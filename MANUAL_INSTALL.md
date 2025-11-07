@@ -63,6 +63,12 @@ brew install python@3.11
 - Instalacja 3-5 minut
 - Zobaczysz "🍺 python@3.11 was successfully installed!"
 
+**Zainstaluj python-tk (dla GUI):**
+
+```bash
+brew install python-tk@3.11
+```
+
 **Dodaj Python 3.11 do PATH:**
 
 ```bash
@@ -78,7 +84,7 @@ python3.11 --version
 
 Powinieneś zobaczyć: `Python 3.11.x`
 
-✅ **Python 3.11 zainstalowany!**
+✅ **Python 3.11 i python-tk zainstalowane!**
 
 ---
 

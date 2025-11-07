@@ -96,11 +96,15 @@ else
     if [[ "$OS_TYPE" == "Darwin" ]]; then
         echo_warning "Instalowanie Python 3.11..."
         brew install python@3.11
+
+        echo_warning "Instalowanie python-tk@3.11 (dla GUI)..."
+        brew install python-tk@3.11
+
         export PATH="/opt/homebrew/opt/python@3.11/bin:$PATH"
-        echo_success "Python 3.11 zainstalowany"
+        echo_success "Python 3.11 i python-tk zainstalowane"
     else
         echo_error "Python 3.11 nie znaleziony"
-        echo "Zainstaluj: sudo apt-get install python3.11 python3.11-venv"
+        echo "Zainstaluj: sudo apt-get install python3.11 python3.11-venv python3-tk"
         exit 1
     fi
 fi

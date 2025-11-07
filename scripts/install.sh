@@ -113,6 +113,10 @@ else
         echo_info "Instalowanie Python 3.11 przez Homebrew..."
         brew install python@3.11
 
+        # Instaluj python-tk dla GUI (tkinter)
+        echo_info "Instalowanie python-tk@3.11 (dla GUI)..."
+        brew install python-tk@3.11
+
         # Dodaj Python 3.11 do PATH dla bieżącej sesji
         export PATH="/opt/homebrew/opt/python@3.11/bin:$PATH"
 
@@ -120,7 +124,7 @@ else
         if command -v python3.11 &> /dev/null; then
             # Użyj python3.11 zamiast python3
             ln -sf /opt/homebrew/opt/python@3.11/bin/python3.11 /opt/homebrew/bin/python3 2>/dev/null || true
-            echo_success "Python 3.11 zainstalowany"
+            echo_success "Python 3.11 i python-tk zainstalowane"
         else
             echo_error "Nie udało się zainstalować Python 3.11"
             exit 1
