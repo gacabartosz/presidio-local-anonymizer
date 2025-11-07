@@ -1,6 +1,6 @@
 """
 Główny moduł aplikacji - CLI do anonimizacji dokumentów.
-Obsługuje pliki DOCX i ODT, pojedyncze pliki lub całe foldery.
+Obsługuje pliki DOCX, ODT, PDF i obrazy (PNG, JPG, TIFF) z OCR, pojedyncze pliki lub całe foldery.
 """
 
 import argparse

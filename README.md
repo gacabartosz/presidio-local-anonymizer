@@ -6,7 +6,7 @@
 
 # Presidio Local Anonymizer
 
-> System anonimizacji dokumentów DOCX/ODT z wykorzystaniem Microsoft Presidio - działa offline, wykrywa polskie dane osobowe
+> Automatyczna anonimizacja dokumentów (DOCX, ODT, PDF) i skanów (PNG, JPG, TIFF) z OCR - działa offline, wykrywa polskie dane osobowe
 
 <div align="center">
 
