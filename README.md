@@ -116,6 +116,8 @@ curl -fsSL https://raw.githubusercontent.com/gacabartosz/presidio-local-anonymiz
 **Czas instalacji:** ~10-15 minut
 **⚠️ WAŻNE:** Uruchom ponownie Terminal po instalacji!
 
+**💡 Problemy z instalacją?** Zobacz [TROUBLESHOOTING.md](TROUBLESHOOTING.md) lub [MANUAL_INSTALL.md](MANUAL_INSTALL.md)
+
 ### 🐧 Linux
 
 **One-liner Bash (zalecana)**

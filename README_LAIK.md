@@ -83,6 +83,13 @@ curl -fsSL https://raw.githubusercontent.com/gacabartosz/presidio-local-anonymiz
 
 **⚠️ WAŻNE:** Zamknij i otwórz ponownie Terminal!
 
+### ❌ Instalacja nie działa?
+
+Jeśli widzisz błąd lub instalacja się zatrzymuje:
+
+1. **Zobacz troubleshooting:** [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+2. **Instalacja ręczna krok po kroku:** [MANUAL_INSTALL.md](MANUAL_INSTALL.md)
+
 ---
 
 # 📝 JAK UŻYWAĆ?

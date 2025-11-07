@@ -83,18 +83,52 @@ fi
 echo ""
 echo_info "Sprawdzanie Python 3.11..."
 
-if ! command -v python3 &> /dev/null; then
-    if [[ "$OS_TYPE" == "Darwin" ]]; then
-        echo_warning "Python nie znaleziony. Instalowanie przez Homebrew..."
-        brew install python@3.11
-        echo_success "Python zainstalowany"
-    else
-        echo_error "Python nie znaleziony. Zainstaluj ręcznie: sudo apt-get install python3.11"
-        exit 1
+# Funkcja sprawdzająca wersję Python
+check_python_version() {
+    if command -v python3 &> /dev/null; then
+        local version=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+        local major=$(echo $version | cut -d. -f1)
+        local minor=$(echo $version | cut -d. -f2)
+
+        if [[ $major -ge 3 ]] && [[ $minor -ge 11 ]]; then
+            return 0  # Wersja OK
+        fi
     fi
-else
+    return 1  # Wersja za stara lub brak Python
+}
+
+# Sprawdź czy Python 3.11+ istnieje
+if check_python_version; then
     PYTHON_VERSION=$(python3 --version)
     echo_success "Python już zainstalowany: $PYTHON_VERSION"
+else
+    if command -v python3 &> /dev/null; then
+        PYTHON_VERSION=$(python3 --version)
+        echo_warning "Znaleziono $PYTHON_VERSION, ale wymagane jest Python 3.11+"
+    else
+        echo_warning "Python nie znaleziony."
+    fi
+
+    if [[ "$OS_TYPE" == "Darwin" ]]; then
+        echo_info "Instalowanie Python 3.11 przez Homebrew..."
+        brew install python@3.11
+
+        # Dodaj Python 3.11 do PATH dla bieżącej sesji
+        export PATH="/opt/homebrew/opt/python@3.11/bin:$PATH"
+
+        # Sprawdź czy instalacja się powiodła
+        if command -v python3.11 &> /dev/null; then
+            # Użyj python3.11 zamiast python3
+            ln -sf /opt/homebrew/opt/python@3.11/bin/python3.11 /opt/homebrew/bin/python3 2>/dev/null || true
+            echo_success "Python 3.11 zainstalowany"
+        else
+            echo_error "Nie udało się zainstalować Python 3.11"
+            exit 1
+        fi
+    else
+        echo_error "Zainstaluj Python 3.11 ręcznie: sudo apt-get install python3.11"
+        exit 1
+    fi
 fi
 
 # =============================================================================
@@ -188,9 +222,19 @@ echo_info "Konfigurowanie środowiska Python..."
 
 VENV_DIR="$APP_DIR/.venv"
 
+# Znajdź odpowiednią wersję Python
+PYTHON_CMD="python3"
+if command -v python3.11 &> /dev/null; then
+    PYTHON_CMD="python3.11"
+elif command -v python3.12 &> /dev/null; then
+    PYTHON_CMD="python3.12"
+fi
+
+echo_info "Używam: $PYTHON_CMD ($($PYTHON_CMD --version))"
+
 if [[ ! -d "$VENV_DIR" ]]; then
     echo_info "Tworzenie środowiska wirtualnego..."
-    python3 -m venv "$VENV_DIR"
+    $PYTHON_CMD -m venv "$VENV_DIR"
     echo_success "Środowisko wirtualne utworzone"
 fi
 
