@@ -46,11 +46,11 @@ class AnonymizerGUI:
         style = ttk.Style()
         style.theme_use('clam')
 
-        # Inicjalizacja analyzera w tle
-        self.init_analyzer()
-
-        # Buduj interfejs
+        # Buduj interfejs NAJPIERW (tworzy widgety włącznie z log_text)
         self.create_widgets()
+
+        # Inicjalizacja analyzera w tle (ПОСЛЕ utworzenia widgetów)
+        self.init_analyzer()
 
         # Drag & Drop setup (opcjonalne - wymaga tkinterdnd2)
         try:
