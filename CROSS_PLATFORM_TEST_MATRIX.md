@@ -9,6 +9,7 @@
 | Race condition GUI | ✅ | ✅ | ✅ | COMPLETE |
 | Pattern objects fix | ✅ | ✅ | ✅ | COMPLETE |
 | tkinterdnd2 fallback | ✅ | ✅ | ✅ | COMPLETE |
+| Poppler auto-install | ⚠️ | ✅ | ✅ | Brak dla Windows |
 
 ---
 
@@ -21,6 +22,7 @@
 - ✅ Python 3.11 (przez winget/choco)
 - ✅ Git (przez winget/choco)
 - ✅ Tesseract OCR (instalator Windows)
+- ⚠️ Poppler (wymaga ręcznej instalacji)
 - ✅ Wszystkie zależności Python (pip)
 - ✅ Model SpaCy pl_core_news_md (przez bezpośredni URL)
 - ✅ Skrypty: `anonymize.cmd`, `anonymize-gui.cmd`
@@ -29,6 +31,7 @@
 
 **Specyfika Windows:**
 - Tkinter jest wbudowany w Python dla Windows - nie wymaga osobnej instalacji
+- Poppler wymaga ręcznej instalacji (np. przez chocolatey: `choco install poppler`)
 - Używa winget lub chocolatey do instalacji zależności systemowych
 - Registry dla menu kontekstowego
 - CMD/PowerShell zamiast bash
@@ -42,6 +45,7 @@
 - ✅ **python-tk@3.11** (dla GUI - KRYTYCZNE na macOS)
 - ✅ Git (przez Homebrew)
 - ✅ Tesseract OCR + tesseract-lang (przez Homebrew)
+- ✅ **Poppler** (dla PDF - przez Homebrew)
 - ✅ Wszystkie zależności Python (pip)
 - ✅ Model SpaCy pl_core_news_md (przez bezpośredni URL)
 - ✅ Skrypty: `anonymize`, `anonymize-gui`
@@ -61,6 +65,7 @@
 - ✅ python3-tk (dla GUI)
 - ✅ Git (przez apt-get/dnf)
 - ✅ Tesseract OCR + tesseract-ocr-pol (przez apt-get/dnf)
+- ✅ **Poppler** (poppler-utils przez apt-get)
 - ✅ Wszystkie zależności Python (pip)
 - ✅ Model SpaCy pl_core_news_md (przez bezpośredni URL)
 - ✅ Skrypty: `anonymize`, `anonymize-gui`
