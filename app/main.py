@@ -15,6 +15,8 @@ from typing import Dict, Any, List, Optional
 from app.analyzer import build_analyzer
 from processors.docx_processor import process_docx
 from processors.odt_processor import process_odt
+from processors.pdf_processor import process_pdf
+from processors.ocr_processor import process_pdf_with_ocr, process_image_with_ocr
 
 # Konfiguracja logowania
 logging_config_path = Path(__file__).parent.parent / "config" / "logging.yaml"
@@ -37,9 +39,10 @@ def main():
 Przykłady użycia:
   %(prog)s dokument.docx
   %(prog)s folder_z_dokumentami/
-  %(prog)s dokument.odt --report szczegolowy_raport.json
+  %(prog)s dokument.pdf --report szczegolowy_raport.json
+  %(prog)s skan.png  (wymaga OCR - Tesseract)
 
-Obsługiwane formaty: DOCX, ODT
+Obsługiwane formaty: DOCX, ODT, PDF, PNG, JPG, TIFF (obrazy z OCR)
 Wykrywane typy danych: PERSON, EMAIL, PHONE_NUMBER, PL_PESEL, PL_NIP, i więcej
         """
     )
@@ -142,15 +145,27 @@ def anonymize_path(
             reports.append(report)
 
     elif path.is_dir():
-        # Przetwórz wszystkie pliki DOCX i ODT w folderze (rekurencyjnie)
+        # Przetwórz wszystkie obsługiwane pliki w folderze (rekurencyjnie)
         logger.info(f"Skanowanie folderu: {path}")
 
-        # Znajdź wszystkie pliki DOCX
+        # Znajdź wszystkie obsługiwane pliki
         docx_files = list(path.rglob("*.docx"))
         odt_files = list(path.rglob("*.odt"))
+        pdf_files = list(path.rglob("*.pdf"))
+        image_files = (
+            list(path.rglob("*.png")) +
+            list(path.rglob("*.jpg")) +
+            list(path.rglob("*.jpeg")) +
+            list(path.rglob("*.tiff")) +
+            list(path.rglob("*.tif"))
+        )
 
-        all_files = docx_files + odt_files
-        logger.info(f"Znaleziono {len(all_files)} plików do przetworzenia ({len(docx_files)} DOCX, {len(odt_files)} ODT)")
+        all_files = docx_files + odt_files + pdf_files + image_files
+        logger.info(
+            f"Znaleziono {len(all_files)} plików do przetworzenia "
+            f"({len(docx_files)} DOCX, {len(odt_files)} ODT, "
+            f"{len(pdf_files)} PDF, {len(image_files)} obrazów)"
+        )
 
         for file_path in all_files:
             try:
@@ -184,16 +199,40 @@ def _process_file(
 
     logger.info(f"Przetwarzanie pliku: {file_path.name}")
 
-    if suffix == '.docx':
-        output_file, report = process_docx(file_path, analyzer, config)
-        return report
+    try:
+        if suffix == '.docx':
+            output_file, report = process_docx(file_path, analyzer, config)
+            return report
 
-    elif suffix == '.odt':
-        output_file, report = process_odt(file_path, analyzer, config)
-        return report
+        elif suffix == '.odt':
+            output_file, report = process_odt(file_path, analyzer, config)
+            return report
 
-    else:
-        logger.warning(f"Nieobsługiwany format pliku: {suffix}")
+        elif suffix == '.pdf':
+            # Automatycznie wykryj czy PDF ma tekst czy jest skanem
+            from processors.pdf_processor import _pdf_has_text
+
+            if _pdf_has_text(file_path):
+                logger.info("PDF zawiera tekst - używam standardowego procesora")
+                output_file, report = process_pdf(file_path, analyzer, config)
+            else:
+                logger.info("PDF jest skanem - używam OCR procesora")
+                output_file, report = process_pdf_with_ocr(file_path, analyzer, config)
+
+            return report
+
+        elif suffix in ['.png', '.jpg', '.jpeg', '.tiff', '.tif']:
+            logger.info("Obraz - używam OCR procesora")
+            output_file, report = process_image_with_ocr(file_path, analyzer, config)
+            return report
+
+        else:
+            logger.warning(f"Nieobsługiwany format pliku: {suffix}")
+            return None
+
+    except ImportError as e:
+        logger.error(f"Brak wymaganych bibliotek dla {suffix}: {e}")
+        print(f"BŁĄD: {e}", file=sys.stderr)
         return None
 
 
