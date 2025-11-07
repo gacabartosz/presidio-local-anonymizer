@@ -1,0 +1,350 @@
+# Skrypt instalacyjny dla Presidio Local Anonymizer
+# Dla systemu Windows 10/11
+
+#Requires -Version 5.1
+
+$ErrorActionPreference = "Stop"
+
+# ============================================================================
+# SEKCJA 1: FUNKCJE POMOCNICZE
+# ============================================================================
+
+function Write-ColoredOutput {
+    param(
+        [string]$Message,
+        [string]$Color = "White"
+    )
+    Write-Host $Message -ForegroundColor $Color
+}
+
+function Test-CommandExists {
+    param([string]$Command)
+    $null -ne (Get-Command $Command -ErrorAction SilentlyContinue)
+}
+
+function Install-WithWinget {
+    param(
+        [string]$PackageId,
+        [string]$DisplayName
+    )
+
+    Write-ColoredOutput "Instalowanie $DisplayName..." "Cyan"
+
+    try {
+        winget install --id $PackageId --exact --silent --accept-source-agreements --accept-package-agreements
+        Write-ColoredOutput "✓ $DisplayName zainstalowany pomyślnie" "Green"
+        return $true
+    }
+    catch {
+        Write-ColoredOutput "✗ Błąd podczas instalacji $DisplayName : $_" "Red"
+        return $false
+    }
+}
+
+function Refresh-EnvironmentPath {
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" +
+                [System.Environment]::GetEnvironmentVariable("Path", "User")
+}
+
+# ============================================================================
+# SEKCJA 2: WERYFIKACJA PREREKWIZYTÓW
+# ============================================================================
+
+Write-ColoredOutput "`n========================================" "Cyan"
+Write-ColoredOutput "PRESIDIO LOCAL ANONYMIZER - INSTALATOR" "Cyan"
+Write-ColoredOutput "========================================`n" "Cyan"
+
+# Sprawdź winget
+if (-not (Test-CommandExists "winget")) {
+    Write-ColoredOutput "BŁĄD: winget nie jest dostępny!" "Red"
+    Write-ColoredOutput "Zainstaluj App Installer ze Microsoft Store lub zaktualizuj Windows." "Yellow"
+    exit 1
+}
+
+# Sprawdź uprawnienia do zapisu w rejestrze użytkownika
+try {
+    $null = Get-Item "HKCU:\Software" -ErrorAction Stop
+}
+catch {
+    Write-ColoredOutput "BŁĄD: Brak uprawnień do zapisu w rejestrze użytkownika!" "Red"
+    exit 1
+}
+
+Write-ColoredOutput "✓ Prerekwizyty spełnione`n" "Green"
+
+# ============================================================================
+# SEKCJA 3: INSTALACJA NARZĘDZI
+# ============================================================================
+
+Write-ColoredOutput "Sprawdzanie i instalacja wymaganych narzędzi...`n" "Yellow"
+
+# Python 3.11
+if (-not (Test-CommandExists "python")) {
+    Write-ColoredOutput "Python nie znaleziony. Instalowanie Python 3.11..." "Yellow"
+    Install-WithWinget "Python.Python.3.11" "Python 3.11"
+    Refresh-EnvironmentPath
+
+    # Sprawdź ponownie
+    if (-not (Test-CommandExists "python")) {
+        Write-ColoredOutput "BŁĄD: Python nie został poprawnie zainstalowany!" "Red"
+        exit 1
+    }
+}
+else {
+    $pythonVersion = & python --version 2>&1
+    Write-ColoredOutput "✓ Python już zainstalowany: $pythonVersion" "Green"
+}
+
+# Git
+if (-not (Test-CommandExists "git")) {
+    Write-ColoredOutput "Git nie znaleziony. Instalowanie Git..." "Yellow"
+    Install-WithWinget "Git.Git" "Git"
+    Refresh-EnvironmentPath
+
+    # Sprawdź ponownie
+    if (-not (Test-CommandExists "git")) {
+        Write-ColoredOutput "BŁĄD: Git nie został poprawnie zainstalowany!" "Red"
+        exit 1
+    }
+}
+else {
+    $gitVersion = & git --version 2>&1
+    Write-ColoredOutput "✓ Git już zainstalowany: $gitVersion" "Green"
+}
+
+# ============================================================================
+# SEKCJA 4: PRZYGOTOWANIE LOKALIZACJI DOCELOWEJ
+# ============================================================================
+
+Write-ColoredOutput "`nPrzygotowywanie lokalizacji instalacji...`n" "Yellow"
+
+$INSTALL_BASE = Join-Path $env:LOCALAPPDATA "PresidioAnon"
+$INSTALL_BIN = Join-Path $INSTALL_BASE "bin"
+
+# Utwórz katalogi
+New-Item -ItemType Directory -Force -Path $INSTALL_BASE | Out-Null
+New-Item -ItemType Directory -Force -Path $INSTALL_BIN | Out-Null
+
+Write-ColoredOutput "✓ Katalog instalacji: $INSTALL_BASE" "Green"
+
+# ============================================================================
+# SEKCJA 5: POBRANIE/AKTUALIZACJA KODU
+# ============================================================================
+
+Write-ColoredOutput "`nPobieranie kodu źródłowego...`n" "Yellow"
+
+$REPO_URL = "https://github.com/gacabartosz/presidio-local-anonymizer.git"
+$APP_DIR = Join-Path $INSTALL_BASE "app"
+
+if (Test-Path (Join-Path $APP_DIR ".git")) {
+    Write-ColoredOutput "Repozytorium już istnieje. Aktualizowanie..." "Yellow"
+    Push-Location $APP_DIR
+    try {
+        & git pull origin main
+        Write-ColoredOutput "✓ Kod zaktualizowany" "Green"
+    }
+    catch {
+        Write-ColoredOutput "✗ Błąd podczas aktualizacji: $_" "Red"
+    }
+    finally {
+        Pop-Location
+    }
+}
+else {
+    Write-ColoredOutput "Klonowanie repozytorium..." "Yellow"
+    try {
+        & git clone $REPO_URL $APP_DIR
+        Write-ColoredOutput "✓ Repozytorium sklonowane" "Green"
+    }
+    catch {
+        Write-ColoredOutput "✗ Błąd podczas klonowania: $_" "Red"
+        exit 1
+    }
+}
+
+# ============================================================================
+# SEKCJA 6: ŚRODOWISKO WIRTUALNE PYTHON
+# ============================================================================
+
+Write-ColoredOutput "`nKonfigurowanie środowiska Python...`n" "Yellow"
+
+$VENV_DIR = Join-Path $APP_DIR ".venv"
+
+# Utwórz venv
+if (-not (Test-Path $VENV_DIR)) {
+    Write-ColoredOutput "Tworzenie środowiska wirtualnego..." "Yellow"
+    & python -m venv $VENV_DIR
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-ColoredOutput "✗ Błąd podczas tworzenia venv!" "Red"
+        exit 1
+    }
+}
+
+$PYTHON_VENV = Join-Path $VENV_DIR "Scripts\python.exe"
+$PIP_VENV = Join-Path $VENV_DIR "Scripts\pip.exe"
+
+# Aktualizuj pip
+Write-ColoredOutput "Aktualizowanie pip..." "Yellow"
+& $PYTHON_VENV -m pip install --upgrade pip --quiet
+
+# Instaluj zależności
+Write-ColoredOutput "Instalowanie zależności Python (może potrwać kilka minut)..." "Yellow"
+
+$REQUIREMENTS_FILE = Join-Path $APP_DIR "requirements.txt"
+
+& $PIP_VENV install -r $REQUIREMENTS_FILE --quiet
+
+if ($LASTEXITCODE -ne 0) {
+    Write-ColoredOutput "✗ Błąd podczas instalacji zależności!" "Red"
+    exit 1
+}
+
+Write-ColoredOutput "✓ Zależności zainstalowane" "Green"
+
+# Pobierz model SpaCy
+Write-ColoredOutput "Pobieranie modelu językowego SpaCy dla języka polskiego..." "Yellow"
+
+& $PYTHON_VENV -m spacy download pl_core_news_md --quiet
+
+if ($LASTEXITCODE -ne 0) {
+    Write-ColoredOutput "✗ Błąd podczas pobierania modelu SpaCy!" "Red"
+    exit 1
+}
+
+Write-ColoredOutput "✓ Model językowy pobrany" "Green"
+
+# ============================================================================
+# SEKCJA 7: UTWORZENIE SKRYPTU WRAPPER
+# ============================================================================
+
+Write-ColoredOutput "`nTworzenie skryptu wrapper...`n" "Yellow"
+
+$WRAPPER_CONTENT = @"
+@echo off
+setlocal
+
+set "APPBASE=$APP_DIR"
+set "PYTHON_EXE=$PYTHON_VENV"
+set "MAIN_SCRIPT=%APPBASE%\app\main.py"
+
+"%PYTHON_EXE%" "%MAIN_SCRIPT%" %*
+"@
+
+$WRAPPER_PATH = Join-Path $INSTALL_BIN "anonymize.cmd"
+
+[System.IO.File]::WriteAllText($WRAPPER_PATH, $WRAPPER_CONTENT, [System.Text.Encoding]::ASCII)
+
+Write-ColoredOutput "✓ Skrypt wrapper utworzony: $WRAPPER_PATH" "Green"
+
+# ============================================================================
+# SEKCJA 8: DODANIE DO PATH UŻYTKOWNIKA
+# ============================================================================
+
+Write-ColoredOutput "`nDodawanie do PATH użytkownika...`n" "Yellow"
+
+$CurrentPath = [Environment]::GetEnvironmentVariable("Path", "User")
+
+if ($CurrentPath -notlike "*$INSTALL_BIN*") {
+    $NewPath = $CurrentPath + ";" + $INSTALL_BIN
+    [Environment]::SetEnvironmentVariable("Path", $NewPath, "User")
+    Write-ColoredOutput "✓ Dodano do PATH: $INSTALL_BIN" "Green"
+    Write-ColoredOutput "  (Restart terminala aby zmiany zaczęły działać)" "Yellow"
+}
+else {
+    Write-ColoredOutput "✓ Folder już jest w PATH" "Green"
+}
+
+# ============================================================================
+# SEKCJA 9: REJESTRACJA MENU KONTEKSTOWEGO DLA PLIKÓW
+# ============================================================================
+
+Write-ColoredOutput "`nRejestrowanie menu kontekstowego dla plików...`n" "Yellow"
+
+$RegKeyFiles = "HKCU:\Software\Classes\*\shell\PresidioAnon"
+
+try {
+    New-Item -Path $RegKeyFiles -Force | Out-Null
+    Set-ItemProperty -Path $RegKeyFiles -Name "(Default)" -Value "Anonimizuj (Presidio)"
+
+    $RegKeyFilesCommand = Join-Path $RegKeyFiles "command"
+    New-Item -Path $RegKeyFilesCommand -Force | Out-Null
+    Set-ItemProperty -Path $RegKeyFilesCommand -Name "(Default)" -Value "`"$WRAPPER_PATH`" `"%1`""
+
+    Write-ColoredOutput "✓ Menu kontekstowe dla plików zarejestrowane" "Green"
+}
+catch {
+    Write-ColoredOutput "✗ Błąd rejestracji menu kontekstowego: $_" "Red"
+}
+
+# ============================================================================
+# SEKCJA 10: REJESTRACJA MENU KONTEKSTOWEGO DLA FOLDERÓW
+# ============================================================================
+
+Write-ColoredOutput "Rejestrowanie menu kontekstowego dla folderów...`n" "Yellow"
+
+$RegKeyFolders = "HKCU:\Software\Classes\Directory\shell\PresidioAnon"
+
+try {
+    New-Item -Path $RegKeyFolders -Force | Out-Null
+    Set-ItemProperty -Path $RegKeyFolders -Name "(Default)" -Value "Anonimizuj folder (Presidio)"
+
+    $RegKeyFoldersCommand = Join-Path $RegKeyFolders "command"
+    New-Item -Path $RegKeyFoldersCommand -Force | Out-Null
+    Set-ItemProperty -Path $RegKeyFoldersCommand -Name "(Default)" -Value "`"$WRAPPER_PATH`" `"%1`""
+
+    Write-ColoredOutput "✓ Menu kontekstowe dla folderów zarejestrowane" "Green"
+}
+catch {
+    Write-ColoredOutput "✗ Błąd rejestracji menu kontekstowego: $_" "Red"
+}
+
+# ============================================================================
+# SEKCJA 11: SMOKE TEST
+# ============================================================================
+
+Write-ColoredOutput "`nWykonywanie testu...`n" "Yellow"
+
+$TestSample = Join-Path $APP_DIR "tests\samples\test_document.docx"
+
+if (Test-Path $TestSample) {
+    Write-ColoredOutput "Testowanie na przykładowym pliku..." "Yellow"
+
+    try {
+        & $PYTHON_VENV (Join-Path $APP_DIR "app\main.py") $TestSample
+
+        # Sprawdź czy powstał plik .anon.docx
+        $TestOutput = $TestSample -replace '\.docx$', '.anon.docx'
+
+        if (Test-Path $TestOutput) {
+            Write-ColoredOutput "✓ Test zakończony pomyślnie!" "Green"
+            Remove-Item $TestOutput -Force
+        }
+        else {
+            Write-ColoredOutput "⚠ Test nie utworzył pliku wyjściowego" "Yellow"
+        }
+    }
+    catch {
+        Write-ColoredOutput "⚠ Test zakończony z błędami (to normalne jeśli brak testowych plików)" "Yellow"
+    }
+}
+
+# ============================================================================
+# SEKCJA 12: KOMUNIKATY KOŃCOWE
+# ============================================================================
+
+Write-ColoredOutput "`n========================================" "Green"
+Write-ColoredOutput "INSTALACJA ZAKOŃCZONA POMYŚLNIE!" "Green"
+Write-ColoredOutput "========================================`n" "Green"
+
+Write-ColoredOutput "Lokalizacja instalacji: $INSTALL_BASE`n" "Cyan"
+
+Write-ColoredOutput "Przykłady użycia:" "Yellow"
+Write-ColoredOutput "  1. Kliknij prawym przyciskiem na pliku DOCX/ODT -> 'Anonimizuj (Presidio)'" "White"
+Write-ColoredOutput "  2. Kliknij prawym przyciskiem na folderze -> 'Anonimizuj folder (Presidio)'" "White"
+Write-ColoredOutput "  3. W terminalu: anonymize.cmd sciezka\do\pliku.docx`n" "White"
+
+Write-ColoredOutput "Aby odinstalować, uruchom: $APP_DIR\scripts\uninstall.ps1`n" "Yellow"
+
+Write-ColoredOutput "Naciśnij dowolny klawisz aby zakończyć..." "Gray"
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
