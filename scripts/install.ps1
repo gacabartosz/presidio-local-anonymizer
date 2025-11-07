@@ -112,6 +112,57 @@ else {
     Write-ColoredOutput "✓ Git już zainstalowany: $gitVersion" "Green"
 }
 
+# Tesseract OCR (dla OCR funkcjonalności - opcjonalne)
+Write-ColoredOutput "`nSprawdzanie Tesseract OCR (dla skanów PDF i obrazów)...`n" "Yellow"
+
+$TesseractPath = "C:\Program Files\Tesseract-OCR\tesseract.exe"
+
+if (-not (Test-Path $TesseractPath)) {
+    Write-ColoredOutput "Tesseract OCR nie znaleziony. Instalowanie..." "Yellow"
+
+    try {
+        # Pobierz instalator Tesseract z UB-Mannheim
+        $TesseractUrl = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.3.3.20231005.exe"
+        $TesseractInstaller = "$env:TEMP\tesseract-setup.exe"
+
+        Write-ColoredOutput "Pobieranie Tesseract OCR (~100 MB)..." "Yellow"
+        Invoke-WebRequest -Uri $TesseractUrl -OutFile $TesseractInstaller -UseBasicParsing
+
+        Write-ColoredOutput "Instalowanie Tesseract OCR..." "Yellow"
+        # Uruchom instalator (silent mode)
+        Start-Process -FilePath $TesseractInstaller -ArgumentList "/S" -Wait
+
+        # Poczekaj aż instalacja się zakończy
+        Start-Sleep -Seconds 3
+
+        # Sprawdź czy zainstalował się
+        if (Test-Path $TesseractPath) {
+            # Pobierz polski plik językowy
+            Write-ColoredOutput "Pobieranie polskiego modelu językowego..." "Yellow"
+            $PolishData = "https://github.com/tesseract-ocr/tessdata/raw/main/pol.traineddata"
+            $TessdataPath = "C:\Program Files\Tesseract-OCR\tessdata"
+
+            Invoke-WebRequest -Uri $PolishData -OutFile "$TessdataPath\pol.traineddata" -UseBasicParsing
+
+            Write-ColoredOutput "✓ Tesseract OCR zainstalowany" "Green"
+        }
+        else {
+            Write-ColoredOutput "⚠ Tesseract OCR nie został poprawnie zainstalowany" "Yellow"
+            Write-ColoredOutput "  OCR dla skanów nie będzie działać. Możesz zainstalować później." "Yellow"
+        }
+
+        # Wyczyść instalator
+        Remove-Item $TesseractInstaller -Force -ErrorAction SilentlyContinue
+    }
+    catch {
+        Write-ColoredOutput "⚠ Nie udało się zainstalować Tesseract OCR: $_" "Yellow"
+        Write-ColoredOutput "  OCR dla skanów nie będzie działać. Możesz zainstalować później." "Yellow"
+    }
+}
+else {
+    Write-ColoredOutput "✓ Tesseract OCR już zainstalowany" "Green"
+}
+
 # ============================================================================
 # SEKCJA 4: PRZYGOTOWANIE LOKALIZACJI DOCELOWEJ
 # ============================================================================
