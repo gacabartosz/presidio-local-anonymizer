@@ -1,10 +1,20 @@
+<div align="center">
+  <img src="assets/logo-banner.svg" alt="Presidio Local Anonymizer" width="600"/>
+</div>
+
+<br/>
+
 # Presidio Local Anonymizer
 
 > System anonimizacji dokumentów DOCX/ODT z wykorzystaniem Microsoft Presidio - działa offline, wykrywa polskie dane osobowe
 
+<div align="center">
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Platform: Windows | macOS | Linux](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue.svg)](https://github.com/gacabartosz/presidio-local-anonymizer)
+
+</div>
 
 ## Przegląd
 
@@ -395,3 +405,5 @@ Projekt jest otwarty na wkład społeczności! Zobacz [CONTRIBUTING.md](docs/CON
 ---
 
 **Wykonane z ❤️ dla społeczności open-source**
+
+👨‍💻 Created by [bartoszgaca.pl](https://bartoszgaca.pl) & 🤖 [Claude Code](https://claude.com/claude-code)

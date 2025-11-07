@@ -1,3 +1,9 @@
+<div align="center">
+  <img src="assets/logo.svg" alt="Presidio Local Anonymizer" width="200"/>
+</div>
+
+<br/>
+
 # 🔒 PRESIDIO - Ukryj Dane Osobowe (INSTRUKCJA DLA LAIKA)
 
 ## 💡 CO TO ROBI?
@@ -334,4 +340,4 @@ https://github.com/gacabartosz/presidio-local-anonymizer/issues
 
 **Wykonane z ❤️ dla społeczności open-source**
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
+👨‍💻 Created by [bartoszgaca.pl](https://bartoszgaca.pl) & 🤖 [Claude Code](https://claude.com/claude-code)

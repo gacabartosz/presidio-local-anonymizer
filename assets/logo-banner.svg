@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="800" height="200">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#2563eb;stop-opacity:0.1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="200" fill="url(#bgGrad)"/>
+
+  <!-- Logo (smaller version) -->
+  <g transform="translate(50, 25)">
+    <!-- Shield outline -->
+    <path d="M75 15 L105 30 L105 63.75 Q105 90 75 112.5 Q45 90 45 63.75 L45 30 Z"
+          fill="#2563eb" stroke="#1e40af" stroke-width="1.5"/>
+
+    <!-- Shield inner -->
+    <path d="M75 22.5 L97.5 33.75 L97.5 60 Q97.5 82.5 75 101.25 Q52.5 82.5 52.5 60 L52.5 33.75 Z"
+          fill="#3b82f6"/>
+
+    <!-- Lock icon -->
+    <rect x="63.75" y="56.25" width="22.5" height="26.25" rx="2.25" fill="#fff"/>
+    <circle cx="75" cy="48.75" r="9" fill="none" stroke="#fff" stroke-width="3"/>
+    <circle cx="75" cy="69" r="3" fill="#2563eb"/>
+    <line x1="75" y1="72" x2="75" y2="76.5" stroke="#2563eb" stroke-width="2.25" stroke-linecap="round"/>
+  </g>
+
+  <!-- Project name -->
+  <text x="200" y="85" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#1e40af">
+    PRESIDIO
+  </text>
+  <text x="200" y="120" font-family="Arial, sans-serif" font-size="28" fill="#2563eb">
+    Local Anonymizer
+  </text>
+
+  <!-- Tagline -->
+  <text x="200" y="155" font-family="Arial, sans-serif" font-size="16" fill="#64748b" font-style="italic">
+    🔒 Offline document anonymization for sensitive data
+  </text>
+</svg>
