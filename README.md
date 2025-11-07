@@ -4,11 +4,13 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Platform: Windows](https://img.shields.io/badge/platform-Windows%2010%2F11-blue.svg)](https://www.microsoft.com/windows)
+[![Platform: Windows | macOS | Linux](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue.svg)](https://github.com/gacabartosz/presidio-local-anonymizer)
 
 ## Przegląd
 
 **Presidio Local Anonymizer** to narzędzie CLI do automatycznej anonimizacji danych osobowych (PII) w dokumentach biurowych. Wykorzystuje bibliotekę [Microsoft Presidio](https://github.com/microsoft/presidio) i działa całkowicie **offline** - nie wymaga połączenia z internetem ani wysyłania danych do zewnętrznych API.
+
+> 📖 **Szukasz prostej instrukcji?** Zobacz [README_LAIK.md](README_LAIK.md) - instrukcja krok po kroku dla osób nie-technicznych!
 
 ### Kluczowe funkcje
 
@@ -16,10 +18,11 @@
 ✅ **Obsługa polskich danych** - wykrywa PESEL, NIP, imiona, nazwiska
 ✅ **Formaty dokumentów** - DOCX (Microsoft Word), ODT (LibreOffice), PDF
 ✅ **OCR dla skanów** - Tesseract OCR dla skanowanych PDF i obrazów (PNG, JPG, TIFF)
-✅ **Integracja z Windows** - menu kontekstowe (prawy przycisk myszy)
+✅ **Integracja z systemem** - menu kontekstowe (prawy przycisk myszy) na Windows, macOS i Linux
 ✅ **Przetwarzanie wsadowe** - obsługa pojedynczych plików i całych folderów
 ✅ **Raporty JSON** - szczegółowe informacje o wykrytych danych
 ✅ **Konfigurowalność** - dostosuj wykrywane encje i maski w YAML
+✅ **GUI (interfejs graficzny)** - prosty interfejs z paskiem postępu
 
 ### Wykrywane typy danych osobowych
 
@@ -35,55 +38,106 @@
 
 ## Wymagania systemowe
 
+### Windows
 - **System operacyjny:** Windows 10 lub Windows 11
 - **Wolne miejsce:** ~500 MB (dla instalacji i zależności)
 - **Uprawnienia:** Instalacja w katalogu użytkownika (nie wymaga praw administratora)
 
+### macOS
+- **System operacyjny:** macOS 10.15 (Catalina) lub nowszy
+- **Wolne miejsce:** ~1 GB (dla instalacji, Homebrew i zależności)
+- **Uprawnienia:** Instalacja w katalogu użytkownika, Homebrew może wymagać hasła
+
+### Linux
+- **System operacyjny:** Ubuntu 20.04+, Debian 10+, Fedora 30+
+- **Wolne miejsce:** ~500 MB (dla instalacji i zależności)
+- **Uprawnienia:** Python 3.11+, Git, Tesseract OCR (instalowane przez użytkownika)
+
 ## Instalacja
 
-### Metoda 1: One-liner PowerShell (zalecana)
+### 🪟 Windows
+
+**Metoda 1: One-liner PowerShell (zalecana)**
 
 Otwórz PowerShell i uruchom:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& {Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/gacabartosz/presidio-local-anonymizer/main/scripts/install.ps1' -OutFile '$env:TEMP\presidio_install.ps1'; & '$env:TEMP\presidio_install.ps1'; Remove-Item '$env:TEMP\presidio_install.ps1' -Force}"
+iwr https://raw.githubusercontent.com/gacabartosz/presidio-local-anonymizer/main/scripts/install.ps1 | iex
 ```
 
-### Metoda 2: Pobranie i uruchomienie skryptu
+**Metoda 2: Pobranie i uruchomienie skryptu**
 
 1. Pobierz [`scripts/install.ps1`](https://raw.githubusercontent.com/gacabartosz/presidio-local-anonymizer/main/scripts/install.ps1)
 2. Kliknij prawym przyciskiem → **Run with PowerShell**
 
-### Co zostanie zainstalowane?
+**Co zostanie zainstalowane:**
+- ✅ Python 3.11, Git (jeśli brak)
+- ✅ Tesseract OCR (dla skanów i obrazów)
+- ✅ Repozytorium + środowisko wirtualne Python
+- ✅ Wszystkie zależności (Presidio, SpaCy, PyPDF2, OCR libs)
+- ✅ Model językowy SpaCy dla języka polskiego
+- ✅ Polski model językowy dla Tesseract OCR
+- ✅ Wpis w menu kontekstowym Windows
+- ✅ Narzędzie w PATH
 
-Skrypt automatycznie:
-- ✅ Zainstaluje Python 3.11 (jeśli brak)
-- ✅ Zainstaluje Git (jeśli brak)
-- ✅ Zainstaluje Tesseract OCR (jeśli brak) - dla skanów i obrazów
-- ✅ Sklonuje repozytorium
-- ✅ Utworzy środowisko wirtualne Python
-- ✅ Zainstaluje wszystkie zależności (Presidio, SpaCy, PyPDF2, OCR libs)
-- ✅ Pobierze model językowy SpaCy dla języka polskiego
-- ✅ Pobierze polski model językowy dla Tesseract OCR
-- ✅ Doda wpis do menu kontekstowego Windows
-- ✅ Doda narzędzie do PATH
+**Lokalizacja:** `%LOCALAPPDATA%\PresidioAnon`
+**Czas instalacji:** ~10-15 minut
 
-**Lokalizacja instalacji:** `%LOCALAPPDATA%\PresidioAnon`
+### 🍎 macOS
 
-**Szacowany czas instalacji:** 10-15 minut (w zależności od prędkości internetu)
+**One-liner Bash (zalecana)**
+
+Otwórz Terminal i uruchom:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/gacabartosz/presidio-local-anonymizer/main/scripts/install.sh | bash
+```
+
+**Co zostanie zainstalowane:**
+- ✅ Homebrew (jeśli brak)
+- ✅ Python 3.11, Git, Tesseract OCR
+- ✅ Repozytorium + środowisko wirtualne Python
+- ✅ Wszystkie zależności
+- ✅ Modele językowe (SpaCy + Tesseract polski)
+- ✅ Usługa Automator (Quick Actions w Finder)
+- ✅ Narzędzie w PATH (.zshrc/.bashrc)
+
+**Lokalizacja:** `~/Library/Application Support/PresidioAnon`
+**Czas instalacji:** ~10-15 minut
+**⚠️ WAŻNE:** Uruchom ponownie Terminal po instalacji!
+
+### 🐧 Linux
+
+**One-liner Bash (zalecana)**
+
+Otwórz Terminal i uruchom:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/gacabartosz/presidio-local-anonymizer/main/scripts/install.sh | bash
+```
+
+**Co zostanie zainstalowane:**
+- ✅ Python 3.11, Git, Tesseract OCR (przez apt-get/dnf)
+- ✅ Repozytorium + środowisko wirtualne Python
+- ✅ Wszystkie zależności
+- ✅ Modele językowe (SpaCy + Tesseract polski)
+- ✅ Narzędzie w PATH
+
+**Lokalizacja:** `~/.presidio-anonymizer`
+**Czas instalacji:** ~10-15 minut
 
 ## Użycie
 
-### 1. GUI (interfejs graficzny) - NOWE! 🎨
+### 1. GUI (interfejs graficzny) 🎨
 
 Uruchom graficzny interfejs:
 
 ```bash
-# Windows: uruchom z Menu Start lub
-%LOCALAPPDATA%\PresidioAnon\app\scripts\anonymize-gui.cmd
-
-# Lub z wiersza poleceń
+# Windows
 anonymize-gui.cmd
+
+# macOS / Linux
+anonymize-gui
 ```
 
 **Funkcje GUI:**
@@ -94,20 +148,24 @@ anonymize-gui.cmd
 
 ### 2. Menu kontekstowe (najłatwiejsze)
 
-**Dla pojedynczego pliku:**
+**Windows:**
 1. Kliknij prawym przyciskiem myszy na pliku (`.docx`, `.odt`, `.pdf`, `.png`, `.jpg`)
 2. Wybierz **"Anonimizuj (Presidio)"**
 3. Poczekaj na zakończenie
 4. Znajdź zanonimizowany plik w tym samym folderze (np. `.anon.pdf`)
 
-**Dla całego folderu:**
-1. Kliknij prawym przyciskiem myszy na folderze
-2. Wybierz **"Anonimizuj folder (Presidio)"**
-3. System przetworzy wszystkie pliki DOCX i ODT w folderze (rekurencyjnie)
+**macOS:**
+1. Kliknij prawym przyciskiem (lub Control+klik) na pliku
+2. Wybierz **Quick Actions → Anonimizuj (Presidio)**
+3. Znajdź zanonimizowany plik w tym samym folderze
+
+**Linux:**
+- Integracja z menedżerem plików zależy od dystrybucji
+- Użyj GUI lub CLI zamiast
 
 ### 3. Wiersz poleceń
 
-Otwórz **CMD** lub **PowerShell**:
+**Windows (CMD / PowerShell):**
 
 ```bash
 # Pojedynczy plik
@@ -123,6 +181,24 @@ anonymize.cmd C:\Moje_Dokumenty\ --report raport.jsonl
 
 # Verbose mode (szczegółowe logi)
 anonymize.cmd dokument.docx --verbose
+```
+
+**macOS / Linux (Terminal):**
+
+```bash
+# Pojedynczy plik
+anonymize dokument.docx
+anonymize raport.pdf
+anonymize skan.png
+
+# Folder (wszystkie DOCX, ODT, PDF i obrazy)
+anonymize ~/Documents/Moje_Dokumenty/
+
+# Z raportem zbiorczym
+anonymize ~/Documents/Moje_Dokumenty/ --report raport.jsonl
+
+# Verbose mode (szczegółowe logi)
+anonymize dokument.docx --verbose
 ```
 
 ### 4. Przykład użycia
@@ -236,13 +312,9 @@ threshold: 0.35  # Niższy = więcej wykryć (więcej false positives)
 
 ## Deinstalacja
 
-Uruchom skrypt deinstalacyjny:
+### Windows
 
-```powershell
-%LOCALAPPDATA%\PresidioAnon\app\scripts\uninstall.ps1
-```
-
-Lub uruchom PowerShell i wykonaj:
+Uruchom PowerShell i wykonaj:
 
 ```powershell
 & "$env:LOCALAPPDATA\PresidioAnon\app\scripts\uninstall.ps1"
@@ -250,20 +322,40 @@ Lub uruchom PowerShell i wykonaj:
 
 Skrypt usunie:
 - Wszystkie pliki aplikacji
-- Wpisy w menu kontekstowym
+- Wpisy w menu kontekstowym Windows
 - Wpis w PATH użytkownika
+
+### macOS / Linux
+
+Uruchom Terminal i wykonaj:
+
+```bash
+# macOS
+bash ~/Library/Application\ Support/PresidioAnon/app/scripts/uninstall.sh
+
+# Linux
+bash ~/.presidio-anonymizer/app/scripts/uninstall.sh
+```
+
+Skrypt usunie:
+- Wszystkie pliki aplikacji
+- Wpisy w PATH (.zshrc, .bashrc)
+- Usługę Automator (tylko macOS)
 
 ## Roadmap
 
-### v0.2.0 (w realizacji) 🔄
+### v0.2.1 (ZREALIZOWANE) ✅
 - [x] Obsługa dokumentów PDF (text layer) ✅
 - [x] Obsługa OCR dla skanów PDF i obrazów (Tesseract) ✅
 - [x] Obsługa formatów obrazów (PNG, JPG, TIFF) ✅
-- [ ] GUI (interfejs graficzny) - w trakcie
+- [x] GUI (interfejs graficzny - tkinter) ✅
+- [x] Wsparcie dla macOS (Homebrew, Automator) ✅
+- [x] Wsparcie dla Linux (apt-get/dnf) ✅
+- [x] One-liner instalacja dla wszystkich platform ✅
+
+### v0.3.0 (w planowaniu)
 - [ ] Zachowanie formatowania DOCX (runs, styles)
 - [ ] Lepsza obsługa ODT (zachowanie struktury)
-
-### v0.3.0 (planowane)
 - [ ] Przetwarzanie równoległe (wielowątkowość)
 - [ ] Podgląd przed/po w GUI
 - [ ] Tryb "pseudonimizacji" (zamiana na fałszywe dane zamiast masek)
@@ -271,7 +363,6 @@ Skrypt usunie:
 - [ ] Dashboard ze statystykami
 
 ### v1.0.0 (planowane)
-- [ ] Wsparcie dla macOS i Linux
 - [ ] Wtyczka dla Microsoft Office
 - [ ] API REST (opcjonalne)
 - [ ] Profesjonalne GUI (PyQt)
