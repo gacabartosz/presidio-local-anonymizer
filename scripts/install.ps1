@@ -256,7 +256,8 @@ Write-ColoredOutput "✓ Zależności zainstalowane" "Green"
 # Pobierz model SpaCy
 Write-ColoredOutput "Pobieranie modelu językowego SpaCy dla języka polskiego..." "Yellow"
 
-& $PYTHON_VENV -m spacy download pl_core_news_md --quiet
+# Użyj bezpośredniego URL zamiast spacy download (bardziej niezawodne)
+& $PIP_VENV install "https://github.com/explosion/spacy-models/releases/download/pl_core_news_md-3.7.0/pl_core_news_md-3.7.0-py3-none-any.whl" --quiet
 
 if ($LASTEXITCODE -ne 0) {
     Write-ColoredOutput "✗ Błąd podczas pobierania modelu SpaCy!" "Red"
