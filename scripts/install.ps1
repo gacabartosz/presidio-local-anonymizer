@@ -163,6 +163,52 @@ else {
     Write-ColoredOutput "✓ Tesseract OCR już zainstalowany" "Green"
 }
 
+# Poppler (dla przetwarzania PDF)
+Write-ColoredOutput "`nSprawdzanie poppler (dla przetwarzania PDF)...`n" "Yellow"
+
+# Sprawdź czy pdftoppm istnieje w PATH
+$PopplerInstalled = $false
+try {
+    $null = & pdftoppm -v 2>&1
+    $PopplerInstalled = $true
+    Write-ColoredOutput "✓ Poppler już zainstalowany" "Green"
+}
+catch {
+    Write-ColoredOutput "Poppler nie znaleziony. Próba instalacji przez chocolatey..." "Yellow"
+
+    # Sprawdź czy chocolatey jest dostępny
+    if (Test-CommandExists "choco") {
+        try {
+            Write-ColoredOutput "Instalowanie poppler przez chocolatey..." "Yellow"
+            & choco install poppler -y
+
+            # Odśwież PATH
+            Refresh-EnvironmentPath
+
+            # Sprawdź ponownie
+            try {
+                $null = & pdftoppm -v 2>&1
+                Write-ColoredOutput "✓ Poppler zainstalowany" "Green"
+                $PopplerInstalled = $true
+            }
+            catch {
+                Write-ColoredOutput "⚠ Poppler nie został poprawnie zainstalowany" "Yellow"
+            }
+        }
+        catch {
+            Write-ColoredOutput "⚠ Nie udało się zainstalować poppler: $_" "Yellow"
+        }
+    }
+    else {
+        Write-ColoredOutput "⚠ Chocolatey nie jest zainstalowany" "Yellow"
+        Write-ColoredOutput "  Poppler jest wymagany do przetwarzania PDF" "Yellow"
+        Write-ColoredOutput "  Zainstaluj ręcznie:" "Yellow"
+        Write-ColoredOutput "    1. Zainstaluj chocolatey: https://chocolatey.org/install" "Cyan"
+        Write-ColoredOutput "    2. Uruchom: choco install poppler" "Cyan"
+        Write-ColoredOutput "  LUB pobierz ręcznie: https://blog.alivate.com.au/poppler-windows/" "Cyan"
+    }
+}
+
 # ============================================================================
 # SEKCJA 4: PRZYGOTOWANIE LOKALIZACJI DOCELOWEJ
 # ============================================================================

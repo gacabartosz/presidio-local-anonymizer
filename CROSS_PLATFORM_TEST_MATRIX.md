@@ -9,7 +9,7 @@
 | Race condition GUI | ✅ | ✅ | ✅ | COMPLETE |
 | Pattern objects fix | ✅ | ✅ | ✅ | COMPLETE |
 | tkinterdnd2 fallback | ✅ | ✅ | ✅ | COMPLETE |
-| Poppler auto-install | ⚠️ | ✅ | ✅ | Brak dla Windows |
+| Poppler auto-install | ✅ | ✅ | ✅ | COMPLETE |
 
 ---
 
@@ -22,7 +22,7 @@
 - ✅ Python 3.11 (przez winget/choco)
 - ✅ Git (przez winget/choco)
 - ✅ Tesseract OCR (instalator Windows)
-- ⚠️ Poppler (wymaga ręcznej instalacji)
+- ✅ **Poppler** (przez chocolatey, z fallbackiem na instrukcje ręczne)
 - ✅ Wszystkie zależności Python (pip)
 - ✅ Model SpaCy pl_core_news_md (przez bezpośredni URL)
 - ✅ Skrypty: `anonymize.cmd`, `anonymize-gui.cmd`
@@ -31,7 +31,7 @@
 
 **Specyfika Windows:**
 - Tkinter jest wbudowany w Python dla Windows - nie wymaga osobnej instalacji
-- Poppler wymaga ręcznej instalacji (np. przez chocolatey: `choco install poppler`)
+- Poppler instalowany automatycznie przez chocolatey (jeśli dostępny), w przeciwnym razie podawane są instrukcje ręcznej instalacji
 - Używa winget lub chocolatey do instalacji zależności systemowych
 - Registry dla menu kontekstowego
 - CMD/PowerShell zamiast bash
