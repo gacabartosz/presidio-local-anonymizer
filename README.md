@@ -14,7 +14,8 @@
 
 ✅ **Offline First** - wszystkie operacje wykonywane lokalnie na Twoim komputerze
 ✅ **Obsługa polskich danych** - wykrywa PESEL, NIP, imiona, nazwiska
-✅ **Formaty dokumentów** - DOCX (Microsoft Word) i ODT (LibreOffice)
+✅ **Formaty dokumentów** - DOCX (Microsoft Word), ODT (LibreOffice), PDF
+✅ **OCR dla skanów** - Tesseract OCR dla skanowanych PDF i obrazów (PNG, JPG, TIFF)
 ✅ **Integracja z Windows** - menu kontekstowe (prawy przycisk myszy)
 ✅ **Przetwarzanie wsadowe** - obsługa pojedynczych plików i całych folderów
 ✅ **Raporty JSON** - szczegółowe informacje o wykrytych danych
@@ -58,41 +59,63 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command "& {Invoke-WebRequest -Ur
 Skrypt automatycznie:
 - ✅ Zainstaluje Python 3.11 (jeśli brak)
 - ✅ Zainstaluje Git (jeśli brak)
+- ✅ Zainstaluje Tesseract OCR (jeśli brak) - dla skanów i obrazów
 - ✅ Sklonuje repozytorium
 - ✅ Utworzy środowisko wirtualne Python
-- ✅ Zainstaluje wszystkie zależności (Presidio, SpaCy, itd.)
+- ✅ Zainstaluje wszystkie zależności (Presidio, SpaCy, PyPDF2, OCR libs)
 - ✅ Pobierze model językowy SpaCy dla języka polskiego
+- ✅ Pobierze polski model językowy dla Tesseract OCR
 - ✅ Doda wpis do menu kontekstowego Windows
 - ✅ Doda narzędzie do PATH
 
 **Lokalizacja instalacji:** `%LOCALAPPDATA%\PresidioAnon`
 
-**Szacowany czas instalacji:** 5-10 minut (w zależności od prędkości internetu)
+**Szacowany czas instalacji:** 10-15 minut (w zależności od prędkości internetu)
 
 ## Użycie
 
-### 1. Menu kontekstowe (najłatwiejsze)
+### 1. GUI (interfejs graficzny) - NOWE! 🎨
+
+Uruchom graficzny interfejs:
+
+```bash
+# Windows: uruchom z Menu Start lub
+%LOCALAPPDATA%\PresidioAnon\app\scripts\anonymize-gui.cmd
+
+# Lub z wiersza poleceń
+anonymize-gui.cmd
+```
+
+**Funkcje GUI:**
+- 📁 Wybór wielu plików lub całego folderu
+- 📊 Pasek postępu
+- 📝 Logi w czasie rzeczywistym
+- ✅ Proste w obsłudze (drag & drop - jeśli zainstalowano tkinterdnd2)
+
+### 2. Menu kontekstowe (najłatwiejsze)
 
 **Dla pojedynczego pliku:**
-1. Kliknij prawym przyciskiem myszy na pliku `.docx` lub `.odt`
+1. Kliknij prawym przyciskiem myszy na pliku (`.docx`, `.odt`, `.pdf`, `.png`, `.jpg`)
 2. Wybierz **"Anonimizuj (Presidio)"**
 3. Poczekaj na zakończenie
-4. Znajdź plik `.anon.docx` (lub `.anon.odt`) w tym samym folderze
+4. Znajdź zanonimizowany plik w tym samym folderze (np. `.anon.pdf`)
 
 **Dla całego folderu:**
 1. Kliknij prawym przyciskiem myszy na folderze
 2. Wybierz **"Anonimizuj folder (Presidio)"**
 3. System przetworzy wszystkie pliki DOCX i ODT w folderze (rekurencyjnie)
 
-### 2. Wiersz poleceń
+### 3. Wiersz poleceń
 
 Otwórz **CMD** lub **PowerShell**:
 
 ```bash
 # Pojedynczy plik
 anonymize.cmd dokument.docx
+anonymize.cmd raport.pdf
+anonymize.cmd skan.png
 
-# Folder (wszystkie DOCX i ODT)
+# Folder (wszystkie DOCX, ODT, PDF i obrazy)
 anonymize.cmd C:\Moje_Dokumenty\
 
 # Z raportem zbiorczym
@@ -102,7 +125,7 @@ anonymize.cmd C:\Moje_Dokumenty\ --report raport.jsonl
 anonymize.cmd dokument.docx --verbose
 ```
 
-### 3. Przykład użycia
+### 4. Przykład użycia
 
 **Przed anonimizacją** (`dokument.docx`):
 ```
@@ -232,22 +255,26 @@ Skrypt usunie:
 
 ## Roadmap
 
-### v0.2.0 (planowane)
+### v0.2.0 (w realizacji) 🔄
+- [x] Obsługa dokumentów PDF (text layer) ✅
+- [x] Obsługa OCR dla skanów PDF i obrazów (Tesseract) ✅
+- [x] Obsługa formatów obrazów (PNG, JPG, TIFF) ✅
+- [ ] GUI (interfejs graficzny) - w trakcie
 - [ ] Zachowanie formatowania DOCX (runs, styles)
 - [ ] Lepsza obsługa ODT (zachowanie struktury)
-- [ ] Obsługa dokumentów PDF (tylko tekst)
-- [ ] GUI (interfejs graficzny)
 
 ### v0.3.0 (planowane)
 - [ ] Przetwarzanie równoległe (wielowątkowość)
-- [ ] Obsługa obrazów w dokumentach (OCR)
+- [ ] Podgląd przed/po w GUI
 - [ ] Tryb "pseudonimizacji" (zamiana na fałszywe dane zamiast masek)
 - [ ] Export do CSV/Excel
+- [ ] Dashboard ze statystykami
 
 ### v1.0.0 (planowane)
 - [ ] Wsparcie dla macOS i Linux
 - [ ] Wtyczka dla Microsoft Office
 - [ ] API REST (opcjonalne)
+- [ ] Profesjonalne GUI (PyQt)
 
 ## Licencja
 
