@@ -29,7 +29,8 @@ tkinterdnd2==0.3.0
 nltk==3.8.1
 
 # Model językowy SpaCy dla języka polskiego (instalowany osobno)
-# pl_core_news_md - instalowany przez: python -m spacy download pl_core_news_md
+# pl_core_news_md - instalowany przez:
+# pip install https://github.com/explosion/spacy-models/releases/download/pl_core_news_md-3.7.0/pl_core_news_md-3.7.0-py3-none-any.whl
 
 # UWAGA: OCR wymaga także instalacji Tesseract OCR:
 # Windows: https://github.com/UB-Mannheim/tesseract/wiki

@@ -236,13 +236,13 @@ Successfully installed presidio-analyzer-2.2.354 presidio-anonymizer-2.2.354 ...
 Wklej w Terminal:
 
 ```bash
-python -m spacy download pl_core_news_md
+pip install https://github.com/explosion/spacy-models/releases/download/pl_core_news_md-3.7.0/pl_core_news_md-3.7.0-py3-none-any.whl
 ```
 
 **Co się stanie:**
 - Pobieranie ~50 MB
 - Instalacja modelu AI dla języka polskiego
-- Zobaczysz "✔ Download and installation successful"
+- Zobaczysz "Successfully installed pl_core_news_md-3.7.0"
 
 ✅ **Model językowy pobrany!**
 

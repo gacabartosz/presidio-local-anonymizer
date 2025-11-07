@@ -253,7 +253,9 @@ echo_success "Zależności zainstalowane"
 
 # Pobierz model SpaCy
 echo_info "Pobieranie modelu językowego SpaCy dla języka polskiego..."
-python -m spacy download pl_core_news_md --quiet
+
+# Zainstaluj przez pip z bezpośrednim URL (bardziej niezawodne niż spacy download)
+pip install https://github.com/explosion/spacy-models/releases/download/pl_core_news_md-3.7.0/pl_core_news_md-3.7.0-py3-none-any.whl --quiet
 
 echo_success "Model językowy pobrany"
 
