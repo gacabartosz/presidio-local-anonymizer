@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict, Any
 import logging
 
-from presidio_analyzer import AnalyzerEngine, PatternRecognizer
+from presidio_analyzer import AnalyzerEngine, PatternRecognizer, Pattern
 from presidio_analyzer.nlp_engine import SpacyNlpEngine, NlpEngineProvider
 
 logger = logging.getLogger("app.analyzer")
@@ -85,11 +85,11 @@ def _add_custom_recognizers(analyzer: AnalyzerEngine, config: Dict[str, Any]) ->
         # Przygotuj listę wzorców dla PatternRecognizer
         pattern_list = []
         for pattern in patterns:
-            pattern_list.append({
-                "name": pattern['name'],
-                "regex": pattern['regex'],
-                "score": pattern['score']
-            })
+            pattern_list.append(Pattern(
+                name=pattern['name'],
+                regex=pattern['regex'],
+                score=pattern['score']
+            ))
 
         # Utwórz rozpoznawacz
         recognizer = PatternRecognizer(
