@@ -20,7 +20,9 @@
 
 **Presidio Local Anonymizer** to narzędzie CLI do automatycznej anonimizacji danych osobowych (PII) w dokumentach biurowych. Wykorzystuje bibliotekę [Microsoft Presidio](https://github.com/microsoft/presidio) i działa całkowicie **offline** - nie wymaga połączenia z internetem ani wysyłania danych do zewnętrznych API.
 
-> 📖 **Szukasz prostej instrukcji?** Zobacz [README_LAIK.md](README_LAIK.md) - instrukcja krok po kroku dla osób nie-technicznych!
+> ⚡ **SZYBKI START:** [PROSTY_START.md](PROSTY_START.md) - jedna komenda, uruchamia natychmiast!
+>
+> 📖 **Instrukcja dla laika:** [README_LAIK.md](README_LAIK.md) - krok po kroku dla osób nie-technicznych
 
 ### Kluczowe funkcje
 
@@ -65,6 +67,8 @@
 
 ## Instalacja
 
+> 💡 **Szukasz najprostszej metody?** Zobacz [PROSTY_START.md](PROSTY_START.md)
+
 ### 🪟 Windows
 
 **Metoda 1: One-liner PowerShell (zalecana)**
@@ -95,9 +99,24 @@ iwr https://raw.githubusercontent.com/gacabartosz/presidio-local-anonymizer/main
 
 ### 🍎 macOS
 
-**One-liner Bash (zalecana)**
+**Metoda 1: Quick Start (NAJŁATWIEJSZA)**
 
-Otwórz Terminal i uruchom:
+Instaluje i uruchamia GUI jedną komendą:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/gacabartosz/presidio-local-anonymizer/main/quick-start.sh)
+```
+
+**Metoda 2: Standalone Installer (zalecana)**
+
+Pobierz i uruchom plik instalacyjny:
+
+```bash
+curl -O https://raw.githubusercontent.com/gacabartosz/presidio-local-anonymizer/main/install-standalone.sh
+bash install-standalone.sh
+```
+
+**Metoda 3: One-liner**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/gacabartosz/presidio-local-anonymizer/main/scripts/install.sh | bash

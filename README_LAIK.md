@@ -6,6 +6,8 @@
 
 # 🔒 PRESIDIO - Ukryj Dane Osobowe (INSTRUKCJA DLA LAIKA)
 
+> ⚡ **CHCESZ OD RAZU URUCHOMIĆ?** Zobacz [PROSTY_START.md](PROSTY_START.md) - jedna komenda i gotowe!
+
 ## 💡 CO TO ROBI?
 
 **Automatycznie ukrywa dane osobowe w dokumentach!**
