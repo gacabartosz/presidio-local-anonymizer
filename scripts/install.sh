@@ -117,6 +117,10 @@ else
         echo_info "Instalowanie python-tk@3.11 (dla GUI)..."
         brew install python-tk@3.11
 
+        # Instaluj poppler dla przetwarzania PDF
+        echo_info "Instalowanie poppler (dla PDF)..."
+        brew install poppler
+
         # Dodaj Python 3.11 do PATH dla bieżącej sesji
         export PATH="/opt/homebrew/opt/python@3.11/bin:$PATH"
 
@@ -182,6 +186,32 @@ if ! command -v tesseract &> /dev/null; then
 else
     TESS_VERSION=$(tesseract --version | head -n1)
     echo_success "Tesseract już zainstalowany: $TESS_VERSION"
+fi
+
+# =============================================================================
+# SEKCJA 4A: INSTALACJA POPPLER (dla PDF)
+# =============================================================================
+
+echo ""
+echo_info "Sprawdzanie poppler (dla przetwarzania PDF)..."
+
+if ! command -v pdftoppm &> /dev/null; then
+    if [[ "$OS_TYPE" == "Darwin" ]]; then
+        echo_warning "Poppler nie znaleziony. Instalowanie..."
+        brew install poppler
+        echo_success "Poppler zainstalowany"
+    else
+        echo_warning "Poppler nie znaleziony. Instalowanie..."
+        if command -v apt-get &> /dev/null; then
+            sudo apt-get install -y poppler-utils
+            echo_success "Poppler zainstalowany"
+        else
+            echo_error "Nie można zainstalować poppler. Zainstaluj ręcznie."
+        fi
+    fi
+else
+    POPPLER_VERSION=$(pdftoppm -v 2>&1 | head -n1)
+    echo_success "Poppler już zainstalowany: $POPPLER_VERSION"
 fi
 
 # =============================================================================
