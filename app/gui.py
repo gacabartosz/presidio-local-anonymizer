@@ -355,9 +355,11 @@ def main():
         from tkinterdnd2 import TkinterDnD
         root = TkinterDnD.Tk()
         logger.info("Uruchomiono z obsługą Drag & Drop")
-    except ImportError:
+    except (ImportError, RuntimeError) as e:
+        # Fallback na standardowy tkinter jeśli tkinterdnd2 nie działa
+        # (np. problem z architekturą na Apple Silicon)
         root = tk.Tk()
-        logger.info("Uruchomiono bez Drag & Drop (zainstaluj tkinterdnd2 dla pełnej funkcjonalności)")
+        logger.info(f"Uruchomiono bez Drag & Drop: {e}")
 
     app = AnonymizerGUI(root)
     root.mainloop()
