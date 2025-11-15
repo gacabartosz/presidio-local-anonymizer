@@ -52,10 +52,11 @@ security_manager = SecurityManager()
 # Security middleware - check API token
 @app.before_request
 def verify_token():
-    """Verify API token for all requests except /health"""
+    """Verify API token for all requests except public endpoints"""
 
-    # Skip token verification for health check
-    if request.path == '/api/health':
+    # Skip token verification for public endpoints
+    public_endpoints = ['/api/health', '/api/token', '/dashboard', '/']
+    if request.path in public_endpoints or request.path.startswith('/static'):
         return None
 
     # Get token from header
