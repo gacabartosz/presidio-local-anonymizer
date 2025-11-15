@@ -16,14 +16,10 @@ spacy==3.7.2
 # Configuration
 PyYAML==6.0.1
 
-# Database
-sqlite3  # Built-in with Python
-
-# Security
-secrets  # Built-in with Python
-
 # Utilities
 python-dotenv==1.0.0
+
+# Note: sqlite3 and secrets are built-in with Python 3.10+
 
 # Testing (optional)
 pytest==7.4.3
