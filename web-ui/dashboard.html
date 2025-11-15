@@ -334,6 +334,18 @@ Telefon: +48 123 456 789"></textarea>
         return;
       }
 
+      // Check if token is loaded
+      if (!apiToken) {
+        addLog('⏳ Token nie załadowany, ładuję...', 'info');
+        await loadToken();
+
+        if (!apiToken) {
+          alert('Nie można załadować tokenu. Sprawdź czy backend działa.');
+          addLog('❌ Nie można załadować tokenu', 'error');
+          return;
+        }
+      }
+
       addLog('Wysyłanie żądania anonimizacji...', 'info');
 
       try {
