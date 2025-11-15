@@ -482,16 +482,10 @@
     // Save settings
     async function saveSettings() {
       try {
-        // Get token first
-        const tokenResponse = await fetch('/api/token');
-        const tokenData = await tokenResponse.json();
-        const token = tokenData.token;
-
         const response = await fetch('/api/config', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'X-Presidio-Token': token
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             entities: currentSettings.map(e => ({

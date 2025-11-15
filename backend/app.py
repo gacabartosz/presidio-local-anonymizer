@@ -21,7 +21,6 @@ sys.path.insert(0, str(backend_dir))
 from api.health import health_bp
 from api.anonymize import anonymize_bp
 from api.config import config_bp
-from storage.security import SecurityManager
 
 # Configure logging
 logging.basicConfig(
@@ -46,42 +45,7 @@ CORS(app, resources={
     }
 })
 
-# Initialize security manager
-security_manager = SecurityManager()
-
-# Security middleware - check API token
-@app.before_request
-def verify_token():
-    """Verify API token for all requests except public endpoints"""
-
-    # Skip token verification for public endpoints
-    public_endpoints = ['/api/health', '/api/token', '/dashboard', '/', '/favicon.ico']
-
-    # Allow GET on /api/config (public), but require token for POST
-    if request.path == '/api/config' and request.method == 'GET':
-        return None
-
-    if request.path in public_endpoints or request.path.startswith('/static'):
-        return None
-
-    # Get token from header
-    token = request.headers.get('X-Presidio-Token')
-
-    if not token:
-        logger.warning(f"Missing token in request to {request.path}")
-        return jsonify({
-            'error': 'Missing authentication token',
-            'message': 'Include X-Presidio-Token header'
-        }), 401
-
-    if not security_manager.verify_token(token):
-        logger.warning(f"Invalid token attempt for {request.path}")
-        return jsonify({
-            'error': 'Invalid authentication token',
-            'message': 'Token is not valid'
-        }), 403
-
-    return None
+# No authentication needed - backend runs only on localhost
 
 # Register blueprints
 app.register_blueprint(health_bp, url_prefix='/api')
@@ -102,13 +66,7 @@ def dashboard():
     from flask import send_from_directory
     return send_from_directory('../web-ui', 'dashboard.html')
 
-# Token endpoint (public - for dashboard)
-@app.route('/api/token', methods=['GET'])
-def get_token():
-    """Get API token (for dashboard use)"""
-    return jsonify({
-        'token': security_manager.get_token()
-    })
+# No token endpoint needed - no authentication required
 
 # Error handlers
 @app.errorhandler(404)
@@ -133,8 +91,9 @@ def main():
     logger.info("=" * 60)
     logger.info("Presidio Browser Anonymizer - Backend Service")
     logger.info("=" * 60)
-    logger.info(f"Security token: {security_manager.get_token()}")
-    logger.info("Extension will auto-load this token automatically")
+    logger.info("🌐 Backend URL: http://127.0.0.1:4222")
+    logger.info("🔧 Settings: http://127.0.0.1:4222")
+    logger.info("📊 Dashboard: http://127.0.0.1:4222/dashboard")
     logger.info("=" * 60)
 
     # Start server

@@ -174,31 +174,6 @@
       color: #f44336;
     }
 
-    .token-info {
-      background: #fff3cd;
-      border: 1px solid #ffc107;
-      padding: 12px;
-      border-radius: 4px;
-      margin-bottom: 20px;
-      font-size: 14px;
-    }
-
-    .token-info code {
-      background: #fff;
-      padding: 4px 8px;
-      border-radius: 3px;
-      font-weight: bold;
-      color: #d32f2f;
-      user-select: all;
-    }
-
-    .copy-btn {
-      background: #4CAF50;
-      padding: 6px 12px;
-      font-size: 12px;
-      margin-left: 8px;
-    }
-
     .entities-list {
       display: flex;
       flex-wrap: wrap;
@@ -222,12 +197,6 @@
       <h1>🔐 Presidio Browser Anonymizer</h1>
       <p class="subtitle">Dashboard monitorowania i testowania</p>
     </header>
-
-    <div class="token-info">
-      ⚠️ <strong>Security Token:</strong> <code id="tokenDisplay">Ładowanie...</code>
-      <button class="copy-btn" onclick="copyToken()">📋 Kopiuj</button>
-      <br><small>Skopiuj ten token do browser extension (popup → API Token → Save)</small>
-    </div>
 
     <div class="status-card">
       <h2>Status Serwisu</h2>
@@ -287,28 +256,6 @@ Telefon: +48 123 456 789"></textarea>
     let requestCount = 0;
     let totalEntities = 0;
     let totalTime = 0;
-    let apiToken = '';
-
-    // Load token
-    async function loadToken() {
-      try {
-        const response = await fetch('/api/token');
-        const data = await response.json();
-        apiToken = data.token;
-        document.getElementById('tokenDisplay').textContent = apiToken;
-        addLog('Token załadowany pomyślnie', 'info');
-      } catch (error) {
-        document.getElementById('tokenDisplay').textContent = 'Błąd ładowania';
-        addLog('Nie można załadować tokenu', 'error');
-      }
-    }
-
-    // Copy token
-    function copyToken() {
-      navigator.clipboard.writeText(apiToken);
-      addLog('Token skopiowany do schowka', 'info');
-      alert('Token skopiowany!');
-    }
 
     // Check health
     async function checkHealth() {
@@ -334,18 +281,6 @@ Telefon: +48 123 456 789"></textarea>
         return;
       }
 
-      // Check if token is loaded
-      if (!apiToken) {
-        addLog('⏳ Token nie załadowany, ładuję...', 'info');
-        await loadToken();
-
-        if (!apiToken) {
-          alert('Nie można załadować tokenu. Sprawdź czy backend działa.');
-          addLog('❌ Nie można załadować tokenu', 'error');
-          return;
-        }
-      }
-
       addLog('Wysyłanie żądania anonimizacji...', 'info');
 
       try {
@@ -354,8 +289,7 @@ Telefon: +48 123 456 789"></textarea>
         const response = await fetch('/api/anonymize', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'X-Presidio-Token': apiToken
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({ text: input })
         });
@@ -420,7 +354,6 @@ ${data.entities_found.map(e => `- ${e.type}: "${e.text}" (pewność: ${(e.score 
     }
 
     // Initialize
-    loadToken();
     checkHealth();
     setInterval(checkHealth, 5000); // Check every 5s
   </script>
