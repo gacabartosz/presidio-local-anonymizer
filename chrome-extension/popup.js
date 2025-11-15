@@ -1,10 +1,12 @@
 // Popup script for Presidio Browser Anonymizer
 
 let currentBackendUrl = '';
+let extensionEnabled = true;
 
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
   await loadBackendUrl();
+  await loadExtensionState();
   await checkBackendStatus();
 
   // Add event listeners for buttons
@@ -12,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('dashboard-btn')?.addEventListener('click', openDashboard);
   document.getElementById('setup-btn')?.addEventListener('click', openSetup);
   document.getElementById('options-btn')?.addEventListener('click', openOptions);
+  document.getElementById('extension-toggle')?.addEventListener('click', toggleExtension);
 
   // Auto-refresh status every 5 seconds
   setInterval(checkBackendStatus, 5000);
@@ -92,6 +95,50 @@ async function checkBackendStatus() {
     // (user might want to manually start backend)
 
     console.error('Backend check failed:', error);
+  }
+}
+
+// Load extension state from storage
+async function loadExtensionState() {
+  try {
+    const result = await chrome.storage.local.get(['extensionEnabled']);
+    extensionEnabled = result.extensionEnabled !== false; // Default to true
+    updateToggleUI();
+  } catch (error) {
+    console.error('Failed to load extension state:', error);
+    extensionEnabled = true;
+    updateToggleUI();
+  }
+}
+
+// Toggle extension on/off
+async function toggleExtension() {
+  extensionEnabled = !extensionEnabled;
+
+  // Save to storage
+  try {
+    await chrome.storage.local.set({ extensionEnabled });
+    updateToggleUI();
+
+    // Notify background script
+    chrome.runtime.sendMessage({
+      action: 'setExtensionState',
+      enabled: extensionEnabled
+    });
+  } catch (error) {
+    console.error('Failed to save extension state:', error);
+  }
+}
+
+// Update toggle button UI
+function updateToggleUI() {
+  const toggle = document.getElementById('extension-toggle');
+  if (toggle) {
+    if (extensionEnabled) {
+      toggle.classList.add('active');
+    } else {
+      toggle.classList.remove('active');
+    }
   }
 }
 

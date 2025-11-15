@@ -1,5 +1,39 @@
 // Content script for Presidio Browser Anonymizer
 
+let extensionEnabled = true;
+
+// Load extension state on initialization
+async function loadExtensionState() {
+  try {
+    const result = await chrome.storage.local.get(['extensionEnabled']);
+    extensionEnabled = result.extensionEnabled !== false; // Default to true
+    console.log('[Presidio] Extension state loaded:', extensionEnabled);
+  } catch (error) {
+    console.error('[Presidio] Failed to load extension state:', error);
+    extensionEnabled = true;
+  }
+}
+
+// Initialize - wait for state to load
+(async () => {
+  await loadExtensionState();
+  console.log('[Presidio] Content script initialized. Auto-anonymization:', extensionEnabled ? 'ENABLED' : 'DISABLED');
+})();
+
+// Listen for storage changes
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (namespace === 'local' && changes.extensionEnabled) {
+    extensionEnabled = changes.extensionEnabled.newValue;
+    console.log('[Presidio] Extension state changed:', extensionEnabled ? 'ENABLED' : 'DISABLED');
+
+    if (extensionEnabled) {
+      showNotification('✅ Auto-anonimizacja WŁĄCZONA', 'success');
+    } else {
+      showNotification('⛔ Auto-anonimizacja WYŁĄCZONA', 'info');
+    }
+  }
+});
+
 // Listen for messages from background script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'replaceSelection') {
@@ -95,6 +129,14 @@ document.addEventListener('keydown', async (e) => {
 
 // Auto-anonymize on paste (Ctrl+V)
 document.addEventListener('paste', async (e) => {
+  // Skip if extension is disabled
+  if (!extensionEnabled) {
+    console.log('[Presidio] Paste event - extension DISABLED, skipping');
+    return;
+  }
+
+  console.log('[Presidio] Paste event detected - extension ENABLED');
+
   // Get pasted text from clipboard
   const pastedText = e.clipboardData.getData('text/plain');
 
@@ -106,12 +148,15 @@ document.addEventListener('paste', async (e) => {
   e.preventDefault();
 
   try {
+    console.log('[Presidio] Sending anonymization request for pasted text...');
     showNotification('Anonimizowanie wklejonego tekstu...', 'info');
 
     const response = await chrome.runtime.sendMessage({
       action: 'anonymize',
       text: pastedText
     });
+
+    console.log('[Presidio] Received response:', response);
 
     if (response.success) {
       // Insert anonymized text at cursor position
@@ -176,12 +221,15 @@ const monitoredTextareas = new WeakSet();
 async function anonymizeBeforeSend(textarea) {
   const text = textarea.value || textarea.textContent || textarea.innerText;
 
+  console.log('[Presidio] anonymizeBeforeSend() called - text length:', text?.length || 0);
+
   if (!text || text.trim().length === 0) {
+    console.log('[Presidio] No text to anonymize, skipping');
     return;
   }
 
   try {
-    console.log('[Presidio] Anonymizing before send...');
+    console.log('[Presidio] Starting anonymization for text:', text.substring(0, 50) + '...');
     showNotification('Anonimizowanie przed wysłaniem...', 'info');
 
     const response = await chrome.runtime.sendMessage({
@@ -219,6 +267,11 @@ async function anonymizeBeforeSend(textarea) {
 
 // Monitor form submissions
 document.addEventListener('submit', async (e) => {
+  // Skip if extension is disabled
+  if (!extensionEnabled) {
+    return;
+  }
+
   console.log('[Presidio] Form submit detected');
 
   // Find textarea/input in the form
@@ -244,6 +297,11 @@ document.addEventListener('submit', async (e) => {
 
 // Monitor button clicks (ChatGPT, Claude, etc.)
 document.addEventListener('click', async (e) => {
+  // Skip if extension is disabled
+  if (!extensionEnabled) {
+    return;
+  }
+
   const button = e.target.closest('button');
 
   if (!button) return;
@@ -292,38 +350,42 @@ document.addEventListener('click', async (e) => {
 
 // Monitor Enter key press (common way to send messages)
 document.addEventListener('keydown', async (e) => {
-  // Enter without Shift (send message in most chat apps)
-  if (e.key === 'Enter' && !e.shiftKey) {
-    const target = e.target;
-
-    // Only process if it's a textarea or contenteditable
-    if (target.tagName === 'TEXTAREA' || target.isContentEditable || target.contentEditable === 'true') {
-      // Check if Enter sends (no Shift) - common in ChatGPT, Claude
-      const parent = target.closest('form');
-
-      if (parent) {
-        console.log('[Presidio] Enter pressed, anonymizing before send...');
-
-        // Prevent default send
-        e.preventDefault();
-        e.stopPropagation();
-
-        // Anonymize content
-        await anonymizeBeforeSend(target);
-
-        // Trigger Enter again after anonymization
-        setTimeout(() => {
-          const enterEvent = new KeyboardEvent('keydown', {
-            key: 'Enter',
-            code: 'Enter',
-            keyCode: 13,
-            which: 13,
-            bubbles: true,
-            cancelable: true
-          });
-          target.dispatchEvent(enterEvent);
-        }, 100);
-      }
-    }
+  // Skip if extension is disabled
+  if (!extensionEnabled) {
+    return;
   }
+
+  // Enter without Shift (send message in most chat apps)
+  // NOTE: This is disabled because it's unreliable for ChatGPT/Claude/Perplexity
+  // Use PASTE (Ctrl+V) or BUTTON CLICK instead - they work much better!
+  //
+  // if (e.key === 'Enter' && !e.shiftKey) {
+  //   console.log('[Presidio] Enter key pressed (no Shift)');
+  //   const target = e.target;
+  //
+  //   // Only process if it's a textarea or contenteditable
+  //   if (target.tagName === 'TEXTAREA' || target.isContentEditable || target.contentEditable === 'true') {
+  //     console.log('[Presidio] Enter pressed in input field, anonymizing before send...');
+  //
+  //     // Prevent default send
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //
+  //     // Anonymize content
+  //     await anonymizeBeforeSend(target);
+  //
+  //     // Trigger Enter again after anonymization
+  //     setTimeout(() => {
+  //       const enterEvent = new KeyboardEvent('keydown', {
+  //         key: 'Enter',
+  //         code: 'Enter',
+  //         keyCode: 13,
+  //         which: 13,
+  //         bubbles: true,
+  //         cancelable: true
+  //       });
+  //       target.dispatchEvent(enterEvent);
+  //     }, 100);
+  //   }
+  // }
 }, true);

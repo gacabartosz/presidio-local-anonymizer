@@ -368,6 +368,122 @@
       transform: translateX(24px);
     }
 
+    /* Logs Styling */
+    .log-entry {
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.2s;
+    }
+
+    .log-entry:hover {
+      border-color: #2563eb;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+    }
+
+    .log-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .log-time {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .log-badge {
+      padding: 4px 12px;
+      background: #dbeafe;
+      color: #1e40af;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .log-time-ms {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-left: auto;
+    }
+
+    .log-content {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .log-section {
+      min-width: 0;
+    }
+
+    .log-label {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .log-text {
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      font-size: 14px;
+      line-height: 1.6;
+      word-wrap: break-word;
+    }
+
+    .log-text.original {
+      color: #dc2626;
+      border-left: 4px solid #dc2626;
+    }
+
+    .log-text.anonymized {
+      color: #059669;
+      border-left: 4px solid #059669;
+    }
+
+    .log-arrow {
+      font-size: 24px;
+      color: #9ca3af;
+      align-self: center;
+    }
+
+    .log-entities {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .entity-tag {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .entity-tag code {
+      background: rgba(146, 64, 14, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
     /* Stats grid for dashboard */
     .stats-grid {
       display: grid;
@@ -483,6 +599,12 @@
         </svg>
         <span>Ustawienia</span>
       </div>
+      <div class="nav-item" data-section="logs">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <span>Logi</span>
+      </div>
       <div class="nav-item" data-section="setup">
         <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
@@ -594,6 +716,26 @@
           <li>Uruchom skrypt instalacyjny dla swojego systemu</li>
           <li>Backend zostanie automatycznie skonfigurowany</li>
         </ol>
+      </div>
+    </section>
+
+    <!-- LOGS SECTION -->
+    <section id="logs" class="section">
+      <div class="page-header">
+        <h1>Logi Anonimizacji</h1>
+        <p>Historia anonimizowanych tekstów - co było, co zostało zanonimizowane.</p>
+      </div>
+
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+          <h2>Historia Operacji</h2>
+          <button onclick="clearLogs()" class="btn btn-secondary" style="padding: 8px 16px; font-size: 14px;">
+            🗑️ Wyczyść Logi
+          </button>
+        </div>
+        <div id="logs-container">
+          <p style="text-align: center; color: #6b7280; padding: 40px;">Ładowanie logów...</p>
+        </div>
       </div>
     </section>
   </main>
@@ -846,6 +988,7 @@
       // Load section data
       if (sectionId === 'settings') loadSettings();
       if (sectionId === 'setup') checkSetup();
+      if (sectionId === 'logs') loadLogs();
     }
 
     // Dashboard functions
@@ -1250,6 +1393,86 @@
       } catch (err) {
         document.getElementById('setup-checks').innerHTML = '<p>Błąd sprawdzania systemu</p>';
       }
+    }
+
+    // Load logs
+    async function loadLogs() {
+      const container = document.getElementById('logs-container');
+
+      try {
+        const res = await fetch(`${API_BASE}/logs?limit=50`);
+        const data = await res.json();
+
+        if (data.logs && data.logs.length > 0) {
+          let html = '';
+          data.logs.forEach(log => {
+            const date = new Date(log.timestamp);
+            const timeStr = date.toLocaleString('pl-PL');
+
+            html += `
+              <div class="log-entry">
+                <div class="log-header">
+                  <span class="log-time">${timeStr}</span>
+                  <span class="log-badge">${log.entities_count} ${log.entities_count === 1 ? 'encja' : 'encji'}</span>
+                  <span class="log-time-ms">${log.processing_time_ms}ms</span>
+                </div>
+                <div class="log-content">
+                  <div class="log-section">
+                    <div class="log-label">Tekst oryginalny:</div>
+                    <div class="log-text original">${escapeHtml(log.original_text)}</div>
+                  </div>
+                  <div class="log-arrow">→</div>
+                  <div class="log-section">
+                    <div class="log-label">Zanonimizowany:</div>
+                    <div class="log-text anonymized">${escapeHtml(log.anonymized_text)}</div>
+                  </div>
+                </div>
+                ${log.entities_found && log.entities_found.length > 0 ? `
+                  <div class="log-entities">
+                    ${log.entities_found.map(e => `<span class="entity-tag">${e.type}: <code>${escapeHtml(e.text)}</code></span>`).join(' ')}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          });
+
+          container.innerHTML = `
+            <div style="margin-bottom: 16px; color: #6b7280; font-size: 14px;">
+              Wyświetlam ${data.logs.length} z ${data.total} logów
+            </div>
+            ${html}
+          `;
+        } else {
+          container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">Brak logów do wyświetlenia</p>';
+        }
+      } catch (err) {
+        console.error('Failed to load logs:', err);
+        container.innerHTML = '<p style="text-align: center; color: #dc2626; padding: 40px;">Błąd ładowania logów</p>';
+      }
+    }
+
+    // Clear logs
+    async function clearLogs() {
+      if (!confirm('Czy na pewno chcesz wyczyścić wszystkie logi?')) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/logs/clear`, { method: 'POST' });
+        if (res.ok) {
+          loadLogs();
+        }
+      } catch (err) {
+        console.error('Failed to clear logs:', err);
+        alert('Błąd czyszczenia logów');
+      }
+    }
+
+    // Escape HTML
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
 
     // Check health

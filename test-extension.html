@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Presidio Extension</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f9fafb;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #1f2937;
+            margin-top: 0;
+        }
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        .instructions {
+            background: #eff6ff;
+            border: 2px solid #2563eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #1e40af;
+        }
+        .instructions ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin: 8px 0;
+            color: #1e40af;
+        }
+        .test-data {
+            background: #f3f4f6;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🧪 Test Presidio Extension - Auto-Anonymization</h1>
+
+        <div class="instructions">
+            <h3>Jak przetestować rozszerzenie:</h3>
+            <ol>
+                <li>Upewnij się, że rozszerzenie jest <strong>włączone</strong> (zielony przycisk w popup)</li>
+                <li>Otwórz <strong>DevTools</strong> (F12) i przejdź do zakładki <strong>Console</strong></li>
+                <li>Skopiuj poniższy tekst testowy (Ctrl+C)</li>
+                <li>Wklej go w pole tekstowe poniżej (Ctrl+V)</li>
+                <li>Sprawdź w konsoli czy pojawiły się logi:<br>
+                    <code>[Presidio] Paste event detected - extension ENABLED</code><br>
+                    <code>[Presidio] Sending anonymization request...</code><br>
+                    <code>[Presidio] Received response: ...</code>
+                </li>
+                <li>Tekst powinien zostać automatycznie zanonimizowany przed wklejeniem</li>
+            </ol>
+        </div>
+
+        <div class="test-data">
+            <strong>Tekst testowy (skopiuj to):</strong><br>
+            Jan Kowalski, email: jan.kowalski@example.com, tel: 123-456-789, PESEL: 92010212345
+        </div>
+
+        <h3>Pole do testowania (Ctrl+V tutaj):</h3>
+        <textarea id="test-textarea" placeholder="Wklej tutaj tekst testowy używając Ctrl+V..."></textarea>
+
+        <h3>Contenteditable (test dla ChatGPT):</h3>
+        <div contenteditable="true" id="test-contenteditable" style="min-height: 100px; border: 2px solid #e5e7eb; border-radius: 8px; padding: 12px; background: white;">
+            Wklej tutaj tekst testowy używając Ctrl+V...
+        </div>
+
+        <button onclick="showConsoleInstructions()">📋 Jak otworzyć konsolę DevTools?</button>
+    </div>
+
+    <div class="card">
+        <h2>🔍 Debugging - Sprawdź background script</h2>
+        <div class="instructions">
+            <h3>Jak sprawdzić logi background script:</h3>
+            <ol>
+                <li>Otwórz <code>chrome://extensions/</code></li>
+                <li>Znajdź "Presidio Browser Anonymizer"</li>
+                <li>Kliknij <strong>"Inspect views: service worker"</strong></li>
+                <li>W konsoli powinny pojawić się logi:<br>
+                    <code>[Presidio Background] Backend URL: http://localhost:4222</code><br>
+                    <code>[Presidio Background] Sending request to: ...</code><br>
+                    <code>[Presidio Background] Response status: 200</code>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function showConsoleInstructions() {
+            alert(`Jak otworzyć konsolę DevTools:\n\n1. Naciśnij F12 (lub Cmd+Option+I na Mac)\n2. Przejdź do zakładki "Console"\n3. Wklej tekst w pole powyżej używając Ctrl+V\n4. Obserwuj logi w konsoli\n\nJeśli nie widzisz logów [Presidio], rozszerzenie może nie działać poprawnie.`);
+        }
+
+        // Log page load
+        console.log('%c🧪 Presidio Test Page Loaded', 'color: #2563eb; font-weight: bold; font-size: 14px');
+        console.log('%cOtwórz popup rozszerzenia i upewnij się, że toggle jest WŁĄCZONY', 'color: #059669; font-size: 12px');
+        console.log('%cNastępnie wklej tekst testowy w pole powyżej i obserwuj logi', 'color: #059669; font-size: 12px');
+    </script>
+</body>
+</html>
