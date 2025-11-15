@@ -46,6 +46,18 @@ Copy this token to browser extension settings
 
 **✅ Skopiuj token!** Będzie potrzebny w kroku 3.
 
+**💡 ALTERNATYWNIE:** Otwórz **Web Dashboard** w przeglądarce:
+```
+http://127.0.0.1:4222/dashboard
+```
+
+Dashboard pokazuje:
+- ✅ Status serwisu (online/offline)
+- 🔑 Security Token (auto-kopiowanie)
+- 🧪 Test anonimizacji (bez extension)
+- 📊 Statystyki (liczba żądań, wykryte dane)
+- 📋 Logi aktywności w czasie rzeczywistym
+
 ---
 
 ### KROK 2: Załaduj extension w Chrome
