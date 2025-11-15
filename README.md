@@ -16,7 +16,7 @@ Automatically anonymize personal data before sending it to AI chatbots. Works lo
 - ✅ **Zero configuration** - install and it works (auto-connect to backend)
 - ✅ **100% offline** - everything runs locally, no data leaves your machine
 - ✅ **Microsoft Presidio** - professional PII detection engine
-- ✅ **Polish data support** - PESEL, NIP, REGON
+- ✅ **Polish data support** - PESEL, NIP
 - ✅ **Web Dashboard** - real-time monitoring and testing
 - ✅ **Multi-platform** - ChatGPT, Claude AI, Perplexity
 

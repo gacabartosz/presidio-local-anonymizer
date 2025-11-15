@@ -134,7 +134,7 @@ def main():
     logger.info("Presidio Browser Anonymizer - Backend Service")
     logger.info("=" * 60)
     logger.info(f"Security token: {security_manager.get_token()}")
-    logger.info("Copy this token to browser extension settings")
+    logger.info("Extension will auto-load this token automatically")
     logger.info("=" * 60)
 
     # Start server

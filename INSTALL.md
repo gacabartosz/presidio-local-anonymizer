@@ -67,7 +67,7 @@ python app.py
 Presidio Browser Anonymizer - Backend Service
 ============================================================
 Security token: dmROn8AMOxGC0HWAu7HYgKGFgMZoOYRGy7EVYxL7_OM
-Copy this token to browser extension settings
+Extension will auto-load this token automatically
 ============================================================
  * Running on http://127.0.0.1:4222
 ```
