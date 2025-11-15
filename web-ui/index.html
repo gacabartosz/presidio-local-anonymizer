@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Presidio Browser Anonymizer - Settings</title>
+  <title>Presidio Anonymizer - Settings</title>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <style>
     * {
@@ -13,104 +13,202 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      background: #f5f7fa;
       min-height: 100vh;
-      padding: 40px 20px;
+      display: flex;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .header {
-      text-align: center;
-      color: white;
-      margin-bottom: 40px;
-    }
-
-    .header h1 {
-      font-size: 42px;
-      margin-bottom: 12px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .header .subtitle {
-      font-size: 18px;
-      opacity: 0.9;
-    }
-
-    .card {
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
       background: white;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-      padding: 32px;
-      margin-bottom: 24px;
+      border-right: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
     }
 
-    .card h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      color: #333;
+    .logo-container {
       display: flex;
       align-items: center;
       gap: 12px;
+      padding: 8px 12px;
+      margin-bottom: 32px;
     }
 
-    .status-indicator {
-      display: inline-flex;
+    .logo {
+      width: 40px;
+      height: 40px;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      background: #f0f0f0;
-      border-radius: 20px;
-      font-size: 14px;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: #6b7280;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar-footer {
+      border-top: 1px solid #e5e7eb;
+      padding-top: 16px;
+      margin-top: 16px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .sidebar-footer a {
+      color: #667eea;
+      text-decoration: none;
       font-weight: 500;
     }
 
-    .status-indicator.online {
-      background: #e8f5e9;
-      color: #2e7d32;
+    .sidebar-footer a:hover {
+      text-decoration: underline;
     }
 
-    .status-indicator .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ccc;
+    /* Main Content */
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      padding: 32px;
     }
 
-    .status-indicator.online .dot {
-      background: #4caf50;
-      animation: pulse 2s infinite;
+    /* Header */
+    .page-header {
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+    .page-title h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
     }
 
+    .page-subtitle {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    /* Language Toggle */
+    .lang-toggle {
+      display: flex;
+      gap: 8px;
+      background: white;
+      padding: 4px;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .lang-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #6b7280;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 24px;
+      margin-bottom: 24px;
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .card-description {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    /* Entity Grid */
     .entity-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 16px;
-      margin-top: 20px;
     }
 
     .entity-item {
-      background: #f8f9fa;
+      background: #f9fafb;
       border-radius: 12px;
       padding: 20px;
       border: 2px solid transparent;
       transition: all 0.3s;
       cursor: pointer;
+      position: relative;
     }
 
     .entity-item:hover {
       border-color: #667eea;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
     }
 
     .entity-item.active {
@@ -135,10 +233,11 @@
       position: relative;
       width: 48px;
       height: 24px;
-      background: #ccc;
+      background: #d1d5db;
       border-radius: 12px;
       transition: 0.3s;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .entity-item.active .entity-toggle {
@@ -155,6 +254,7 @@
       background: white;
       border-radius: 50%;
       transition: 0.3s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
     .entity-item.active .entity-toggle::before {
@@ -169,7 +269,7 @@
 
     .entity-example {
       font-size: 12px;
-      font-family: 'Courier New', monospace;
+      font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
       background: rgba(0,0,0,0.05);
       padding: 6px 10px;
       border-radius: 6px;
@@ -180,6 +280,7 @@
       background: rgba(255, 255, 255, 0.2);
     }
 
+    /* Actions */
     .actions {
       display: flex;
       gap: 12px;
@@ -189,12 +290,16 @@
     .btn {
       padding: 12px 24px;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
+      border-radius: 10px;
+      font-size: 15px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
       flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .btn-primary {
@@ -204,66 +309,23 @@
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
     }
 
     .btn-secondary {
-      background: #f0f0f0;
-      color: #333;
+      background: #f3f4f6;
+      color: #374151;
     }
 
     .btn-secondary:hover {
-      background: #e0e0e0;
+      background: #e5e7eb;
     }
 
-    .quick-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-    }
-
-    .quick-link {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px;
-      background: #f8f9fa;
-      border-radius: 12px;
-      text-decoration: none;
-      color: #333;
-      transition: all 0.3s;
-    }
-
-    .quick-link:hover {
-      background: #667eea;
-      color: white;
-      transform: translateY(-2px);
-    }
-
-    .quick-link .icon {
-      font-size: 24px;
-    }
-
-    .footer {
-      text-align: center;
-      color: white;
-      margin-top: 40px;
-      padding: 20px;
-      opacity: 0.9;
-    }
-
-    .footer a {
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-      border-bottom: 2px solid rgba(255,255,255,0.3);
-      transition: 0.3s;
-    }
-
-    .footer a:hover {
-      border-bottom-color: white;
-    }
-
+    /* Notification */
     .notification {
       position: fixed;
       top: 20px;
@@ -271,10 +333,12 @@
       background: white;
       padding: 16px 24px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       display: none;
       animation: slideIn 0.3s;
       z-index: 1000;
+      font-size: 14px;
+      font-weight: 500;
     }
 
     .notification.show {
@@ -291,53 +355,118 @@
         opacity: 1;
       }
     }
+
+    /* Status Indicator */
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status-indicator.online {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-indicator.offline {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .entity-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>🔐 Presidio Browser Anonymizer</h1>
-      <p class="subtitle">Real-time PII protection for AI chatbots</p>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-container">
+      <img src="/logo.svg" alt="Presidio Logo" class="logo">
+      <span class="logo-text">Presidio</span>
     </div>
 
-    <div class="card">
-      <h2>
-        <span>Service Status</span>
-        <span class="status-indicator" id="statusIndicator">
-          <span class="dot"></span>
-          <span id="statusText">Checking...</span>
-        </span>
-      </h2>
+    <nav class="nav-menu">
+      <a href="/dashboard" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a href="/" class="nav-item active">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Ustawienia</span>
+      </a>
+    </nav>
 
-      <div class="quick-links">
-        <a href="/dashboard" class="quick-link">
-          <span class="icon">📊</span>
-          <div>
-            <div style="font-weight: 600;">Dashboard</div>
-            <div style="font-size: 12px; opacity: 0.7;">Monitor & test</div>
-          </div>
-        </a>
-        <a href="https://github.com/gacabartosz/presidio-local-anonymizer" target="_blank" class="quick-link">
-          <span class="icon">📚</span>
-          <div>
-            <div style="font-weight: 600;">Documentation</div>
-            <div style="font-size: 12px; opacity: 0.7;">GitHub repo</div>
-          </div>
-        </a>
-        <a href="https://bartoszgaca.pl" target="_blank" class="quick-link">
-          <span class="icon">👨‍💻</span>
-          <div>
-            <div style="font-weight: 600;">Author</div>
-            <div style="font-size: 12px; opacity: 0.7;">Bartosz Gaca</div>
-          </div>
-        </a>
+    <div class="sidebar-footer">
+      <div style="margin-bottom: 8px;">
+        <strong>Wersja:</strong> 1.0.0
+      </div>
+      <div>
+        Stworzone przez<br>
+        <a href="https://bartoszgaca.pl" target="_blank">bartoszgaca.pl</a> &<br>
+        <a href="https://claude.ai/claude-code" target="_blank">Claude Code</a>
       </div>
     </div>
+  </aside>
 
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="page-header">
+      <div class="page-title">
+        <h1 class="title-text">Ustawienia</h1>
+        <p class="page-subtitle subtitle-text">Konfiguracja typów danych osobowych do anonimizacji.</p>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="pl">🇵🇱 PL</button>
+        <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+      </div>
+    </header>
+
+    <!-- Status Card -->
     <div class="card">
-      <h2>⚙️ Anonymization Settings</h2>
-      <p style="color: #666; margin-bottom: 20px;">
-        Choose which types of personal data to anonymize. Click on each card to enable/disable.
+      <h2 class="card-title status-title">Status Serwisu</h2>
+      <span class="status-indicator online" id="statusIndicator">
+        <span class="status-dot"></span>
+        <span class="status-text">Online</span>
+      </span>
+    </div>
+
+    <!-- Settings Card -->
+    <div class="card">
+      <h2 class="card-title settings-title">⚙️ Ustawienia Anonimizacji</h2>
+      <p class="card-description settings-desc">
+        Wybierz typy danych osobowych, które mają być anonimizowane. Kliknij na kartę aby włączyć/wyłączyć.
       </p>
 
       <div class="entity-grid" id="entityGrid">
@@ -345,21 +474,63 @@
       </div>
 
       <div class="actions">
-        <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
-        <button class="btn btn-secondary" onclick="resetSettings()">🔄 Reset to Default</button>
+        <button class="btn btn-primary" onclick="saveSettings()">
+          <span>💾</span>
+          <span class="btn-save-text">Zapisz Ustawienia</span>
+        </button>
+        <button class="btn btn-secondary" onclick="resetSettings()">
+          <span>🔄</span>
+          <span class="btn-reset-text">Resetuj do Domyślnych</span>
+        </button>
       </div>
     </div>
-  </div>
-
-  <div class="footer">
-    Created by <a href="https://bartoszgaca.pl" target="_blank">bartoszgaca.pl</a> & <a href="https://claude.ai" target="_blank">Claude Code</a>
-  </div>
+  </main>
 
   <div class="notification" id="notification">
-    <strong>✅ Settings saved!</strong>
+    <strong>✅ Ustawienia zapisane!</strong>
   </div>
 
   <script>
+    // Translations
+    const translations = {
+      pl: {
+        settings: {
+          title: 'Ustawienia',
+          subtitle: 'Konfiguracja typów danych osobowych do anonimizacji.',
+          statusTitle: 'Status Serwisu',
+          settingsTitle: '⚙️ Ustawienia Anonimizacji',
+          settingsDesc: 'Wybierz typy danych osobowych, które mają być anonimizowane. Kliknij na kartę aby włączyć/wyłączyć.',
+          btnSave: 'Zapisz Ustawienia',
+          btnReset: 'Resetuj do Domyślnych',
+          statusOnline: 'Online',
+          statusOffline: 'Offline',
+          navDashboard: 'Dashboard',
+          navSettings: 'Ustawienia',
+          notificationSaved: '✅ Ustawienia zapisane pomyślnie!',
+          notificationReset: '🔄 Ustawienia przywrócone do domyślnych',
+          notificationError: '❌ Błąd podczas zapisywania ustawień'
+        }
+      },
+      en: {
+        settings: {
+          title: 'Settings',
+          subtitle: 'Configuration of personal data types to anonymize.',
+          statusTitle: 'Service Status',
+          settingsTitle: '⚙️ Anonymization Settings',
+          settingsDesc: 'Choose which types of personal data to anonymize. Click on each card to enable/disable.',
+          btnSave: 'Save Settings',
+          btnReset: 'Reset to Default',
+          statusOnline: 'Online',
+          statusOffline: 'Offline',
+          navDashboard: 'Dashboard',
+          navSettings: 'Settings',
+          notificationSaved: '✅ Settings saved successfully!',
+          notificationReset: '🔄 Settings reset to default',
+          notificationError: '❌ Error saving settings'
+        }
+      }
+    };
+
     const entities = [
       {
         name: 'EMAIL_ADDRESS',
@@ -380,6 +551,20 @@
         displayName: 'NIP',
         description: 'Polish tax ID',
         example: '123-456-78-90 → [NIP]',
+        enabled: true
+      },
+      {
+        name: 'PL_PASSPORT',
+        displayName: 'Polish Passport',
+        description: 'Polish passport number',
+        example: 'AB1234567 → [PASZPORT_PL]',
+        enabled: true
+      },
+      {
+        name: 'PL_ID_CARD',
+        displayName: 'Polish ID Card',
+        description: 'Polish ID card number',
+        example: 'ABC123456 → [DOWOD_PL]',
         enabled: true
       },
       {
@@ -418,22 +603,71 @@
         enabled: true
       },
       {
-        name: 'PERSON',
-        displayName: 'Person Name',
-        description: 'Names of people',
-        example: 'Jan Kowalski → [IMIE]',
-        enabled: false
-      },
-      {
         name: 'CREDIT_CARD',
         displayName: 'Credit Card',
         description: 'Credit card numbers',
         example: '4111-1111-1111-1111 → [KARTA]',
         enabled: true
+      },
+      {
+        name: 'IBAN_CODE',
+        displayName: 'IBAN',
+        description: 'IBAN bank account numbers',
+        example: 'PL61109010140000071219812874 → [IBAN]',
+        enabled: true
+      },
+      {
+        name: 'PERSON',
+        displayName: 'Person Name',
+        description: 'Names of people',
+        example: 'Jan Kowalski → [OSOBA]',
+        enabled: false
+      },
+      {
+        name: 'US_SSN',
+        displayName: 'US SSN',
+        description: 'US Social Security Number',
+        example: '123-45-6789 → [SSN]',
+        enabled: false
+      },
+      {
+        name: 'CRYPTO',
+        displayName: 'Cryptocurrency',
+        description: 'Crypto wallet addresses',
+        example: '1A1zP1...DivfNa → [CRYPTO]',
+        enabled: false
       }
     ];
 
+    let currentLang = 'pl';
     let currentSettings = [...entities];
+
+    // Language Toggle
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentLang = btn.dataset.lang;
+        updateTranslations();
+      });
+    });
+
+    function updateTranslations() {
+      const t = translations[currentLang].settings;
+
+      document.querySelector('.title-text').textContent = t.title;
+      document.querySelector('.subtitle-text').textContent = t.subtitle;
+      document.querySelector('.status-title').textContent = t.statusTitle;
+      document.querySelector('.settings-title').textContent = t.settingsTitle;
+      document.querySelector('.settings-desc').textContent = t.settingsDesc;
+      document.querySelector('.btn-save-text').textContent = t.btnSave;
+      document.querySelector('.btn-reset-text').textContent = t.btnReset;
+      document.querySelector('.status-text').textContent = t.statusOnline;
+
+      // Update nav labels
+      document.querySelectorAll('.nav-label')[0].textContent = t.navDashboard;
+      document.querySelectorAll('.nav-label')[1].textContent = t.navSettings;
+    }
 
     // Load settings from backend
     async function loadSettings() {
@@ -481,6 +715,7 @@
 
     // Save settings
     async function saveSettings() {
+      const t = translations[currentLang].settings;
       try {
         const response = await fetch('/api/config', {
           method: 'POST',
@@ -496,20 +731,21 @@
         });
 
         if (response.ok) {
-          showNotification('✅ Settings saved successfully!');
+          showNotification(t.notificationSaved);
         } else {
-          showNotification('❌ Failed to save settings');
+          showNotification(t.notificationError);
         }
       } catch (error) {
-        showNotification('❌ Error: ' + error.message);
+        showNotification(t.notificationError);
       }
     }
 
     // Reset settings
     function resetSettings() {
-      currentSettings = entities.map(e => ({ ...e, enabled: true }));
+      const t = translations[currentLang].settings;
+      currentSettings = entities.map(e => ({ ...e }));
       renderEntities();
-      showNotification('🔄 Settings reset to default');
+      showNotification(t.notificationReset);
     }
 
     // Show notification
@@ -527,13 +763,24 @@
       try {
         const response = await fetch('/api/health');
         const data = await response.json();
+        const indicator = document.getElementById('statusIndicator');
+        const statusText = document.querySelector('.status-text');
+        const t = translations[currentLang].settings;
 
         if (data.status === 'healthy') {
-          document.getElementById('statusIndicator').classList.add('online');
-          document.getElementById('statusText').textContent = 'Online';
+          indicator.className = 'status-indicator online';
+          statusText.textContent = t.statusOnline;
+        } else {
+          indicator.className = 'status-indicator offline';
+          statusText.textContent = t.statusOffline;
         }
       } catch (error) {
-        document.getElementById('statusText').textContent = 'Offline';
+        const indicator = document.getElementById('statusIndicator');
+        const statusText = document.querySelector('.status-text');
+        const t = translations[currentLang].settings;
+
+        indicator.className = 'status-indicator offline';
+        statusText.textContent = t.statusOffline;
       }
     }
 

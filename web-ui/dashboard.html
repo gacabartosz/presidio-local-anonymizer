@@ -13,168 +13,389 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #f5f5f5;
-      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+      display: flex;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: white;
+      border-right: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
     }
 
-    header {
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: #6b7280;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar-footer {
+      border-top: 1px solid #e5e7eb;
+      padding-top: 16px;
+      margin-top: 16px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .sidebar-footer a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .sidebar-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      padding: 32px;
+    }
+
+    /* Header */
+    .page-header {
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .page-title h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    /* Language Toggle */
+    .lang-toggle {
+      display: flex;
+      gap: 8px;
+      background: white;
+      padding: 4px;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .lang-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #6b7280;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 24px;
+      margin-bottom: 24px;
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 20px;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-card {
       background: white;
       padding: 24px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      color: #666;
-      font-size: 14px;
-    }
-
-    .status-card {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
       gap: 16px;
+      transition: all 0.3s;
     }
 
-    .stat {
-      padding: 16px;
-      background: #f8f9fa;
-      border-radius: 6px;
-      text-align: center;
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    }
+
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.blue {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .stat-icon.green {
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+      color: white;
+    }
+
+    .stat-icon.orange {
+      background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+      color: white;
+    }
+
+    .stat-icon.purple {
+      background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
+      color: white;
+    }
+
+    .stat-content {
+      flex: 1;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
     }
 
     .stat-value {
       font-size: 32px;
-      font-weight: bold;
-      color: #2196F3;
+      font-weight: 700;
+      color: #111827;
     }
 
-    .stat-label {
-      font-size: 12px;
-      color: #666;
-      margin-top: 4px;
-      text-transform: uppercase;
+    /* Test Section */
+    .test-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
     }
 
-    .online {
-      color: #4CAF50;
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    .test-section {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-
-    .test-section h2 {
-      font-size: 18px;
-      margin-bottom: 16px;
+    .input-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
     }
 
     textarea {
       width: 100%;
-      min-height: 100px;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    button {
-      background: #2196F3;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    button:hover {
-      background: #1976D2;
-    }
-
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
-    .result {
-      margin-top: 16px;
-      padding: 12px;
-      background: #f8f9fa;
-      border-radius: 4px;
-      border-left: 4px solid #2196F3;
-      font-family: monospace;
+      min-height: 200px;
+      padding: 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
       font-size: 13px;
+      color: #111827;
+      resize: vertical;
+      transition: all 0.2s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .output-box {
+      width: 100%;
+      min-height: 200px;
+      padding: 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+      color: #111827;
+      background: #f9fafb;
       white-space: pre-wrap;
-      display: none;
-    }
-
-    .result.show {
-      display: block;
-    }
-
-    .logs-section {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .logs {
-      background: #1e1e1e;
-      color: #d4d4d4;
-      padding: 16px;
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-      max-height: 400px;
+      word-wrap: break-word;
       overflow-y: auto;
     }
 
-    .log-entry {
-      margin-bottom: 4px;
-      padding: 4px;
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
     }
 
-    .log-entry.info {
-      color: #4CAF50;
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .log-entry.warning {
-      color: #FF9800;
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
     }
 
-    .log-entry.error {
-      color: #f44336;
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
     }
 
-    .entities-list {
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Stats Details */
+    .stats-details {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f9fafb;
+      border-radius: 12px;
+      border-left: 4px solid #667eea;
+      display: none;
+    }
+
+    .stats-details.show {
+      display: block;
+    }
+
+    .stats-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .stats-item:last-child {
+      border-bottom: none;
+    }
+
+    .stats-item-label {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .stats-item-value {
+      font-size: 13px;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    /* Entity Badges */
+    .entity-badges {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -182,80 +403,338 @@
     }
 
     .entity-badge {
-      background: #e3f2fd;
-      color: #1976d2;
-      padding: 4px 12px;
-      border-radius: 12px;
+      padding: 6px 12px;
+      border-radius: 8px;
       font-size: 12px;
       font-weight: 500;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      color: #667eea;
+    }
+
+    /* Logs */
+    .logs-container {
+      background: #1f2937;
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+      font-size: 12px;
+      margin-top: 16px;
+    }
+
+    .log-entry {
+      padding: 6px 0;
+      color: #d1d5db;
+    }
+
+    .log-entry.info {
+      color: #34d399;
+    }
+
+    .log-entry.warning {
+      color: #fbbf24;
+    }
+
+    .log-entry.error {
+      color: #f87171;
+    }
+
+    .log-timestamp {
+      color: #9ca3af;
+      margin-right: 8px;
+    }
+
+    /* Status Indicator */
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status-indicator.online {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-indicator.offline {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .test-container {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🔐 Presidio Browser Anonymizer</h1>
-      <p class="subtitle">Dashboard monitorowania i testowania</p>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-container">
+      <img src="/logo.svg" alt="Presidio Logo" class="logo">
+      <span class="logo-text">Presidio</span>
+    </div>
+
+    <nav class="nav-menu">
+      <a href="/dashboard" class="nav-item active">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a href="/" class="nav-item">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Ustawienia</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div style="margin-bottom: 8px;">
+        <strong>Wersja:</strong> 1.0.0
+      </div>
+      <div>
+        Stworzone przez<br>
+        <a href="https://bartoszgaca.pl" target="_blank">bartoszgaca.pl</a> &<br>
+        <a href="https://claude.ai/claude-code" target="_blank">Claude Code</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="page-header">
+      <div class="page-title">
+        <h1 class="title-text">Dashboard</h1>
+        <p class="page-subtitle subtitle-text">Monitorowanie i testowanie usługi anonimizacji w czasie rzeczywistym.</p>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="pl">🇵🇱 PL</button>
+        <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+      </div>
     </header>
 
-    <div class="status-card">
-      <h2>Status Serwisu</h2>
-      <div class="status-grid">
-        <div class="stat">
-          <div class="stat-value online" id="statusValue">●</div>
-          <div class="stat-label">Status</div>
+    <!-- Status Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon blue">
+          <span>🟢</span>
         </div>
-        <div class="stat">
+        <div class="stat-content">
+          <div class="stat-label stat-status-label">Status</div>
+          <div class="stat-value" id="statusValue">
+            <span class="status-indicator online" id="statusIndicator">
+              <span class="status-dot"></span>
+              <span class="status-text">Online</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon green">
+          <span>📨</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-label stat-requests-label">Liczba Żądań</div>
           <div class="stat-value" id="requestCount">0</div>
-          <div class="stat-label">Żądania</div>
         </div>
-        <div class="stat">
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon orange">
+          <span>🔍</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-label stat-entities-label">Znalezione Encje</div>
           <div class="stat-value" id="entitiesFound">0</div>
-          <div class="stat-label">Wykryte dane</div>
         </div>
-        <div class="stat">
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon purple">
+          <span>⚡</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-label stat-avgtime-label">Śr. Czas Przetwarzania</div>
           <div class="stat-value" id="avgTime">0ms</div>
-          <div class="stat-label">Śr. czas</div>
         </div>
       </div>
+    </div>
 
-      <div class="entities-list">
-        <div class="entity-badge">EMAIL_ADDRESS</div>
-        <div class="entity-badge">PL_PESEL</div>
-        <div class="entity-badge">PL_NIP</div>
-        <div class="entity-badge">PHONE_NUMBER</div>
-        <div class="entity-badge">URL</div>
-        <div class="entity-badge">IP_ADDRESS</div>
-        <div class="entity-badge">DATE_TIME</div>
-        <div class="entity-badge">LOCATION</div>
+    <!-- Test Anonymization -->
+    <div class="card">
+      <h2 class="card-title test-title">🧪 Test Anonimizacji</h2>
+      <div class="test-container">
+        <div class="input-group">
+          <label class="input-label input-label-text">Tekst wejściowy</label>
+          <textarea id="testInput" class="test-input-placeholder" placeholder="Wpisz tekst z danymi osobowymi, np:&#10;&#10;Cześć, jestem Jan Kowalski&#10;Email: jan.kowalski@example.com&#10;PESEL: 92010212345&#10;Telefon: +48 123 456 789"></textarea>
+        </div>
+        <div class="input-group">
+          <label class="input-label output-label-text">Zanonimizowany tekst</label>
+          <div id="testOutput" class="output-box output-placeholder-text">Wyniki pojawią się tutaj...</div>
+        </div>
+      </div>
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="testAnonymize()">
+          <span>🚀</span>
+          <span class="btn-test-text">Testuj Anonimizację</span>
+        </button>
+        <button class="btn btn-secondary" onclick="clearTest()">
+          <span>🗑️</span>
+          <span class="btn-clear-text">Wyczyść</span>
+        </button>
+      </div>
+
+      <!-- Stats Details -->
+      <div id="statsDetails" class="stats-details">
+        <div class="stats-item">
+          <span class="stats-item-label stats-time-label">Czas przetwarzania:</span>
+          <span class="stats-item-value" id="processingTime">-</span>
+        </div>
+        <div class="stats-item">
+          <span class="stats-item-label stats-detected-label">Wykryte dane:</span>
+          <span class="stats-item-value" id="detectedCount">-</span>
+        </div>
+        <div id="entityList"></div>
       </div>
     </div>
 
-    <div class="test-section">
-      <h2>🧪 Test Anonimizacji</h2>
-      <textarea id="testInput" placeholder="Wpisz tekst z danymi osobowymi, np:
-Cześć, jestem Jan Kowalski
-Email: jan.kowalski@example.com
-PESEL: 92010212345
-Telefon: +48 123 456 789"></textarea>
-      <button onclick="testAnonymize()">🚀 Testuj Anonimizację</button>
-      <button onclick="clearTest()" style="background: #666; margin-left: 8px;">🗑️ Wyczyść</button>
-
-      <div id="testResult" class="result"></div>
-    </div>
-
-    <div class="logs-section">
-      <h2>📋 Logi Aktywności</h2>
-      <div class="logs" id="logsContainer">
-        <div class="log-entry info">[INFO] Dashboard załadowany</div>
+    <!-- Activity Logs -->
+    <div class="card">
+      <h2 class="card-title logs-title">📋 Logi Aktywności</h2>
+      <div class="logs-container" id="logsContainer">
+        <div class="log-entry info">
+          <span class="log-timestamp">[00:00:00]</span>
+          <span class="log-init-text">[INFO] Dashboard załadowany</span>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 
   <script>
+    // Translations
+    const translations = {
+      pl: {
+        dashboard: {
+          title: 'Dashboard',
+          subtitle: 'Monitorowanie i testowanie usługi anonimizacji w czasie rzeczywistym.',
+          statusLabel: 'Status',
+          requestsLabel: 'Liczba Żądań',
+          entitiesLabel: 'Znalezione Encje',
+          avgTimeLabel: 'Śr. Czas Przetwarzania',
+          testTitle: '🧪 Test Anonimizacji',
+          inputLabel: 'Tekst wejściowy',
+          outputLabel: 'Zanonimizowany tekst',
+          btnTest: 'Testuj Anonimizację',
+          btnClear: 'Wyczyść',
+          outputPlaceholder: 'Wyniki pojawią się tutaj...',
+          inputPlaceholder: 'Wpisz tekst z danymi osobowymi, np:\n\nCześć, jestem Jan Kowalski\nEmail: jan.kowalski@example.com\nPESEL: 92010212345\nTelefon: +48 123 456 789',
+          logsTitle: '📋 Logi Aktywności',
+          statsTimeLabel: 'Czas przetwarzania:',
+          statsDetectedLabel: 'Wykryte dane:',
+          logInit: '[INFO] Dashboard załadowany',
+          statusOnline: 'Online',
+          statusOffline: 'Offline',
+          navDashboard: 'Dashboard',
+          navSettings: 'Ustawienia'
+        }
+      },
+      en: {
+        dashboard: {
+          title: 'Dashboard',
+          subtitle: 'Real-time monitoring and testing of anonymization service.',
+          statusLabel: 'Status',
+          requestsLabel: 'Request Count',
+          entitiesLabel: 'Found Entities',
+          avgTimeLabel: 'Avg. Processing Time',
+          testTitle: '🧪 Test Anonymization',
+          inputLabel: 'Input text',
+          outputLabel: 'Anonymized text',
+          btnTest: 'Test Anonymization',
+          btnClear: 'Clear',
+          outputPlaceholder: 'Results will appear here...',
+          inputPlaceholder: 'Enter text with personal data, e.g.:\n\nHi, I\'m Jan Kowalski\nEmail: jan.kowalski@example.com\nPESEL: 92010212345\nPhone: +48 123 456 789',
+          logsTitle: '📋 Activity Logs',
+          statsTimeLabel: 'Processing time:',
+          statsDetectedLabel: 'Detected data:',
+          logInit: '[INFO] Dashboard loaded',
+          statusOnline: 'Online',
+          statusOffline: 'Offline',
+          navDashboard: 'Dashboard',
+          navSettings: 'Settings'
+        }
+      }
+    };
+
+    let currentLang = 'pl';
     let requestCount = 0;
     let totalEntities = 0;
     let totalTime = 0;
+
+    // Language Toggle
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentLang = btn.dataset.lang;
+        updateTranslations();
+      });
+    });
+
+    function updateTranslations() {
+      const t = translations[currentLang].dashboard;
+
+      document.querySelector('.title-text').textContent = t.title;
+      document.querySelector('.subtitle-text').textContent = t.subtitle;
+      document.querySelector('.stat-status-label').textContent = t.statusLabel;
+      document.querySelector('.stat-requests-label').textContent = t.requestsLabel;
+      document.querySelector('.stat-entities-label').textContent = t.entitiesLabel;
+      document.querySelector('.stat-avgtime-label').textContent = t.avgTimeLabel;
+      document.querySelector('.test-title').textContent = t.testTitle;
+      document.querySelector('.input-label-text').textContent = t.inputLabel;
+      document.querySelector('.output-label-text').textContent = t.outputLabel;
+      document.querySelector('.btn-test-text').textContent = t.btnTest;
+      document.querySelector('.btn-clear-text').textContent = t.btnClear;
+      document.querySelector('.output-placeholder-text').textContent = t.outputPlaceholder;
+      document.querySelector('.test-input-placeholder').placeholder = t.inputPlaceholder;
+      document.querySelector('.logs-title').textContent = t.logsTitle;
+      document.querySelector('.stats-time-label').textContent = t.statsTimeLabel;
+      document.querySelector('.stats-detected-label').textContent = t.statsDetectedLabel;
+      document.querySelector('.status-text').textContent = t.statusOnline;
+
+      // Update nav labels
+      document.querySelectorAll('.nav-label')[0].textContent = t.navDashboard;
+      document.querySelectorAll('.nav-label')[1].textContent = t.navSettings;
+    }
 
     // Check health
     async function checkHealth() {
@@ -263,25 +742,38 @@ Telefon: +48 123 456 789"></textarea>
         const response = await fetch('/api/health');
         const data = await response.json();
 
+        const indicator = document.getElementById('statusIndicator');
+        const statusText = document.querySelector('.status-text');
+        const t = translations[currentLang].dashboard;
+
         if (data.status === 'healthy') {
-          document.getElementById('statusValue').textContent = '● ONLINE';
-          document.getElementById('statusValue').className = 'stat-value online';
+          indicator.className = 'status-indicator online';
+          statusText.textContent = t.statusOnline;
+        } else {
+          indicator.className = 'status-indicator offline';
+          statusText.textContent = t.statusOffline;
         }
       } catch (error) {
-        document.getElementById('statusValue').textContent = '● OFFLINE';
-        document.getElementById('statusValue').className = 'stat-value';
+        const indicator = document.getElementById('statusIndicator');
+        const statusText = document.querySelector('.status-text');
+        const t = translations[currentLang].dashboard;
+
+        indicator.className = 'status-indicator offline';
+        statusText.textContent = t.statusOffline;
       }
     }
 
     // Test anonymize
     async function testAnonymize() {
       const input = document.getElementById('testInput').value;
+      const t = translations[currentLang].dashboard;
+
       if (!input.trim()) {
-        alert('Wpisz jakiś tekst do testowania!');
+        alert(currentLang === 'pl' ? 'Wpisz jakiś tekst do testowania!' : 'Enter some text to test!');
         return;
       }
 
-      addLog('Wysyłanie żądania anonimizacji...', 'info');
+      addLog(currentLang === 'pl' ? 'Wysyłanie żądania anonimizacji...' : 'Sending anonymization request...', 'info');
 
       try {
         const startTime = Date.now();
@@ -309,46 +801,53 @@ Telefon: +48 123 456 789"></textarea>
           document.getElementById('avgTime').textContent = Math.round(totalTime / requestCount) + 'ms';
 
           // Show result
-          const result = document.getElementById('testResult');
-          result.innerHTML = `
-<strong>✅ Sukces! Czas: ${duration}ms</strong>
+          const output = document.getElementById('testOutput');
+          output.textContent = data.anonymized_text;
 
-<strong>Oryginalny tekst:</strong>
-${data.original_text}
+          // Show stats details
+          const statsDetails = document.getElementById('statsDetails');
+          statsDetails.classList.add('show');
+          document.getElementById('processingTime').textContent = duration + 'ms';
+          document.getElementById('detectedCount').textContent = data.stats.total_entities;
 
-<strong>Zanonimizowany tekst:</strong>
-${data.anonymized_text}
+          // Show entity badges
+          const entityList = document.getElementById('entityList');
+          if (data.entities_found.length > 0) {
+            const badges = data.entities_found.map(e =>
+              `<span class="entity-badge">${e.type}: "${e.text}" (${(e.score * 100).toFixed(0)}%)</span>`
+            ).join('');
+            entityList.innerHTML = `<div class="entity-badges">${badges}</div>`;
+          } else {
+            entityList.innerHTML = '';
+          }
 
-<strong>Wykryte dane (${data.stats.total_entities}):</strong>
-${data.entities_found.map(e => `- ${e.type}: "${e.text}" (pewność: ${(e.score * 100).toFixed(0)}%)`).join('\n')}
-          `;
-          result.className = 'result show';
-
-          addLog(`✅ Anonimizacja zakończona: ${data.stats.total_entities} danych wykrytych w ${duration}ms`, 'info');
+          addLog(`✅ ${currentLang === 'pl' ? 'Anonimizacja zakończona' : 'Anonymization complete'}: ${data.stats.total_entities} ${currentLang === 'pl' ? 'danych wykrytych w' : 'data detected in'} ${duration}ms`, 'info');
         } else {
-          addLog(`❌ Błąd: ${data.message || 'Nieznany błąd'}`, 'error');
-          alert('Błąd: ' + (data.message || 'Nieznany błąd'));
+          addLog(`❌ ${currentLang === 'pl' ? 'Błąd' : 'Error'}: ${data.message || (currentLang === 'pl' ? 'Nieznany błąd' : 'Unknown error')}`, 'error');
+          alert((currentLang === 'pl' ? 'Błąd: ' : 'Error: ') + (data.message || (currentLang === 'pl' ? 'Nieznany błąd' : 'Unknown error')));
         }
       } catch (error) {
-        addLog(`❌ Błąd połączenia: ${error.message}`, 'error');
-        alert('Błąd połączenia z API');
+        addLog(`❌ ${currentLang === 'pl' ? 'Błąd połączenia' : 'Connection error'}: ${error.message}`, 'error');
+        alert(currentLang === 'pl' ? 'Błąd połączenia z API' : 'API connection error');
       }
     }
 
     // Clear test
     function clearTest() {
+      const t = translations[currentLang].dashboard;
       document.getElementById('testInput').value = '';
-      document.getElementById('testResult').className = 'result';
-      addLog('Test wyczyszczony', 'info');
+      document.getElementById('testOutput').textContent = t.outputPlaceholder;
+      document.getElementById('statsDetails').classList.remove('show');
+      addLog(currentLang === 'pl' ? 'Test wyczyszczony' : 'Test cleared', 'info');
     }
 
     // Add log entry
     function addLog(message, type = 'info') {
       const logs = document.getElementById('logsContainer');
-      const timestamp = new Date().toLocaleTimeString('pl-PL');
+      const timestamp = new Date().toLocaleTimeString(currentLang === 'pl' ? 'pl-PL' : 'en-US');
       const entry = document.createElement('div');
       entry.className = `log-entry ${type}`;
-      entry.textContent = `[${timestamp}] ${message}`;
+      entry.innerHTML = `<span class="log-timestamp">[${timestamp}]</span>${message}`;
       logs.appendChild(entry);
       logs.scrollTop = logs.scrollHeight;
     }

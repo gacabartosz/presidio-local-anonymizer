@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#2563eb" opacity="0.1"/>
+
+  <!-- Shield outline -->
+  <path d="M100 20 L140 40 L140 85 Q140 120 100 150 Q60 120 60 85 L60 40 Z"
+        fill="#2563eb" stroke="#1e40af" stroke-width="2"/>
+
+  <!-- Shield inner -->
+  <path d="M100 30 L130 45 L130 80 Q130 110 100 135 Q70 110 70 80 L70 45 Z"
+        fill="#3b82f6"/>
+
+  <!-- Lock icon -->
+  <rect x="85" y="75" width="30" height="35" rx="3" fill="#fff"/>
+  <circle cx="100" cy="65" r="12" fill="none" stroke="#fff" stroke-width="4"/>
+  <circle cx="100" cy="92" r="4" fill="#2563eb"/>
+  <line x1="100" y1="96" x2="100" y2="102" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Anonymization symbols (redacted blocks) -->
+  <rect x="45" y="155" width="25" height="5" rx="2" fill="#94a3b8" opacity="0.8"/>
+  <rect x="45" y="165" width="35" height="5" rx="2" fill="#94a3b8" opacity="0.6"/>
+  <rect x="45" y="175" width="20" height="5" rx="2" fill="#94a3b8" opacity="0.4"/>
+
+  <rect x="130" y="155" width="25" height="5" rx="2" fill="#94a3b8" opacity="0.8"/>
+  <rect x="120" y="165" width="35" height="5" rx="2" fill="#94a3b8" opacity="0.6"/>
+  <rect x="135" y="175" width="20" height="5" rx="2" fill="#94a3b8" opacity="0.4"/>
+</svg>
