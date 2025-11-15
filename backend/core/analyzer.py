@@ -11,6 +11,8 @@ import logging
 
 from presidio_analyzer import AnalyzerEngine, PatternRecognizer, Pattern
 from presidio_analyzer.nlp_engine import SpacyNlpEngine, NlpEngineProvider
+from presidio_analyzer import RecognizerResult
+from presidio_analyzer.entity_recognizer import EntityRecognizer
 
 logger = logging.getLogger("app.analyzer")
 
@@ -63,6 +65,9 @@ def build_analyzer() -> tuple[AnalyzerEngine, Dict[str, Any]]:
     # Dodanie niestandardowych rozpoznawaczy dla polskich encji
     _add_custom_recognizers(analyzer, config)
 
+    # Dodanie rozpoznawacza SpaCy dla polskich etykiet NER
+    _add_polish_spacy_recognizer(analyzer, nlp_engine)
+
     logger.info(f"Analyzer gotowy. Obsługiwane encje: {list(config['entities'].keys())}")
 
     return analyzer, config
@@ -102,6 +107,79 @@ def _add_custom_recognizers(analyzer: AnalyzerEngine, config: Dict[str, Any]) ->
         analyzer.registry.add_recognizer(recognizer)
 
         logger.info(f"Dodano niestandardowy rozpoznawacz dla: {entity_name} ({len(pattern_list)} wzorców)")
+
+
+def _add_polish_spacy_recognizer(analyzer: AnalyzerEngine, nlp_engine) -> None:
+    """
+    Dodaje niestandardowy rozpoznawacz SpaCy dla polskich etykiet NER.
+    Mapuje polskie etykiety (persName, placeName) na encje Presidio (PERSON, LOCATION).
+
+    Args:
+        analyzer: AnalyzerEngine do którego dodajemy rozpoznawacz
+        nlp_engine: Skonfigurowany silnik NLP SpaCy
+    """
+
+    class PolishSpacyRecognizer(EntityRecognizer):
+        """Rozpoznawacz mapujący polskie etykiety SpaCy na encje Presidio"""
+
+        POLISH_TO_PRESIDIO_MAPPING = {
+            "persName": "PERSON",        # Polskie imiona i nazwiska
+            "placeName": "LOCATION",      # Polskie nazwy miejscowości
+            "geogName": "LOCATION",       # Nazwy geograficzne
+            "orgName": "ORGANIZATION",    # Nazwy organizacji
+        }
+
+        def __init__(self):
+            # Obsługiwane encje to wartości z mapowania
+            supported_entities = list(set(self.POLISH_TO_PRESIDIO_MAPPING.values()))
+            super().__init__(
+                supported_entities=supported_entities,
+                supported_language="pl",
+                name="PolishSpacyRecognizer"
+            )
+
+        def load(self) -> None:
+            """Załaduj model - nie wymagane dla tego rozpoznawacza"""
+            pass
+
+        def analyze(self, text: str, entities: list, nlp_artifacts=None):
+            """
+            Analizuj tekst używając SpaCy i mapuj polskie etykiety na encje Presidio.
+
+            Args:
+                text: Tekst do analizy
+                entities: Lista encji do wykrycia
+                nlp_artifacts: Wyniki SpaCy NLP
+
+            Returns:
+                Lista RecognizerResult
+            """
+            results = []
+
+            if not nlp_artifacts or not hasattr(nlp_artifacts, 'entities'):
+                return results
+
+            # Iteruj przez encje wykryte przez SpaCy
+            for ent in nlp_artifacts.entities:
+                # Sprawdź czy etykieta SpaCy ma mapowanie na encję Presidio
+                presidio_entity = self.POLISH_TO_PRESIDIO_MAPPING.get(ent.label_)
+
+                if presidio_entity and presidio_entity in entities:
+                    # Utwórz wynik rozpoznania
+                    result = RecognizerResult(
+                        entity_type=presidio_entity,
+                        start=ent.start_char,
+                        end=ent.end_char,
+                        score=0.85  # Wysoki wynik pewności
+                    )
+                    results.append(result)
+
+            return results
+
+    # Dodaj rozpoznawacz do analyzera
+    polish_recognizer = PolishSpacyRecognizer()
+    analyzer.registry.add_recognizer(polish_recognizer)
+    logger.info("Dodano rozpoznawacz polskich etykiet SpaCy (persName->PERSON, placeName->LOCATION)")
 
 
 def get_supported_entities(config: Dict[str, Any]) -> list[str]:
