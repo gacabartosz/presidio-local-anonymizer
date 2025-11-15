@@ -21,6 +21,7 @@ sys.path.insert(0, str(backend_dir))
 from api.health import health_bp
 from api.anonymize import anonymize_bp
 from api.config import config_bp
+from api.setup import setup_bp
 
 # Configure logging
 logging.basicConfig(
@@ -51,20 +52,16 @@ CORS(app, resources={
 app.register_blueprint(health_bp, url_prefix='/api')
 app.register_blueprint(anonymize_bp, url_prefix='/api')
 app.register_blueprint(config_bp, url_prefix='/api')
+app.register_blueprint(setup_bp, url_prefix='/api/setup')
 
-# Root endpoint - serve index.html
+# Root endpoint - serve main app
 @app.route('/')
-def index():
-    """Root endpoint - settings page"""
-    from flask import send_from_directory
-    return send_from_directory('../web-ui', 'index.html')
-
-# Dashboard endpoint
 @app.route('/dashboard')
-def dashboard():
-    """Serve dashboard HTML"""
+@app.route('/setup')
+def index():
+    """Serve main application - single page app"""
     from flask import send_from_directory
-    return send_from_directory('../web-ui', 'dashboard.html')
+    return send_from_directory('../web-ui', 'app.html')
 
 # No token endpoint needed - no authentication required
 

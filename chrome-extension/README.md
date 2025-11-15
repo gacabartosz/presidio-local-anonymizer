@@ -74,6 +74,20 @@ Then update extension config:
 
 ## Usage
 
+### Auto-Anonymize on Paste (NEW!)
+
+**Automatic anonymization when you paste text anywhere:**
+
+1. Copy text containing PII (e.g., email, PESEL, phone number)
+2. Paste it anywhere with `Ctrl+V` (or `Cmd+V` on Mac)
+3. Text will be **automatically anonymized** before insertion!
+
+Works everywhere:
+- ChatGPT and other AI chatbots
+- Email clients (Gmail, Outlook)
+- Forms and text fields
+- Content-editable areas
+
 ### Keyboard Shortcut
 
 1. Select text on any webpage

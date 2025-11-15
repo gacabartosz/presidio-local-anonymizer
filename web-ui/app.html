@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presidio Browser Anonymizer</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 256px;
+      background: #1f2937;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      padding: 0 8px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      margin-right: 12px;
+    }
+
+    .logo-text h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+      margin: 0;
+    }
+
+    .logo-text p {
+      font-size: 12px;
+      color: #9ca3af;
+      margin: 0;
+    }
+
+    /* Language Switcher */
+    .lang-switcher {
+      display: flex;
+      gap: 16px;
+      padding: 0 8px;
+      margin-bottom: 24px;
+    }
+
+    .lang-flag {
+      width: 32px;
+      height: 20px;
+      border-radius: 2px;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: all 0.2s;
+    }
+
+    .lang-flag:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .lang-flag.active {
+      opacity: 1;
+      box-shadow: 0 0 0 2px #60a5fa, 0 0 0 4px #1f2937;
+    }
+
+    /* Navigation */
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-radius: 8px;
+      color: #d1d5db;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      background: #374151;
+      color: white;
+    }
+
+    .nav-item.active {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 16px;
+    }
+
+    /* Footer */
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid #374151;
+      text-align: center;
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .sidebar-footer p {
+      margin: 4px 0;
+    }
+
+    .sidebar-footer a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 256px;
+      flex: 1;
+      padding: 24px 32px;
+      overflow-y: auto;
+    }
+
+    /* Sections */
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Common styles */
+    .page-header h1 {
+      font-size: 30px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+
+    .page-header p {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .status-badge.online {
+      background: rgba(16, 185, 129, 0.1);
+      color: #059669;
+    }
+
+    .status-badge.offline {
+      background: rgba(239, 68, 68, 0.1);
+      color: #dc2626;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .status-dot.online {
+      background: #10b981;
+    }
+
+    .status-dot.offline {
+      background: #ef4444;
+    }
+
+    /* Entity cards for settings */
+    .category-section {
+      margin-bottom: 32px;
+    }
+
+    .category-header {
+      font-size: 20px;
+      font-weight: 600;
+      color: #111827;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+    }
+
+    .entity-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 1400px) {
+      .entity-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .entity-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .entity-card {
+      padding: 20px;
+      border-radius: 16px;
+      border: 2px solid #e5e7eb;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .entity-card:hover {
+      border-color: #60a5fa;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .entity-card.enabled {
+      background: #eff6ff;
+      border-color: #2563eb;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .entity-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .entity-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .entity-card.enabled .entity-name {
+      color: #1e40af;
+    }
+
+    .entity-description {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .entity-example {
+      display: block;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      padding: 8px;
+      border-radius: 6px;
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+
+    .entity-card.enabled .entity-example {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 24px;
+      border-radius: 9999px;
+      background: #d1d5db;
+      transition: background 0.3s;
+    }
+
+    .toggle-switch.enabled {
+      background: #2563eb;
+    }
+
+    .toggle-knob {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s;
+    }
+
+    .toggle-switch.enabled .toggle-knob {
+      transform: translateX(24px);
+    }
+
+    /* Stats grid for dashboard */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #dbeafe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-content h3 {
+      font-size: 12px;
+      font-weight: 500;
+      color: #6b7280;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .stat-content p {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-container">
+      <svg class="logo-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+          </linearGradient>
+          <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <rect width="64" height="64" rx="8" fill="url(#bgGradient)"/>
+        <path d="M32 6 L55 16 V38 C55 52 43 60 32 62 C21 60 9 52 9 38 V16 Z"
+              fill="url(#shieldGradient)" stroke="#1e3a8a" stroke-width="1.5"/>
+        <rect x="23" y="34" width="18" height="22" rx="2" fill="white"/>
+        <path d="M32 22 Q38 22 38 28 V34 H26 V28 Q26 22 32 22"
+              fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+        <circle cx="32" cy="42" r="2.5" fill="#2563eb"/>
+        <rect x="30.5" y="44" width="3" height="8" rx="1.5" fill="#2563eb"/>
+      </svg>
+      <div class="logo-text">
+        <h1>Presidio</h1>
+        <p>ANONYMIZER</p>
+      </div>
+    </div>
+
+    <!-- Language Switcher -->
+    <div class="lang-switcher">
+      <svg class="lang-flag active" data-lang="pl" viewBox="0 0 5 3">
+        <rect width="5" height="3" fill="#fff"/>
+        <rect width="5" height="1.5" y="1.5" fill="#dc143c"/>
+      </svg>
+      <svg class="lang-flag" data-lang="en" viewBox="0 0 60 30">
+        <clipPath id="a"><path d="M0 0v30h60V0z"/></clipPath>
+        <path d="M0 0v30h60V0z" fill="#012169"/>
+        <g clip-path="url(#a)">
+          <path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/>
+          <path d="M0 0l60 30m0-30L0 30" stroke="#c8102e" stroke-width="4"/>
+          <path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/>
+          <path d="M30 0v30M0 15h60" stroke="#c8102e" stroke-width="6"/>
+        </g>
+      </svg>
+      <svg class="lang-flag" data-lang="de" viewBox="0 0 5 3">
+        <rect width="5" height="3" fill="#000"/>
+        <rect width="5" height="2" y="1" fill="#D00"/>
+        <rect width="5" height="1" y="2" fill="#FFCE00"/>
+      </svg>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+      <div class="nav-item active" data-section="dashboard">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-item" data-section="settings">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span>Ustawienia</span>
+      </div>
+      <div class="nav-item" data-section="setup">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+        </svg>
+        <span>Setup</span>
+      </div>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <p><span id="footer-version">Wersja</span> 1.3.0</p>
+      <p><span id="footer-created">Stworzone przez</span> <a href="https://github.com/gacabartosz" target="_blank">gacabartosz</a></p>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- DASHBOARD SECTION -->
+    <section id="dashboard" class="section active">
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <p>Monitorowanie i testowanie usługi anonimizacji w czasie rzeczywistym.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:24px;height:24px;color:#2563eb">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <h3>Status Serwisu</h3>
+            <p id="status-value" class="online">Online</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:24px;height:24px;color:#2563eb">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <h3>Liczba Żądań</h3>
+            <p id="request-count">0</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🧪 Test Anonimizacji</h2>
+        <textarea id="test-input" placeholder="Wpisz tekst z danymi osobowymi..." style="width:100%;height:120px;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-family:monospace;"></textarea>
+        <div style="margin-top:16px;display:flex;gap:8px;">
+          <button class="btn btn-primary" onclick="testAnonymize()">🚀 Testuj</button>
+          <button class="btn btn-secondary" onclick="clearTest()">Wyczyść</button>
+        </div>
+        <div id="test-result" class="hidden" style="margin-top:16px;padding:16px;background:#f9fafb;border-radius:8px;">
+          <h4 style="color:#10b981;margin-bottom:8px;">Zanonimizowany tekst:</h4>
+          <p id="anonymized-text" style="font-family:monospace;"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS SECTION -->
+    <section id="settings" class="section">
+      <div class="page-header">
+        <h1>Ustawienia Anonimizacji</h1>
+        <p>Zarządzaj typami danych osobowych, które mają być wykrywane i anonimowane.</p>
+      </div>
+
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
+        <h2 style="margin:0;">Status Usługi</h2>
+        <div class="status-badge online" id="status-badge-settings">
+          <div class="status-dot online"></div>
+          <span>Online</span>
+        </div>
+      </div>
+
+      <div id="settings-container">
+        <p>Ładowanie ustawień...</p>
+      </div>
+
+      <div style="margin-top:24px;display:flex;justify-content:flex-end;gap:16px;">
+        <button class="btn btn-secondary" onclick="resetSettings()">Resetuj do Domyślnych</button>
+        <button class="btn btn-primary" onclick="saveSettings()">Zapisz Ustawienia</button>
+      </div>
+    </section>
+
+    <!-- SETUP SECTION -->
+    <section id="setup" class="section">
+      <div class="page-header">
+        <h1>Setup Wizard</h1>
+        <p>Sprawdź wymagania systemowe i zainstaluj backend.</p>
+      </div>
+
+      <div class="card">
+        <h2>Sprawdzanie Systemu</h2>
+        <div id="setup-checks">
+          <p>Sprawdzanie wymagań...</p>
+        </div>
+      </div>
+
+      <div class="card hidden" id="setup-instructions">
+        <h2>Instrukcje Instalacji</h2>
+        <p>Backend jest uruchomiony! ✅</p>
+        <p style="margin-top:12px;">Jeśli chcesz zaktualizować lub naprawić instalację:</p>
+        <ol style="margin-top:12px;padding-left:24px;">
+          <li>Pobierz repozytorium z GitHub</li>
+          <li>Uruchom skrypt instalacyjny dla swojego systemu</li>
+          <li>Backend zostanie automatycznie skonfigurowany</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = 'http://localhost:4222/api';
+    let entitySettings = {};
+    let currentLang = 'pl';
+
+    // Translations
+    const translations = {
+      pl: {
+        // Navigation
+        nav_dashboard: 'Dashboard',
+        nav_settings: 'Ustawienia',
+        nav_setup: 'Setup',
+
+        // Dashboard
+        dashboard_title: 'Dashboard',
+        dashboard_subtitle: 'Monitorowanie i testowanie usługi anonimizacji w czasie rzeczywistym.',
+        status_service: 'Status Serwisu',
+        status_online: 'Online',
+        status_offline: 'Offline',
+        request_count: 'Liczba Żądań',
+        test_title: '🧪 Test Anonimizacji',
+        test_placeholder: 'Wpisz tekst z danymi osobowymi...',
+        test_button: '🚀 Testuj',
+        clear_button: 'Wyczyść',
+        result_title: 'Zanonimizowany tekst:',
+
+        // Settings
+        settings_title: 'Ustawienia Anonimizacji',
+        settings_subtitle: 'Zarządzaj typami danych osobowych, które mają być wykrywane i anonimowane.',
+        service_status: 'Status Usługi',
+        loading_settings: 'Ładowanie ustawień...',
+        save_settings: 'Zapisz Ustawienia',
+        reset_settings: 'Resetuj do Domyślnych',
+        settings_saved: 'Ustawienia zapisane!',
+        confirm_reset: 'Czy na pewno chcesz przywrócić domyślne ustawienia?',
+
+        // Setup
+        setup_title: 'Setup Wizard',
+        setup_subtitle: 'Sprawdź wymagania systemowe i zainstaluj backend.',
+        system_check: 'Sprawdzanie Systemu',
+        checking: 'Sprawdzanie wymagań...',
+        install_instructions: 'Instrukcje Instalacji',
+        backend_running: 'Backend jest uruchomiony! ✅',
+
+        // Categories
+        category_polish: '🇵🇱 Dane Polskie',
+        category_us: '🇺🇸 Dane Amerykańskie',
+        category_other_countries: '🌍 Inne Kraje',
+        category_other: '🔐 Inne Typy',
+
+        // Footer
+        version: 'Wersja',
+        created_by: 'Stworzone przez',
+
+        // Entity examples
+        example: 'Przykład'
+      },
+      en: {
+        // Navigation
+        nav_dashboard: 'Dashboard',
+        nav_settings: 'Settings',
+        nav_setup: 'Setup',
+
+        // Dashboard
+        dashboard_title: 'Dashboard',
+        dashboard_subtitle: 'Monitor and test anonymization service in real-time.',
+        status_service: 'Service Status',
+        status_online: 'Online',
+        status_offline: 'Offline',
+        request_count: 'Request Count',
+        test_title: '🧪 Anonymization Test',
+        test_placeholder: 'Enter text with personal data...',
+        test_button: '🚀 Test',
+        clear_button: 'Clear',
+        result_title: 'Anonymized text:',
+
+        // Settings
+        settings_title: 'Anonymization Settings',
+        settings_subtitle: 'Manage personal data types to be detected and anonymized.',
+        service_status: 'Service Status',
+        loading_settings: 'Loading settings...',
+        save_settings: 'Save Settings',
+        reset_settings: 'Reset to Defaults',
+        settings_saved: 'Settings saved!',
+        confirm_reset: 'Are you sure you want to reset to default settings?',
+
+        // Setup
+        setup_title: 'Setup Wizard',
+        setup_subtitle: 'Check system requirements and install backend.',
+        system_check: 'System Check',
+        checking: 'Checking requirements...',
+        install_instructions: 'Installation Instructions',
+        backend_running: 'Backend is running! ✅',
+
+        // Categories
+        category_polish: '🇵🇱 Polish Data',
+        category_us: '🇺🇸 US Data',
+        category_other_countries: '🌍 Other Countries',
+        category_other: '🔐 Other Types',
+
+        // Footer
+        version: 'Version',
+        created_by: 'Created by',
+
+        // Entity examples
+        example: 'Example'
+      },
+      de: {
+        // Navigation
+        nav_dashboard: 'Dashboard',
+        nav_settings: 'Einstellungen',
+        nav_setup: 'Setup',
+
+        // Dashboard
+        dashboard_title: 'Dashboard',
+        dashboard_subtitle: 'Überwachen und testen Sie den Anonymisierungsdienst in Echtzeit.',
+        status_service: 'Dienststatus',
+        status_online: 'Online',
+        status_offline: 'Offline',
+        request_count: 'Anfragenzahl',
+        test_title: '🧪 Anonymisierungstest',
+        test_placeholder: 'Geben Sie Text mit personenbezogenen Daten ein...',
+        test_button: '🚀 Testen',
+        clear_button: 'Löschen',
+        result_title: 'Anonymisierter Text:',
+
+        // Settings
+        settings_title: 'Anonymisierungseinstellungen',
+        settings_subtitle: 'Verwalten Sie Arten personenbezogener Daten, die erkannt und anonymisiert werden sollen.',
+        service_status: 'Dienststatus',
+        loading_settings: 'Einstellungen werden geladen...',
+        save_settings: 'Einstellungen speichern',
+        reset_settings: 'Auf Standard zurücksetzen',
+        settings_saved: 'Einstellungen gespeichert!',
+        confirm_reset: 'Möchten Sie wirklich die Standardeinstellungen wiederherstellen?',
+
+        // Setup
+        setup_title: 'Setup-Assistent',
+        setup_subtitle: 'Überprüfen Sie Systemanforderungen und installieren Sie das Backend.',
+        system_check: 'Systemüberprüfung',
+        checking: 'Überprüfung der Anforderungen...',
+        install_instructions: 'Installationsanweisungen',
+        backend_running: 'Backend läuft! ✅',
+
+        // Categories
+        category_polish: '🇵🇱 Polnische Daten',
+        category_us: '🇺🇸 US-Daten',
+        category_other_countries: '🌍 Andere Länder',
+        category_other: '🔐 Andere Typen',
+
+        // Footer
+        version: 'Version',
+        created_by: 'Erstellt von',
+
+        // Entity examples
+        example: 'Beispiel'
+      }
+    };
+
+    // Language switcher
+    document.querySelectorAll('.lang-flag').forEach(flag => {
+      flag.addEventListener('click', () => {
+        const lang = flag.dataset.lang;
+        switchLanguage(lang);
+      });
+    });
+
+    function switchLanguage(lang) {
+      currentLang = lang;
+
+      // Update active flag
+      document.querySelectorAll('.lang-flag').forEach(f => f.classList.remove('active'));
+      document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
+
+      // Update all UI text
+      updateUIText();
+    }
+
+    function t(key) {
+      return translations[currentLang][key] || key;
+    }
+
+    function updateUIText() {
+      // Navigation
+      const navItems = document.querySelectorAll('.nav-item span');
+      navItems[0].textContent = t('nav_dashboard');
+      navItems[1].textContent = t('nav_settings');
+      navItems[2].textContent = t('nav_setup');
+
+      // Dashboard
+      document.querySelector('#dashboard .page-header h1').textContent = t('dashboard_title');
+      document.querySelector('#dashboard .page-header p').textContent = t('dashboard_subtitle');
+      document.querySelectorAll('#dashboard .stat-content h3')[0].textContent = t('status_service');
+      document.querySelectorAll('#dashboard .stat-content h3')[1].textContent = t('request_count');
+      document.querySelector('#dashboard .card h2').textContent = t('test_title');
+      document.getElementById('test-input').placeholder = t('test_placeholder');
+      document.querySelector('#dashboard .btn-primary').textContent = t('test_button');
+      document.querySelector('#dashboard .btn-secondary').textContent = t('clear_button');
+      document.querySelector('#test-result h4').textContent = t('result_title');
+
+      // Settings
+      document.querySelector('#settings .page-header h1').textContent = t('settings_title');
+      document.querySelector('#settings .page-header p').textContent = t('settings_subtitle');
+      document.querySelector('#settings .card h2').textContent = t('service_status');
+      document.querySelector('#settings .btn-primary').textContent = t('save_settings');
+      document.querySelector('#settings .btn-secondary').textContent = t('reset_settings');
+
+      // Setup
+      document.querySelector('#setup .page-header h1').textContent = t('setup_title');
+      document.querySelector('#setup .page-header p').textContent = t('setup_subtitle');
+      document.querySelector('#setup .card h2').textContent = t('system_check');
+
+      // Footer
+      document.getElementById('footer-version').textContent = t('version');
+      document.getElementById('footer-created').textContent = t('created_by');
+
+      // Re-render settings to update entity names
+      if (document.getElementById('settings').classList.contains('active')) {
+        renderSettings();
+      }
+    }
+
+    // Navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const section = item.dataset.section;
+        showSection(section);
+      });
+    });
+
+    function showSection(sectionId) {
+      // Update nav
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.section === sectionId) {
+          item.classList.add('active');
+        }
+      });
+
+      // Update sections
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(sectionId).classList.add('active');
+
+      // Load section data
+      if (sectionId === 'settings') loadSettings();
+      if (sectionId === 'setup') checkSetup();
+    }
+
+    // Dashboard functions
+    async function testAnonymize() {
+      const text = document.getElementById('test-input').value;
+      if (!text) return alert(currentLang === 'pl' ? 'Wpisz tekst do testu!' : currentLang === 'en' ? 'Enter text to test!' : 'Geben Sie Text zum Testen ein!');
+
+      try {
+        const res = await fetch(`${API_BASE}/anonymize`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+        const data = await res.json();
+
+        document.getElementById('anonymized-text').textContent = data.anonymized_text;
+        document.getElementById('test-result').classList.remove('hidden');
+
+        const count = parseInt(document.getElementById('request-count').textContent);
+        document.getElementById('request-count').textContent = count + 1;
+      } catch (err) {
+        alert('Błąd: ' + err.message);
+      }
+    }
+
+    function clearTest() {
+      document.getElementById('test-input').value = '';
+      document.getElementById('test-result').classList.add('hidden');
+    }
+
+    // Settings functions
+    async function loadSettings() {
+      try {
+        const res = await fetch(`${API_BASE}/config`);
+        const data = await res.json();
+
+        if (data.entities && Array.isArray(data.entities)) {
+          entitySettings = {};
+          data.entities.forEach(e => {
+            entitySettings[e.name] = e.enabled;
+          });
+        }
+
+        renderSettings();
+      } catch (err) {
+        document.getElementById('settings-container').innerHTML = '<p>Błąd ładowania ustawień</p>';
+      }
+    }
+
+    function renderSettings() {
+      // Complete entity definitions with categories, descriptions, and examples
+      const entityData = {
+        'polish': {
+          title: t('category_polish'),
+          entities: [
+            {
+              name: 'EMAIL_ADDRESS',
+              displayName: 'Adres Email',
+              description: 'Adresy email używane do komunikacji elektronicznej',
+              example: 'jan.kowalski@example.com',
+              defaultEnabled: true
+            },
+            {
+              name: 'PL_PESEL',
+              displayName: 'PESEL',
+              description: 'Polski numer identyfikacyjny PESEL (11 cyfr)',
+              example: '92032912345',
+              defaultEnabled: true
+            },
+            {
+              name: 'PL_NIP',
+              displayName: 'NIP',
+              description: 'Numer Identyfikacji Podatkowej (10 cyfr)',
+              example: '1234563218',
+              defaultEnabled: true
+            },
+            {
+              name: 'PL_PASSPORT',
+              displayName: 'Paszport Polski',
+              description: 'Numer paszportu polskiego (2 litery + 7 cyfr)',
+              example: 'AB1234567',
+              defaultEnabled: true
+            },
+            {
+              name: 'PL_ID_CARD',
+              displayName: 'Dowód Osobisty',
+              description: 'Numer dowodu osobistego (3 litery + 6 cyfr)',
+              example: 'ABC123456',
+              defaultEnabled: true
+            },
+            {
+              name: 'PL_REGON',
+              displayName: 'REGON',
+              description: 'Numer REGON firmy (9 lub 14 cyfr)',
+              example: '123456785',
+              defaultEnabled: true
+            },
+            {
+              name: 'PHONE_NUMBER',
+              displayName: 'Numer Telefonu',
+              description: 'Numery telefonów (krajowe i międzynarodowe)',
+              example: '+48 123 456 789',
+              defaultEnabled: true
+            },
+            {
+              name: 'CREDIT_CARD',
+              displayName: 'Karta Kredytowa',
+              description: 'Numery kart kredytowych i debetowych',
+              example: '4532-1234-5678-9010',
+              defaultEnabled: true
+            },
+            {
+              name: 'IBAN_CODE',
+              displayName: 'Numer IBAN',
+              description: 'Międzynarodowy numer konta bankowego',
+              example: 'PL61109010140000071219812874',
+              defaultEnabled: true
+            },
+            {
+              name: 'IP_ADDRESS',
+              displayName: 'Adres IP',
+              description: 'Adresy IPv4 i IPv6',
+              example: '192.168.1.1',
+              defaultEnabled: true
+            },
+            {
+              name: 'URL',
+              displayName: 'Adres URL',
+              description: 'Adresy stron internetowych i linki',
+              example: 'https://example.com',
+              defaultEnabled: true
+            },
+            {
+              name: 'DATE_TIME',
+              displayName: 'Data i Czas',
+              description: 'Daty urodzenia i znaczniki czasowe',
+              example: '15.03.1992',
+              defaultEnabled: true
+            }
+          ]
+        },
+        'us': {
+          title: t('category_us'),
+          entities: [
+            {
+              name: 'US_SSN',
+              displayName: 'Social Security Number',
+              description: 'Amerykański numer ubezpieczenia społecznego',
+              example: '123-45-6789',
+              defaultEnabled: false
+            },
+            {
+              name: 'US_PASSPORT',
+              displayName: 'US Passport',
+              description: 'Numer paszportu amerykańskiego',
+              example: '123456789',
+              defaultEnabled: false
+            },
+            {
+              name: 'US_BANK_NUMBER',
+              displayName: 'US Bank Account',
+              description: 'Numer konta bankowego w USA',
+              example: '123456789012',
+              defaultEnabled: false
+            },
+            {
+              name: 'US_DRIVER_LICENSE',
+              displayName: 'US Driver License',
+              description: 'Amerykańskie prawo jazdy',
+              example: 'D1234567',
+              defaultEnabled: false
+            },
+            {
+              name: 'US_ITIN',
+              displayName: 'US ITIN',
+              description: 'Individual Taxpayer Identification Number',
+              example: '900-70-1234',
+              defaultEnabled: false
+            }
+          ]
+        },
+        'other_countries': {
+          title: t('category_other_countries'),
+          entities: [
+            {
+              name: 'UK_NHS',
+              displayName: 'UK NHS Number',
+              description: 'Brytyjski numer NHS (służba zdrowia)',
+              example: '123 456 7890',
+              defaultEnabled: false
+            },
+            {
+              name: 'AU_ABN',
+              displayName: 'Australian ABN',
+              description: 'Australian Business Number',
+              example: '12345678901',
+              defaultEnabled: false
+            },
+            {
+              name: 'AU_ACN',
+              displayName: 'Australian ACN',
+              description: 'Australian Company Number',
+              example: '123456789',
+              defaultEnabled: false
+            },
+            {
+              name: 'AU_TFN',
+              displayName: 'Australian TFN',
+              description: 'Tax File Number (Australia)',
+              example: '123456782',
+              defaultEnabled: false
+            },
+            {
+              name: 'AU_MEDICARE',
+              displayName: 'Australian Medicare',
+              description: 'Numer Medicare (Australia)',
+              example: '2123 45670 1',
+              defaultEnabled: false
+            },
+            {
+              name: 'SG_NRIC_FIN',
+              displayName: 'Singapore NRIC/FIN',
+              description: 'Singapurski numer identyfikacyjny',
+              example: 'S1234567D',
+              defaultEnabled: false
+            },
+            {
+              name: 'NRP',
+              displayName: 'NRP (Portugal)',
+              description: 'Portugalski numer identyfikacyjny',
+              example: '123456789',
+              defaultEnabled: false
+            }
+          ]
+        },
+        'other': {
+          title: t('category_other'),
+          entities: [
+            {
+              name: 'PERSON',
+              displayName: 'Imię i Nazwisko',
+              description: 'Imiona i nazwiska osób',
+              example: 'Jan Kowalski',
+              defaultEnabled: true
+            },
+            {
+              name: 'LOCATION',
+              displayName: 'Lokalizacja',
+              description: 'Adresy, miasta, kraje',
+              example: 'ul. Marszałkowska 1, Warszawa',
+              defaultEnabled: true
+            },
+            {
+              name: 'CRYPTO',
+              displayName: 'Portfel Kryptowalut',
+              description: 'Adresy portfeli Bitcoin, Ethereum itp.',
+              example: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+              defaultEnabled: false
+            },
+            {
+              name: 'MEDICAL_LICENSE',
+              displayName: 'Licencja Medyczna',
+              description: 'Numery licencji lekarskich i medycznych',
+              example: 'ML-123456',
+              defaultEnabled: false
+            }
+          ]
+        }
+      };
+
+      let html = '';
+
+      // Render each category
+      Object.keys(entityData).forEach(categoryKey => {
+        const category = entityData[categoryKey];
+
+        html += `
+          <div class="card category-section">
+            <div class="category-header">${category.title}</div>
+            <div class="entity-grid">
+        `;
+
+        category.entities.forEach(entity => {
+          // Check if entity is enabled (use default if not set)
+          const enabled = entitySettings.hasOwnProperty(entity.name)
+            ? entitySettings[entity.name]
+            : entity.defaultEnabled;
+
+          html += `
+            <div class="entity-card ${enabled ? 'enabled' : ''}" onclick="toggleEntity('${entity.name}')">
+              <div class="entity-card-header">
+                <div class="entity-name">${entity.displayName}</div>
+                <div class="toggle-switch ${enabled ? 'enabled' : ''}">
+                  <div class="toggle-knob"></div>
+                </div>
+              </div>
+              <div class="entity-description">${entity.description}</div>
+              <code class="entity-example">${t('example')}: ${entity.example}</code>
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('settings-container').innerHTML = html;
+    }
+
+    function toggleEntity(name) {
+      entitySettings[name] = !entitySettings[name];
+      renderSettings();
+    }
+
+    async function saveSettings() {
+      const entities = Object.keys(entitySettings).map(name => ({
+        name,
+        enabled: entitySettings[name]
+      }));
+
+      try {
+        await fetch(`${API_BASE}/config`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ entities })
+        });
+        alert(t('settings_saved'));
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    function resetSettings() {
+      if (!confirm(t('confirm_reset'))) return;
+
+      // Reset to default settings - Polish entities enabled, rest disabled
+      entitySettings = {
+        // Polish entities - enabled by default
+        'EMAIL_ADDRESS': true,
+        'PL_PESEL': true,
+        'PL_NIP': true,
+        'PL_PASSPORT': true,
+        'PL_ID_CARD': true,
+        'PL_REGON': true,
+        'PHONE_NUMBER': true,
+        'CREDIT_CARD': true,
+        'IBAN_CODE': true,
+        'IP_ADDRESS': true,
+        'URL': true,
+        'DATE_TIME': true,
+        'PERSON': true,
+        'LOCATION': true,
+
+        // US entities - disabled by default
+        'US_SSN': false,
+        'US_PASSPORT': false,
+        'US_BANK_NUMBER': false,
+        'US_DRIVER_LICENSE': false,
+        'US_ITIN': false,
+
+        // Other countries - disabled by default
+        'UK_NHS': false,
+        'AU_ABN': false,
+        'AU_ACN': false,
+        'AU_TFN': false,
+        'AU_MEDICARE': false,
+        'SG_NRIC_FIN': false,
+        'NRP': false,
+
+        // Other types - mixed defaults
+        'CRYPTO': false,
+        'MEDICAL_LICENSE': false
+      };
+
+      renderSettings();
+    }
+
+    // Setup functions
+    async function checkSetup() {
+      try {
+        const res = await fetch(`${API_BASE}/setup/check-system`);
+        const data = await res.json();
+
+        let html = '<ul style="list-style:none;padding:0;">';
+        Object.values(data.checks).forEach(check => {
+          const icon = check.status ? '✅' : '❌';
+          html += `
+            <li style="padding:12px;margin-bottom:8px;background:#f9fafb;border-radius:8px;">
+              ${icon} <strong>${check.name}:</strong> ${check.message}
+            </li>
+          `;
+        });
+        html += '</ul>';
+
+        document.getElementById('setup-checks').innerHTML = html;
+
+        if (data.all_passed) {
+          document.getElementById('setup-instructions').classList.remove('hidden');
+        }
+      } catch (err) {
+        document.getElementById('setup-checks').innerHTML = '<p>Błąd sprawdzania systemu</p>';
+      }
+    }
+
+    // Check health
+    async function checkHealth() {
+      try {
+        const res = await fetch(`${API_BASE}/health`);
+        const data = await res.json();
+        const isOnline = data.status === 'healthy';
+
+        document.getElementById('status-value').textContent = isOnline ? t('status_online') : t('status_offline');
+        document.getElementById('status-value').className = isOnline ? 'online' : 'offline';
+      } catch (err) {
+        document.getElementById('status-value').textContent = t('status_offline');
+        document.getElementById('status-value').className = 'offline';
+      }
+    }
+
+    // Initialize
+    updateUIText();
+    checkHealth();
+    setInterval(checkHealth, 15000);
+  </script>
+</body>
+</html>

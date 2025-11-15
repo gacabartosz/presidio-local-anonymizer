@@ -1,12 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Presidio Browser Anonymizer",
-  "version": "1.2.0",
-  "description": "Real-time PII anonymization powered by Microsoft Presidio. Detects and masks sensitive data like emails, phone numbers, PESEL, NIP, and more.",
+  "version": "1.3.0",
+  "description": "Auto-anonymize PII when pasting text! Powered by Microsoft Presidio. Detects emails, phones, PESEL, NIP, credit cards, IDs - 28 entity types. Works with ChatGPT, Gmail, and all websites.",
+  "author": "Bartosz Gaca",
+  "homepage_url": "https://github.com/gacabartosz/presidio-local-anonymizer",
   "permissions": [
     "activeTab",
     "storage",
-    "contextMenus"
+    "contextMenus",
+    "clipboardRead"
   ],
   "host_permissions": [
     "http://localhost:*/*",

@@ -1,55 +1,108 @@
 # 🔐 Presidio Browser Anonymizer
 
-**Real-time text anonymization for ChatGPT, Claude AI, and Perplexity using Microsoft Presidio**
+**Chrome Extension + Local Backend - Auto-anonymize PII when pasting text!**
 
-Automatically anonymize personal data before sending it to AI chatbots. Works locally (100% offline) with Microsoft Presidio.
+Automatically anonymize personal data when pasting into ChatGPT, Gmail, forms, and any website. Powered by Microsoft Presidio. Works 100% locally - no data leaves your computer.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
-![Status](https://img.shields.io/badge/status-active-success.svg)
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Chrome Extension](https://img.shields.io/badge/chrome-extension-brightgreen.svg)
+![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)
 
 ---
 
 ## ✨ Features
 
-- ✅ **Real-time anonymization** - automatic textarea monitoring before sending
-- ✅ **Zero configuration** - install and it works (auto-connect to backend)
-- ✅ **100% offline** - everything runs locally, no data leaves your machine
-- ✅ **Microsoft Presidio** - professional PII detection engine
-- ✅ **Polish data support** - PESEL, NIP
-- ✅ **Web Dashboard** - real-time monitoring and testing
-- ✅ **Multi-platform** - ChatGPT, Claude AI, Perplexity
+- 🚀 **Auto-Paste Anonymization (NEW!)** - Automatically anonymizes when you paste (Ctrl+V) anywhere!
+- ✅ **Zero configuration** - One-click installation scripts for Windows/Mac/Linux
+- ✅ **100% offline** - Everything runs locally, no data leaves your machine
+- ✅ **Microsoft Presidio** - Professional PII detection engine
+- ✅ **28 entity types** - PESEL, NIP, emails, phones, credit cards, passports, IDs
+- ✅ **Polish language optimized** - Native support for Polish PII
+- ✅ **Works everywhere** - ChatGPT, Gmail, forms, content-editable fields
+- ✅ **Web Dashboard** - Real-time monitoring and testing
 
 ---
 
-## 🚀 Quick Start (3 Steps)
+## 🚀 Quick Installation
 
-> **📦 Full Installation Guide:** See [INSTALL.md](INSTALL.md) for complete step-by-step instructions from scratch.
+> **📖 Full Documentation:** [INSTALLATION.md](INSTALLATION.md) - Complete step-by-step guide with troubleshooting
 
-### Step 1: Start Backend
+### Windows
 
-```bash
-cd backend
-source .venv/bin/activate
-python app.py
-```
+1. Download project and run installer:
+   ```cmd
+   git clone https://github.com/gacabartosz/presidio-local-anonymizer
+   cd presidio-local-anonymizer
+   install-windows.bat
+   ```
 
-**Leave terminal open!** Backend must run in background.
+2. Install Chrome extension:
+   - Open `chrome://extensions/`
+   - Enable "Developer mode"
+   - Click "Load unpacked" → select `chrome-extension/` folder
 
-### Step 2: Load Extension in Chrome
+3. **Done!** Start pasting text and it will be auto-anonymized!
 
-1. Open `chrome://extensions/`
-2. Enable **"Developer mode"** (top right)
-3. Click **"Load unpacked"**
-4. Select `extension/` folder
+### macOS
 
-### Step 3: Done!
+1. Download project and run installer:
+   ```bash
+   git clone https://github.com/gacabartosz/presidio-local-anonymizer
+   cd presidio-local-anonymizer
+   ./install-mac.sh
+   ```
 
-Extension will automatically connect to backend. Check status:
-- Click extension icon (blue "P")
-- Status should show: **● Connected** ✅
+2. Install Chrome extension:
+   - Open `chrome://extensions/`
+   - Enable "Developer mode"
+   - Click "Load unpacked" → select `chrome-extension/` folder
 
-**That's it!** Type in ChatGPT/Claude - data will be automatically anonymized.
+3. **Done!** Start pasting text and it will be auto-anonymized!
+
+### Linux
+
+1. Download project and run installer:
+   ```bash
+   git clone https://github.com/gacabartosz/presidio-local-anonymizer
+   cd presidio-local-anonymizer
+   ./install-linux.sh
+   ```
+
+2. Install Chrome extension:
+   - Open `chrome://extensions/`
+   - Enable "Developer mode"
+   - Click "Load unpacked" → select `chrome-extension/` folder
+
+3. **Done!** Start pasting text and it will be auto-anonymized!
+
+---
+
+## 🎯 How It Works
+
+### Auto-Paste Anonymization (Primary Method)
+
+1. **Copy text with PII:**
+   ```
+   Mój PESEL: 44051401359, email: jan@example.com, tel: +48 123 456 789
+   ```
+
+2. **Paste anywhere (Ctrl+V):**
+   - ChatGPT prompt
+   - Gmail compose
+   - Any form field
+   - Content-editable areas
+
+3. **Text automatically anonymized:**
+   ```
+   Mój PESEL: [PESEL], email: [EMAIL], tel: [TELEFON]
+   ```
+
+### Alternative Methods
+
+**Keyboard Shortcut:** Select text → Press `Ctrl+Shift+A` (Mac: `Cmd+Shift+A`)
+
+**Context Menu:** Select text → Right-click → "Anonimizuj zaznaczony tekst"
 
 ---
 

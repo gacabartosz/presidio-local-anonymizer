@@ -1,27 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
-  <!-- Background circle -->
-  <circle cx="100" cy="100" r="95" fill="#2563eb" opacity="0.1"/>
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+  </defs>
 
-  <!-- Shield outline -->
-  <path d="M100 20 L140 40 L140 85 Q140 120 100 150 Q60 120 60 85 L60 40 Z"
-        fill="#2563eb" stroke="#1e40af" stroke-width="2"/>
+  <!-- Background - full square -->
+  <rect width="200" height="200" fill="url(#bgGradient)"/>
 
-  <!-- Shield inner -->
-  <path d="M100 30 L130 45 L130 80 Q130 110 100 135 Q70 110 70 80 L70 45 Z"
-        fill="#3b82f6"/>
+  <!-- Large shield - fills most of the square -->
+  <path d="M100 15 L175 50 V120 C175 165 135 190 100 195 C65 190 25 165 25 120 V50 Z"
+        fill="url(#shieldGradient)" stroke="#1e3a8a" stroke-width="4" filter="url(#shadow)"/>
 
-  <!-- Lock icon -->
-  <rect x="85" y="75" width="30" height="35" rx="3" fill="#fff"/>
-  <circle cx="100" cy="65" r="12" fill="none" stroke="#fff" stroke-width="4"/>
-  <circle cx="100" cy="92" r="4" fill="#2563eb"/>
-  <line x1="100" y1="96" x2="100" y2="102" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+  <!-- Shield highlight -->
+  <path d="M100 25 L165 55 V115 C165 155 130 177 100 182 C70 177 35 155 35 115 V55 Z"
+        fill="#3b82f6" opacity="0.3"/>
 
-  <!-- Anonymization symbols (redacted blocks) -->
-  <rect x="45" y="155" width="25" height="5" rx="2" fill="#94a3b8" opacity="0.8"/>
-  <rect x="45" y="165" width="35" height="5" rx="2" fill="#94a3b8" opacity="0.6"/>
-  <rect x="45" y="175" width="20" height="5" rx="2" fill="#94a3b8" opacity="0.4"/>
+  <!-- Large lock body -->
+  <rect x="70" y="105" width="60" height="70" rx="6" fill="white" filter="url(#shadow)"/>
 
-  <rect x="130" y="155" width="25" height="5" rx="2" fill="#94a3b8" opacity="0.8"/>
-  <rect x="120" y="165" width="35" height="5" rx="2" fill="#94a3b8" opacity="0.6"/>
-  <rect x="135" y="175" width="20" height="5" rx="2" fill="#94a3b8" opacity="0.4"/>
+  <!-- Lock shackle (ring) -->
+  <path d="M100 70 Q120 70 120 90 V105 H80 V90 Q80 70 100 70"
+        fill="none" stroke="white" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- Keyhole -->
+  <circle cx="100" cy="130" r="8" fill="#2563eb"/>
+  <rect x="96" y="135" width="8" height="25" rx="3" fill="#2563eb"/>
+
+  <!-- Decorative bars (redacted/anonymous effect) -->
+  <rect x="45" y="45" width="30" height="6" rx="3" fill="white" opacity="0.4"/>
+  <rect x="125" y="45" width="30" height="6" rx="3" fill="white" opacity="0.4"/>
+
+  <!-- Corner accents -->
+  <rect x="10" y="10" width="20" height="3" rx="1.5" fill="white" opacity="0.5"/>
+  <rect x="10" y="10" width="3" height="20" rx="1.5" fill="white" opacity="0.5"/>
+
+  <rect x="170" y="10" width="20" height="3" rx="1.5" fill="white" opacity="0.5"/>
+  <rect x="187" y="10" width="3" height="20" rx="1.5" fill="white" opacity="0.5"/>
+
+  <rect x="10" y="187" width="20" height="3" rx="1.5" fill="white" opacity="0.5"/>
+  <rect x="10" y="170" width="3" height="20" rx="1.5" fill="white" opacity="0.5"/>
+
+  <rect x="170" y="187" width="20" height="3" rx="1.5" fill="white" opacity="0.5"/>
+  <rect x="187" y="170" width="3" height="20" rx="1.5" fill="white" opacity="0.5"/>
 </svg>
