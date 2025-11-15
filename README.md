@@ -88,16 +88,52 @@ Dashboard shows:
 
 ## 🔒 Detected Data Types
 
-| Type | Example | Mask |
-|------|---------|------|
-| EMAIL | jan@example.com | [EMAIL] |
-| PL_PESEL | 92010212345 | [PESEL] |
-| PL_NIP | 123-456-78-90 | [NIP] |
-| PHONE_NUMBER | +48 123 456 789 | [TELEFON] |
-| URL | https://example.com | [URL] |
-| IP_ADDRESS | 192.168.1.1 | [IP] |
-| DATE_TIME | 2024-12-10 | [DATA] |
-| LOCATION | Warsaw | [LOKALIZACJA] |
+### 🇵🇱 Polskie dane (domyślnie włączone):
+
+| Type | Example | Mask | Enabled |
+|------|---------|------|---------|
+| EMAIL | jan@example.com | [EMAIL] | ✅ |
+| PL_PESEL | 92010212345 | [PESEL] | ✅ |
+| PL_NIP | 123-456-78-90 | [NIP] | ✅ |
+| PL_PASSPORT | AB1234567 | [PASZPORT_PL] | ✅ |
+| PL_ID_CARD | ABC123456 | [DOWOD_PL] | ✅ |
+| PHONE_NUMBER | +48 123 456 789 | [TELEFON] | ✅ |
+| CREDIT_CARD | 4532-1234-5678-9010 | [KARTA] | ✅ |
+| IBAN_CODE | PL61109010140000071219812874 | [IBAN] | ✅ |
+| IP_ADDRESS | 192.168.1.1 | [IP] | ✅ |
+| URL | https://example.com | [URL] | ✅ |
+| DATE_TIME | 2024-12-10 | [DATA] | ✅ |
+| LOCATION | Warsaw | [LOKALIZACJA] | ✅ |
+
+### 🌍 Dane międzynarodowe (domyślnie wyłączone):
+
+| Type | Example | Mask | Country |
+|------|---------|------|---------|
+| US_SSN | 123-45-6789 | [SSN] | 🇺🇸 USA |
+| US_PASSPORT | 123456789 | [PASZPORT_US] | 🇺🇸 USA |
+| US_BANK_NUMBER | 123456789 | [BANK_US] | 🇺🇸 USA |
+| US_DRIVER_LICENSE | D1234567 | [PRAWO_JAZDY_US] | 🇺🇸 USA |
+| US_ITIN | 912-34-5678 | [ITIN] | 🇺🇸 USA |
+| UK_NHS | 123 456 7890 | [NHS] | 🇬🇧 UK |
+| AU_ABN | 12 345 678 901 | [ABN] | 🇦🇺 Australia |
+| AU_ACN | 123 456 789 | [ACN] | 🇦🇺 Australia |
+| AU_TFN | 123 456 782 | [TFN] | 🇦🇺 Australia |
+| AU_MEDICARE | 1234 56789 0 | [MEDICARE_AU] | 🇦🇺 Australia |
+| SG_NRIC_FIN | S1234567D | [NRIC_SG] | 🇸🇬 Singapore |
+
+### 🔐 Inne dane:
+
+| Type | Example | Mask | Enabled |
+|------|---------|------|---------|
+| PERSON | Jan Kowalski | [OSOBA] | ❌ (off by default) |
+| CRYPTO | 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa | [CRYPTO] | ❌ |
+| MEDICAL_LICENSE | MD123456 | [LICENCJA_MED] | ❌ |
+| PL_REGON | 123456789 | [REGON] | ❌ |
+| NRP | AB123456C | [NRP] | ❌ |
+
+**Razem: 27 typów danych osobowych!**
+
+Możesz włączyć/wyłączyć każdy typ w Settings: http://127.0.0.1:4222
 
 ---
 
