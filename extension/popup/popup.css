@@ -108,6 +108,15 @@ button:hover {
   background: #1976D2;
 }
 
+.info {
+  padding: 12px;
+  background: #e3f2fd;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #1565c0;
+  line-height: 1.4;
+}
+
 .footer {
   text-align: center;
   color: #666;

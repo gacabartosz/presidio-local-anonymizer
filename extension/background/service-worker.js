@@ -5,19 +5,14 @@
 
 const API_BASE_URL = 'http://127.0.0.1:4222/api';
 
-// Load API token from storage
+// Auto-load API token from backend
 let API_TOKEN = null;
 
 chrome.runtime.onInstalled.addListener(async () => {
   console.log('[Presidio] Extension installed');
 
-  // Load token from storage
-  const result = await chrome.storage.local.get(['apiToken']);
-  if (result.apiToken) {
-    API_TOKEN = result.apiToken;
-  } else {
-    console.warn('[Presidio] API token not set. Please configure in popup.');
-  }
+  // Auto-fetch token from backend
+  await autoLoadToken();
 
   // Set default settings
   await chrome.storage.local.set({
@@ -25,6 +20,30 @@ chrome.runtime.onInstalled.addListener(async () => {
     showHighlights: true
   });
 });
+
+// Auto-load token from backend on startup
+chrome.runtime.onStartup.addListener(async () => {
+  console.log('[Presidio] Extension started');
+  await autoLoadToken();
+});
+
+// Auto-load token function
+async function autoLoadToken() {
+  try {
+    // Try to fetch token from backend
+    const response = await fetch('http://127.0.0.1:4222/api/token');
+    if (response.ok) {
+      const data = await response.json();
+      API_TOKEN = data.token;
+      await chrome.storage.local.set({ apiToken: API_TOKEN });
+      console.log('[Presidio] Token auto-loaded from backend ✓');
+    } else {
+      console.warn('[Presidio] Could not auto-load token. Backend may not be running.');
+    }
+  } catch (error) {
+    console.warn('[Presidio] Backend not available. Start backend to enable anonymization.');
+  }
+}
 
 // Listen for messages from content scripts
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
