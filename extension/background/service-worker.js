@@ -29,8 +29,16 @@ chrome.runtime.onStartup.addListener(async () => {
 
 // Auto-load token function
 async function autoLoadToken() {
+  // First, try to load from storage (cached)
+  const stored = await chrome.storage.local.get(['apiToken']);
+  if (stored.apiToken) {
+    API_TOKEN = stored.apiToken;
+    console.log('[Presidio] Token loaded from cache ✓');
+    return;
+  }
+
+  // If not cached, fetch from backend
   try {
-    // Try to fetch token from backend
     const response = await fetch('http://127.0.0.1:4222/api/token');
     if (response.ok) {
       const data = await response.json();
@@ -73,8 +81,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
  * Anonymize text via API
  */
 async function anonymizeText(text) {
+  // Auto-load token if not available
   if (!API_TOKEN) {
-    throw new Error('API token not configured');
+    console.log('[Presidio] Token not loaded, attempting auto-load...');
+    await autoLoadToken();
+
+    // If still no token, throw error
+    if (!API_TOKEN) {
+      throw new Error('Backend not running. Please start backend: cd backend && source .venv/bin/activate && python app.py');
+    }
   }
 
   const response = await fetch(`${API_BASE_URL}/anonymize`, {
@@ -107,4 +122,8 @@ async function checkHealth() {
   return await response.json();
 }
 
-console.log('[Presidio] Service worker loaded');
+// Initialize token on service worker load
+(async function init() {
+  console.log('[Presidio] Service worker loaded');
+  await autoLoadToken();
+})();
