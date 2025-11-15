@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Presidio Browser Anonymizer - Settings</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
     <style>
         * {
             margin: 0;
@@ -762,9 +764,36 @@
         let entitySettings = { ...defaultEntityState };
         let isSaving = false;
 
+        // Detect Browser Language
+        function detectBrowserLanguage() {
+            // Get browser language (e.g., "pl-PL", "en-US", "de-DE")
+            const browserLang = navigator.language || navigator.userLanguage;
+            const langCode = browserLang.split('-')[0].toLowerCase(); // Extract "pl", "en", "de"
+
+            // Check if we support this language
+            if (translations[langCode]) {
+                return langCode;
+            }
+
+            // Default to Polish
+            return 'pl';
+        }
+
         // Initialize
         function init() {
+            // Auto-detect browser language
+            const detectedLang = detectBrowserLanguage();
+            currentLang = detectedLang;
+
+            // Update active flag on initial load
+            document.querySelectorAll('.lang-flag').forEach(f => f.classList.remove('active'));
+            const activeFlag = document.querySelector(`[data-lang="${detectedLang}"]`);
+            if (activeFlag) {
+                activeFlag.classList.add('active');
+            }
+
             setupLanguageSwitcher();
+            updateUILanguage();
             checkHealth();
             loadSettings();
             renderCategories();
@@ -823,7 +852,7 @@
                 const response = await fetch(`${API_BASE_URL}/health`);
                 const data = await response.json();
 
-                if (data.status === 'ok') {
+                if (data.status === 'healthy' || data.status === 'ok') {
                     statusBadge.className = 'status-badge online';
                     statusDot.className = 'status-dot online';
                     statusText.textContent = t.settings.status.online;
@@ -840,10 +869,19 @@
         // Load Settings
         async function loadSettings() {
             try {
-                const response = await fetch(`${API_BASE_URL}/settings`);
+                const response = await fetch(`${API_BASE_URL}/config`);
                 if (response.ok) {
                     const data = await response.json();
-                    entitySettings = { ...defaultEntityState, ...data };
+                    // Convert array format [{name: "EMAIL", enabled: true}] to object format
+                    if (data.entities && Array.isArray(data.entities)) {
+                        const loadedSettings = {};
+                        data.entities.forEach(entity => {
+                            loadedSettings[entity.name] = entity.enabled;
+                        });
+                        entitySettings = { ...defaultEntityState, ...loadedSettings };
+                    } else {
+                        entitySettings = { ...defaultEntityState };
+                    }
                 } else {
                     entitySettings = { ...defaultEntityState };
                 }
@@ -933,10 +971,16 @@
             btnSaveText.textContent = translations[currentLang].settings.saving;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/settings`, {
+                // Convert object format to array format for backend
+                const entitiesArray = Object.keys(entitySettings).map(name => ({
+                    name: name,
+                    enabled: entitySettings[name]
+                }));
+
+                const response = await fetch(`${API_BASE_URL}/config`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(entitySettings),
+                    body: JSON.stringify({ entities: entitiesArray }),
                 });
 
                 if (response.ok) {
