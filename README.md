@@ -24,6 +24,8 @@ Automatically anonymize personal data before sending it to AI chatbots. Works lo
 
 ## 🚀 Quick Start (3 Steps)
 
+> **📦 Full Installation Guide:** See [INSTALL.md](INSTALL.md) for complete step-by-step instructions from scratch.
+
 ### Step 1: Start Backend
 
 ```bash
