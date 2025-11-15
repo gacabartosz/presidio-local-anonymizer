@@ -1,6 +1,6 @@
 // Background service worker for Presidio Browser Anonymizer
-
-const API_BASE_URL = 'http://localhost:4222/api';
+// Import config functions
+importScripts('config.js');
 
 // Listen for messages from content scripts
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -10,19 +10,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       .catch(error => sendResponse({ success: false, error: error.message }));
     return true; // Keep the message channel open for async response
   }
+
+  if (request.action === 'getBackendUrl') {
+    getBackendUrl()
+      .then(url => sendResponse({ success: true, url }))
+      .catch(error => sendResponse({ success: false, error: error.message }));
+    return true;
+  }
+
+  if (request.action === 'testConnection') {
+    testBackendConnection(request.url)
+      .then(result => sendResponse(result))
+      .catch(error => sendResponse({ success: false, message: error.message }));
+    return true;
+  }
 });
 
 // Anonymize text using the API
 async function anonymizeText(text) {
   try {
-    const response = await fetch(`${API_BASE_URL}/anonymize`, {
+    const backendUrl = await getBackendUrl();
+    const response = await fetch(`${backendUrl}/api/anonymize`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text })
     });
 
     if (!response.ok) {
-      throw new Error('Anonymization failed');
+      throw new Error(`HTTP ${response.status}: Anonymization failed`);
     }
 
     const data = await response.json();

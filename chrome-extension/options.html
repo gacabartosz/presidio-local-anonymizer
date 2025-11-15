@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Konfiguracja Presidio Anonymizer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 32px;
+    }
+    .section {
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    input[type="url"], input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+    .help-text {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+    .btn-test {
+      background: #10b981;
+      color: white;
+    }
+    .btn-test:hover {
+      background: #059669;
+    }
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+    }
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+    .status-box {
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+    .status-box.success {
+      background: rgba(16, 185, 129, 0.1);
+      color: #059669;
+      border: 1px solid #10b981;
+    }
+    .status-box.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #dc2626;
+      border: 1px solid #ef4444;
+    }
+    .hidden {
+      display: none;
+    }
+    .install-guide {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 32px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .install-guide h3 {
+      font-size: 16px;
+      color: #1f2937;
+      margin-bottom: 12px;
+    }
+    .install-guide code {
+      background: #e5e7eb;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+    .install-guide ol {
+      margin-left: 20px;
+    }
+    .install-guide li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚙️ Konfiguracja</h1>
+    <div class="subtitle">Presidio Browser Anonymizer v1.2.0</div>
+
+    <div class="section">
+      <label for="backend-url">URL Backendu</label>
+      <input type="url" id="backend-url" placeholder="http://localhost:4222" value="http://localhost:4222">
+      <div class="help-text">Adres serwera Presidio Anonymizer (domyślnie: http://localhost:4222)</div>
+    </div>
+
+    <div class="btn-group">
+      <button id="test-btn" class="btn btn-test">🔍 Testuj Połączenie</button>
+      <button id="save-btn" class="btn btn-primary">💾 Zapisz</button>
+      <button id="reset-btn" class="btn btn-secondary">🔄 Reset</button>
+    </div>
+
+    <div id="status-message" class="status-box hidden"></div>
+
+    <div class="install-guide">
+      <h3>📖 Instrukcja instalacji backendu</h3>
+      <ol>
+        <li>Sklonuj repozytorium: <code>git clone https://github.com/gacabartosz/presidio-local-anonymizer</code></li>
+        <li>Przejdź do katalogu: <code>cd presidio-local-anonymizer/backend</code></li>
+        <li>Utwórz venv: <code>python -m venv .venv && source .venv/bin/activate</code></li>
+        <li>Zainstaluj zależności: <code>pip install -r requirements.txt</code></li>
+        <li>Pobierz model SpaCy: <code>python -m spacy download pl_core_news_md</code></li>
+        <li>Uruchom backend: <code>python app.py</code></li>
+        <li>Backend dostępny pod adresem: <code>http://localhost:4222</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

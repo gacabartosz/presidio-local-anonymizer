@@ -1,117 +1,195 @@
 # Presidio Browser Anonymizer - Chrome Extension
 
-Rozszerzenie Chrome do anonimizacji danych osobowych w czasie rzeczywistym.
+Chrome extension for real-time PII anonymization powered by Microsoft Presidio.
 
-## Funkcje
+## Features
 
-- **Anonimizacja zaznaczonego tekstu** - Kliknij prawym przyciskiem myszy na zaznaczonym tekście → "Anonimizuj zaznaczony tekst"
-- **Skrót klawiszowy** - `Ctrl+Shift+A` (Mac: `Cmd+Shift+A`) anonimizuje zaznaczony tekst
-- **Popup z statusem** - Sprawdzenie statusu serwisu i szybki dostęp do Dashboard i Ustawień
-- **Automatyczna detekcja PII** - Wykrywa i maskuje:
-  - Adresy email
-  - Numery telefonów
-  - PESEL, NIP, dowód osobisty, paszport (PL)
-  - Karty kredytowe, IBAN
-  - Adresy IP, URL
-  - Daty, lokalizacje
-  - SSN, paszporty (US)
-  - NHS, ABN, TFN, Medicare (UK/AU/SG)
+- **Real-time Anonymization**: Anonymize selected text with Ctrl+Shift+A
+- **Context Menu**: Right-click selected text → "Anonimizuj zaznaczony tekst"
+- **Configurable Backend**: Connect to any Presidio backend instance
+- **Polish Language Support**: Optimized for Polish PII (PESEL, NIP, names, locations)
+- **28 Entity Types**: Emails, phones, credit cards, IDs, and more
 
-## Wymagania
+## Installation
 
-**Backend musi być uruchomiony!**
+### 1. Install Backend
 
 ```bash
-cd backend
-source .venv/bin/activate
+# Clone repository
+git clone https://github.com/gacabartosz/presidio-local-anonymizer
+cd presidio-local-anonymizer/backend
+
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Download SpaCy model
+python -m spacy download pl_core_news_md
+
+# Run backend
 python app.py
 ```
 
-Backend działa na: `http://localhost:4222`
+Backend will start on `http://localhost:4222`
 
-## Instalacja Rozszerzenia
+### 2. Install Chrome Extension
 
-### 1. Przygotuj ikony (opcjonalne)
+#### Option A: Load Unpacked (Development)
 
-Rozszerzenie wymaga ikon PNG w różnych rozmiarach. Możesz:
+1. Open Chrome → `chrome://extensions/`
+2. Enable "Developer mode" (top-right corner)
+3. Click "Load unpacked"
+4. Select `/path/to/presidio-local-anonymizer/chrome-extension` folder
 
-**Opcja A: Użyj narzędzia online do konwersji SVG → PNG**
-- Otwórz https://svgtopng.com/
-- Wgraj plik `icons/icon.svg`
-- Wygeneruj PNG w rozmiarach: 16x16, 32x32, 48x48, 128x128
-- Zapisz jako `icon-16.png`, `icon-32.png`, `icon-48.png`, `icon-128.png`
-- Umieść w folderze `icons/`
+#### Option B: From GitHub Releases
 
-**Opcja B: Użyj ImageMagick (jeśli zainstalowany)**
+1. Download latest `.crx` or `.zip` from [Releases](https://github.com/gacabartosz/presidio-local-anonymizer/releases)
+2. Drag & drop into `chrome://extensions/`
+
+## Configuration
+
+### Setting Backend URL
+
+1. Click extension icon
+2. Click "🔧 Konfiguracja Wtyczki"
+3. Enter backend URL (e.g., `http://localhost:4222`)
+4. Click "🔍 Testuj Połączenie" to verify
+5. Click "💾 Zapisz" to save
+
+### Custom Port or Host
+
+If you run backend on different port:
+
 ```bash
-cd chrome-extension/icons
-convert icon.svg -resize 16x16 icon-16.png
-convert icon.svg -resize 32x32 icon-32.png
-convert icon.svg -resize 48x48 icon-48.png
-convert icon.svg -resize 128x128 icon-128.png
+python app.py --port 8080
 ```
 
-**Opcja C: Użyj tymczasowych ikon (dla testów)**
-Możesz tymczasowo użyć dowolnych obrazów PNG o odpowiednich rozmiarach, aby przetestować rozszerzenie.
+Then update extension config:
+- Open extension options
+- Set URL to `http://localhost:8080`
+- Save
 
-### 2. Załaduj rozszerzenie do Chrome
+## Usage
 
-1. Otwórz Chrome i przejdź do: `chrome://extensions/`
-2. Włącz **Tryb dewelopera** (przełącznik w prawym górnym rogu)
-3. Kliknij **Załaduj rozpakowane**
-4. Wybierz folder: `/Users/gaca/presidio-local-anonymizer/chrome-extension`
+### Keyboard Shortcut
 
-### 3. Gotowe!
+1. Select text on any webpage
+2. Press `Ctrl+Shift+A` (or `Cmd+Shift+A` on Mac)
+3. Text will be anonymized instantly
 
-Rozszerzenie jest zainstalowane. Zobaczysz ikonę Presidio w pasku narzędzi Chrome.
+### Context Menu
 
-## Użycie
+1. Select text
+2. Right-click
+3. Choose "Anonimizuj zaznaczony tekst"
 
-### Metoda 1: Menu kontekstowe
-1. Zaznacz tekst z danymi osobowymi na dowolnej stronie
-2. Kliknij prawym przyciskiem myszy
-3. Wybierz **"Anonimizuj zaznaczony tekst"**
-4. Tekst zostanie zastąpiony wersją zanonimizowaną
+### Dashboard
 
-### Metoda 2: Skrót klawiszowy
-1. Zaznacz tekst z danymi osobowymi
-2. Naciśnij `Ctrl+Shift+A` (Windows/Linux) lub `Cmd+Shift+A` (Mac)
-3. Tekst zostanie automatycznie zanonimizowany
+- Click extension icon → "⚙️ Ustawienia" - Configure entity detection
+- Click extension icon → "📊 Dashboard" - Test anonymization
 
-### Metoda 3: Popup
-1. Kliknij ikonę rozszerzenia w pasku narzędzi
-2. Sprawdź status serwisu
-3. Kliknij **Dashboard** lub **Ustawienia** aby otworzyć interfejs webowy
+## Detected Entities
 
-## Rozwiązywanie problemów
+### Polish Specific
+- **PESEL**: Personal identification number
+- **NIP**: Tax identification number
+- **REGON**: Business registry number
+- **ID Card**: Polish ID card numbers
+- **Passport**: Polish passport numbers
 
-### "Status Serwisu: Offline"
-- Upewnij się, że backend jest uruchomiony: `python backend/app.py`
-- Sprawdź czy backend działa: http://localhost:4222/api/health
+### General
+- **PERSON**: Names and surnames
+- **LOCATION**: Cities, addresses
+- **EMAIL_ADDRESS**: Email addresses
+- **PHONE_NUMBER**: Phone numbers
+- **CREDIT_CARD**: Credit card numbers
+- **IBAN_CODE**: Bank account numbers
+- **IP_ADDRESS**: IP addresses
+- **URL**: Web addresses
+- **DATE_TIME**: Dates and times
 
-### Rozszerzenie nie anonimizuje tekstu
-- Sprawdź konsolę Chrome (F12 → Console) dla błędów
-- Upewnij się, że backend odpowiada poprawnie
-- Spróbuj przeładować rozszerzenie w `chrome://extensions/`
+## Architecture
 
-### Ikony nie wyświetlają się
-- Upewnij się, że wygenerowałeś pliki PNG w folderze `icons/`
-- Przeładuj rozszerzenie w `chrome://extensions/`
+```
+┌─────────────┐
+│   Chrome    │
+│  Extension  │
+└──────┬──────┘
+       │ HTTP API
+       │
+┌──────▼──────┐
+│   Backend   │
+│  (Flask)    │
+└──────┬──────┘
+       │
+┌──────▼──────┐
+│  Presidio   │
+│  + SpaCy    │
+└─────────────┘
+```
 
-## Bezpieczeństwo
+## Development
 
-- Rozszerzenie komunikuje się **TYLKO** z localhost:4222
-- Żadne dane nie są wysyłane do internetu
-- Backend działa lokalnie na Twoim komputerze
-- Wszystkie dane pozostają w Twojej sieci lokalnej
+### Project Structure
 
-## Wsparcie
+```
+chrome-extension/
+├── manifest.json          # Extension configuration
+├── background.js          # Service worker (API calls)
+├── content-script.js      # Page interaction
+├── popup.html/js          # Extension popup
+├── options.html/js        # Configuration page
+├── config.js              # Config management
+└── icons/                 # Extension icons
+```
 
-- **GitHub**: https://github.com/gacabartosz/presidio-local-anonymizer
-- **Backend API**: http://localhost:4222/api
-- **Dashboard**: http://localhost:4222/dashboard
-- **Ustawienia**: http://localhost:4222/
+### Building
 
-## Licencja
+No build step required - extension works directly from source.
 
-MIT License - Zobacz plik LICENSE w głównym katalogu projektu.
+### Testing
+
+1. Make changes to code
+2. Go to `chrome://extensions/`
+3. Click reload icon on extension card
+4. Test functionality
+
+## Troubleshooting
+
+### "Status: Offline"
+
+- Verify backend is running: `curl http://localhost:4222/api/health`
+- Check backend URL in extension options
+- Check browser console for errors
+
+### "Anonymization Failed"
+
+- Ensure backend is accessible
+- Check text contains detectable entities
+- Verify entities are enabled in dashboard settings
+
+### Permission Errors
+
+- Extension requires `http://localhost` access
+- For custom hosts, update `host_permissions` in manifest.json
+
+## License
+
+MIT
+
+## Contributing
+
+1. Fork repository
+2. Create feature branch
+3. Make changes
+4. Test thoroughly
+5. Submit pull request
+
+## Links
+
+- **Repository**: https://github.com/gacabartosz/presidio-local-anonymizer
+- **Issues**: https://github.com/gacabartosz/presidio-local-anonymizer/issues
+- **Presidio**: https://github.com/microsoft/presidio
