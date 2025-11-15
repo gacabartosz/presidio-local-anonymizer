@@ -4,7 +4,7 @@ Anonymization endpoint - core functionality
 
 from flask import Blueprint, jsonify, request
 import logging
-from core.analyzer import build_analyzer
+from core.analyzer import build_analyzer, get_supported_entities
 from core.anonymizer import anonymize_text
 
 logger = logging.getLogger(__name__)
@@ -87,11 +87,22 @@ def anonymize():
         import time
         start_time = time.time()
 
+        # Get enabled entities from config
+        enabled_entities = get_supported_entities(config)
+
+        # If user provided entities filter, use intersection with enabled entities
+        if entities_filter:
+            entities_to_use = list(set(entities_filter) & set(enabled_entities))
+        else:
+            entities_to_use = enabled_entities
+
+        logger.info(f"Analyzing with entities: {entities_to_use}")
+
         # Analyze text for PII
         results = analyzer.analyze(
             text=text,
             language='pl',
-            entities=entities_filter  # If None, detects all entities
+            entities=entities_to_use  # Use only enabled entities
         )
 
         # Anonymize text

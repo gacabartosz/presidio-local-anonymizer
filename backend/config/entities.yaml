@@ -1,174 +1,144 @@
-# Konfiguracja wykrywania i anonimizacji encji PII dla języka polskiego
-
+entities:
+  AU_ABN:
+    description: Australian Business Number
+    enabled: false
+    mask: '[ABN]'
+  AU_ACN:
+    description: Australian Company Number
+    enabled: false
+    mask: '[ACN]'
+  AU_MEDICARE:
+    description: Australian Medicare Number
+    enabled: false
+    mask: '[MEDICARE_AU]'
+  AU_TFN:
+    description: Australian Tax File Number
+    enabled: false
+    mask: '[TFN]'
+  CREDIT_CARD:
+    description: Numer karty kredytowej
+    enabled: true
+    mask: '[KARTA]'
+  CRYPTO:
+    description: Adres kryptowaluty (Bitcoin, Ethereum)
+    enabled: false
+    mask: '[CRYPTO]'
+  DATE_TIME:
+    description: Data lub data i czas
+    enabled: true
+    mask: '[DATA]'
+  EMAIL_ADDRESS:
+    description: Adres email
+    enabled: true
+    mask: '[EMAIL]'
+  IBAN_CODE:
+    description: Numer rachunku bankowego IBAN
+    enabled: true
+    mask: '[IBAN]'
+  IP_ADDRESS:
+    description: Adres IP
+    enabled: true
+    mask: '[IP]'
+  LOCATION:
+    description: Lokalizacja geograficzna
+    enabled: true
+    mask: '[LOKALIZACJA]'
+  MEDICAL_LICENSE:
+    description: Numer licencji medycznej
+    enabled: false
+    mask: '[LICENCJA_MED]'
+  NRP:
+    description: National Registry of Persons (UK)
+    enabled: false
+    mask: '[NRP]'
+  PERSON:
+    description: Imię i nazwisko osoby
+    enabled: true
+    mask: '[OSOBA]'
+  PHONE_NUMBER:
+    description: Numer telefonu
+    enabled: true
+    mask: '[TELEFON]'
+  PL_ID_CARD:
+    description: Numer dowodu osobistego (polska)
+    enabled: true
+    mask: '[DOWOD_PL]'
+    patterns:
+    - name: ID_CARD_NEW
+      regex: \b[A-Z]{3}\d{6}\b
+      score: 0.7
+  PL_NIP:
+    description: Polski numer identyfikacji podatkowej (NIP)
+    enabled: true
+    mask: '[NIP]'
+    patterns:
+    - name: NIP_PATTERN_WITH_DASHES
+      regex: \b\d{3}-\d{3}-\d{2}-\d{2}\b|\b\d{3}-\d{2}-\d{2}-\d{3}\b
+      score: 0.8
+    - name: NIP_PATTERN_NO_DASHES
+      regex: \b\d{10}\b
+      score: 0.5
+  PL_PASSPORT:
+    description: Numer paszportu polskiego
+    enabled: true
+    mask: '[PASZPORT_PL]'
+    patterns:
+    - name: PASSPORT_NEW
+      regex: \b[A-Z]{2}\d{7}\b
+      score: 0.7
+    - name: PASSPORT_OLD
+      regex: \b[A-Z]{3}\d{6}\b
+      score: 0.6
+  PL_PESEL:
+    description: Polski numer PESEL
+    enabled: true
+    mask: '[PESEL]'
+    patterns:
+    - name: PESEL_PATTERN
+      regex: \b\d{11}\b
+      score: 0.6
+  PL_REGON:
+    description: Polski numer REGON (identyfikacja podmiotów gospodarczych)
+    enabled: true
+    mask: '[REGON]'
+    patterns:
+    - name: REGON_9
+      regex: \b\d{9}\b
+      score: 0.4
+    - name: REGON_14
+      regex: \b\d{14}\b
+      score: 0.5
+  SG_NRIC_FIN:
+    description: Singapore National Registration ID
+    enabled: false
+    mask: '[NRIC_SG]'
+  UK_NHS:
+    description: Numer NHS (National Health Service UK)
+    enabled: false
+    mask: '[NHS]'
+  URL:
+    description: Adres URL
+    enabled: true
+    mask: '[URL]'
+  US_BANK_NUMBER:
+    description: Numer rachunku bankowego USA
+    enabled: false
+    mask: '[BANK_US]'
+  US_DRIVER_LICENSE:
+    description: Numer prawa jazdy USA
+    enabled: false
+    mask: '[PRAWO_JAZDY_US]'
+  US_ITIN:
+    description: Individual Taxpayer Identification Number USA
+    enabled: false
+    mask: '[ITIN]'
+  US_PASSPORT:
+    description: Numer paszportu USA
+    enabled: false
+    mask: '[PASZPORT_US]'
+  US_SSN:
+    description: Numer ubezpieczenia społecznego USA (SSN)
+    enabled: false
+    mask: '[SSN]'
 language: pl
 threshold: 0.35
-
-entities:
-  PERSON:
-    mask: "[OSOBA]"
-    description: "Imię i nazwisko osoby"
-    enabled: false
-
-  EMAIL_ADDRESS:
-    mask: "[EMAIL]"
-    description: "Adres email"
-    enabled: true
-
-  PHONE_NUMBER:
-    mask: "[TELEFON]"
-    description: "Numer telefonu"
-    enabled: true
-
-  PL_PESEL:
-    mask: "[PESEL]"
-    description: "Polski numer PESEL"
-    enabled: true
-    patterns:
-      - name: "PESEL_PATTERN"
-        regex: '\b\d{11}\b'
-        score: 0.6
-
-  PL_NIP:
-    mask: "[NIP]"
-    description: "Polski numer identyfikacji podatkowej (NIP)"
-    enabled: true
-    patterns:
-      - name: "NIP_PATTERN_WITH_DASHES"
-        regex: '\b\d{3}-\d{3}-\d{2}-\d{2}\b|\b\d{3}-\d{2}-\d{2}-\d{3}\b'
-        score: 0.8
-      - name: "NIP_PATTERN_NO_DASHES"
-        regex: '\b\d{10}\b'
-        score: 0.5
-
-  LOCATION:
-    mask: "[LOKALIZACJA]"
-    description: "Lokalizacja geograficzna"
-    enabled: true
-
-  DATE_TIME:
-    mask: "[DATA]"
-    description: "Data lub data i czas"
-    enabled: true
-
-  URL:
-    mask: "[URL]"
-    description: "Adres URL"
-    enabled: true
-
-  IP_ADDRESS:
-    mask: "[IP]"
-    description: "Adres IP"
-    enabled: true
-
-  CREDIT_CARD:
-    mask: "[KARTA]"
-    description: "Numer karty kredytowej"
-    enabled: true
-
-  CRYPTO:
-    mask: "[CRYPTO]"
-    description: "Adres kryptowaluty (Bitcoin, Ethereum)"
-    enabled: false
-
-  IBAN_CODE:
-    mask: "[IBAN]"
-    description: "Numer rachunku bankowego IBAN"
-    enabled: true
-
-  US_PASSPORT:
-    mask: "[PASZPORT_US]"
-    description: "Numer paszportu USA"
-    enabled: false
-
-  US_SSN:
-    mask: "[SSN]"
-    description: "Numer ubezpieczenia społecznego USA (SSN)"
-    enabled: false
-
-  US_BANK_NUMBER:
-    mask: "[BANK_US]"
-    description: "Numer rachunku bankowego USA"
-    enabled: false
-
-  US_DRIVER_LICENSE:
-    mask: "[PRAWO_JAZDY_US]"
-    description: "Numer prawa jazdy USA"
-    enabled: false
-
-  US_ITIN:
-    mask: "[ITIN]"
-    description: "Individual Taxpayer Identification Number USA"
-    enabled: false
-
-  UK_NHS:
-    mask: "[NHS]"
-    description: "Numer NHS (National Health Service UK)"
-    enabled: false
-
-  MEDICAL_LICENSE:
-    mask: "[LICENCJA_MED]"
-    description: "Numer licencji medycznej"
-    enabled: false
-
-  AU_ABN:
-    mask: "[ABN]"
-    description: "Australian Business Number"
-    enabled: false
-
-  AU_ACN:
-    mask: "[ACN]"
-    description: "Australian Company Number"
-    enabled: false
-
-  AU_TFN:
-    mask: "[TFN]"
-    description: "Australian Tax File Number"
-    enabled: false
-
-  AU_MEDICARE:
-    mask: "[MEDICARE_AU]"
-    description: "Australian Medicare Number"
-    enabled: false
-
-  SG_NRIC_FIN:
-    mask: "[NRIC_SG]"
-    description: "Singapore National Registration ID"
-    enabled: false
-
-  PL_REGON:
-    mask: "[REGON]"
-    description: "Polski numer REGON (identyfikacja podmiotów gospodarczych)"
-    enabled: false
-    patterns:
-      - name: "REGON_9"
-        regex: '\b\d{9}\b'
-        score: 0.4
-      - name: "REGON_14"
-        regex: '\b\d{14}\b'
-        score: 0.5
-
-  PL_PASSPORT:
-    mask: "[PASZPORT_PL]"
-    description: "Numer paszportu polskiego"
-    enabled: true
-    patterns:
-      - name: "PASSPORT_NEW"
-        regex: '\b[A-Z]{2}\d{7}\b'
-        score: 0.7
-      - name: "PASSPORT_OLD"
-        regex: '\b[A-Z]{3}\d{6}\b'
-        score: 0.6
-
-  PL_ID_CARD:
-    mask: "[DOWOD_PL]"
-    description: "Numer dowodu osobistego (polska)"
-    enabled: true
-    patterns:
-      - name: "ID_CARD_NEW"
-        regex: '\b[A-Z]{3}\d{6}\b'
-        score: 0.7
-
-  NRP:
-    mask: "[NRP]"
-    description: "National Registry of Persons (UK)"
-    enabled: false
