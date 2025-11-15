@@ -87,3 +87,4 @@ dmypy.json
 # Chrome Extension build files (NEVER commit private keys!)
 *.crx
 *.pem
+presidio-extension-*.zip
