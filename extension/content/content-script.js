@@ -39,13 +39,28 @@ function observeTextareas() {
  * Find main textarea and attach event listeners
  */
 function findAndAttachToTextarea() {
-  // Selectors for different sites
+  // Selectors for different sites (ordered by specificity)
   const selectors = [
-    'textarea[data-id="root"]', // ChatGPT
-    'textarea#prompt-textarea', // ChatGPT alternative
-    'div[contenteditable="true"]', // Claude AI
-    'textarea.search-box-input', // Perplexity
-    'textarea', // Generic fallback
+    // ChatGPT (current interface - late 2024)
+    '#prompt-textarea',
+    'textarea[placeholder*="Message"]',
+    'textarea[placeholder*="Send a message"]',
+
+    // ChatGPT (older versions)
+    'textarea[data-id="root"]',
+
+    // Claude AI
+    'div[contenteditable="true"][data-value]',
+    'div[contenteditable="true"]',
+
+    // Perplexity
+    'textarea.search-box-input',
+    'textarea[placeholder*="Ask anything"]',
+
+    // Generic fallback (main content textarea)
+    'main textarea',
+    'textarea[role="textbox"]',
+    'textarea',
   ];
 
   for (const selector of selectors) {
@@ -54,8 +69,13 @@ function findAndAttachToTextarea() {
       console.log('[Presidio] Found textarea:', selector);
       attachToTextarea(textarea);
       currentTextarea = textarea;
-      break;
+      return; // Found and attached
     }
+  }
+
+  // If no textarea found, try again later
+  if (!currentTextarea) {
+    console.log('[Presidio] No textarea found yet, will retry...');
   }
 }
 
