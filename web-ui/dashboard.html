@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presidio Browser Anonymizer - Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .status-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .stat {
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #2196F3;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    .online {
+      color: #4CAF50;
+    }
+
+    .test-section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .test-section h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    button:hover {
+      background: #1976D2;
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 4px;
+      border-left: 4px solid #2196F3;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .logs-section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .logs {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 16px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .log-entry {
+      margin-bottom: 4px;
+      padding: 4px;
+    }
+
+    .log-entry.info {
+      color: #4CAF50;
+    }
+
+    .log-entry.warning {
+      color: #FF9800;
+    }
+
+    .log-entry.error {
+      color: #f44336;
+    }
+
+    .token-info {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .token-info code {
+      background: #fff;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-weight: bold;
+      color: #d32f2f;
+      user-select: all;
+    }
+
+    .copy-btn {
+      background: #4CAF50;
+      padding: 6px 12px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+
+    .entities-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .entity-badge {
+      background: #e3f2fd;
+      color: #1976d2;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔐 Presidio Browser Anonymizer</h1>
+      <p class="subtitle">Dashboard monitorowania i testowania</p>
+    </header>
+
+    <div class="token-info">
+      ⚠️ <strong>Security Token:</strong> <code id="tokenDisplay">Ładowanie...</code>
+      <button class="copy-btn" onclick="copyToken()">📋 Kopiuj</button>
+      <br><small>Skopiuj ten token do browser extension (popup → API Token → Save)</small>
+    </div>
+
+    <div class="status-card">
+      <h2>Status Serwisu</h2>
+      <div class="status-grid">
+        <div class="stat">
+          <div class="stat-value online" id="statusValue">●</div>
+          <div class="stat-label">Status</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="requestCount">0</div>
+          <div class="stat-label">Żądania</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="entitiesFound">0</div>
+          <div class="stat-label">Wykryte dane</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="avgTime">0ms</div>
+          <div class="stat-label">Śr. czas</div>
+        </div>
+      </div>
+
+      <div class="entities-list">
+        <div class="entity-badge">EMAIL_ADDRESS</div>
+        <div class="entity-badge">PL_PESEL</div>
+        <div class="entity-badge">PL_NIP</div>
+        <div class="entity-badge">PHONE_NUMBER</div>
+        <div class="entity-badge">URL</div>
+        <div class="entity-badge">IP_ADDRESS</div>
+        <div class="entity-badge">DATE_TIME</div>
+        <div class="entity-badge">LOCATION</div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>🧪 Test Anonimizacji</h2>
+      <textarea id="testInput" placeholder="Wpisz tekst z danymi osobowymi, np:
+Cześć, jestem Jan Kowalski
+Email: jan.kowalski@example.com
+PESEL: 92010212345
+Telefon: +48 123 456 789"></textarea>
+      <button onclick="testAnonymize()">🚀 Testuj Anonimizację</button>
+      <button onclick="clearTest()" style="background: #666; margin-left: 8px;">🗑️ Wyczyść</button>
+
+      <div id="testResult" class="result"></div>
+    </div>
+
+    <div class="logs-section">
+      <h2>📋 Logi Aktywności</h2>
+      <div class="logs" id="logsContainer">
+        <div class="log-entry info">[INFO] Dashboard załadowany</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let requestCount = 0;
+    let totalEntities = 0;
+    let totalTime = 0;
+    let apiToken = '';
+
+    // Load token
+    async function loadToken() {
+      try {
+        const response = await fetch('/api/token');
+        const data = await response.json();
+        apiToken = data.token;
+        document.getElementById('tokenDisplay').textContent = apiToken;
+        addLog('Token załadowany pomyślnie', 'info');
+      } catch (error) {
+        document.getElementById('tokenDisplay').textContent = 'Błąd ładowania';
+        addLog('Nie można załadować tokenu', 'error');
+      }
+    }
+
+    // Copy token
+    function copyToken() {
+      navigator.clipboard.writeText(apiToken);
+      addLog('Token skopiowany do schowka', 'info');
+      alert('Token skopiowany!');
+    }
+
+    // Check health
+    async function checkHealth() {
+      try {
+        const response = await fetch('/api/health');
+        const data = await response.json();
+
+        if (data.status === 'healthy') {
+          document.getElementById('statusValue').textContent = '● ONLINE';
+          document.getElementById('statusValue').className = 'stat-value online';
+        }
+      } catch (error) {
+        document.getElementById('statusValue').textContent = '● OFFLINE';
+        document.getElementById('statusValue').className = 'stat-value';
+      }
+    }
+
+    // Test anonymize
+    async function testAnonymize() {
+      const input = document.getElementById('testInput').value;
+      if (!input.trim()) {
+        alert('Wpisz jakiś tekst do testowania!');
+        return;
+      }
+
+      addLog('Wysyłanie żądania anonimizacji...', 'info');
+
+      try {
+        const startTime = Date.now();
+
+        const response = await fetch('/api/anonymize', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Presidio-Token': apiToken
+          },
+          body: JSON.stringify({ text: input })
+        });
+
+        const data = await response.json();
+        const endTime = Date.now();
+        const duration = endTime - startTime;
+
+        if (response.ok) {
+          // Update stats
+          requestCount++;
+          totalEntities += data.stats.total_entities;
+          totalTime += duration;
+
+          document.getElementById('requestCount').textContent = requestCount;
+          document.getElementById('entitiesFound').textContent = totalEntities;
+          document.getElementById('avgTime').textContent = Math.round(totalTime / requestCount) + 'ms';
+
+          // Show result
+          const result = document.getElementById('testResult');
+          result.innerHTML = `
+<strong>✅ Sukces! Czas: ${duration}ms</strong>
+
+<strong>Oryginalny tekst:</strong>
+${data.original_text}
+
+<strong>Zanonimizowany tekst:</strong>
+${data.anonymized_text}
+
+<strong>Wykryte dane (${data.stats.total_entities}):</strong>
+${data.entities_found.map(e => `- ${e.type}: "${e.text}" (pewność: ${(e.score * 100).toFixed(0)}%)`).join('\n')}
+          `;
+          result.className = 'result show';
+
+          addLog(`✅ Anonimizacja zakończona: ${data.stats.total_entities} danych wykrytych w ${duration}ms`, 'info');
+        } else {
+          addLog(`❌ Błąd: ${data.message || 'Nieznany błąd'}`, 'error');
+          alert('Błąd: ' + (data.message || 'Nieznany błąd'));
+        }
+      } catch (error) {
+        addLog(`❌ Błąd połączenia: ${error.message}`, 'error');
+        alert('Błąd połączenia z API');
+      }
+    }
+
+    // Clear test
+    function clearTest() {
+      document.getElementById('testInput').value = '';
+      document.getElementById('testResult').className = 'result';
+      addLog('Test wyczyszczony', 'info');
+    }
+
+    // Add log entry
+    function addLog(message, type = 'info') {
+      const logs = document.getElementById('logsContainer');
+      const timestamp = new Date().toLocaleTimeString('pl-PL');
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.textContent = `[${timestamp}] ${message}`;
+      logs.appendChild(entry);
+      logs.scrollTop = logs.scrollHeight;
+    }
+
+    // Initialize
+    loadToken();
+    checkHealth();
+    setInterval(checkHealth, 5000); // Check every 5s
+  </script>
+</body>
+</html>

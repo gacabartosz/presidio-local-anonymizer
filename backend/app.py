@@ -31,14 +31,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Initialize Flask app
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../web-ui', static_url_path='')
 app.config['JSON_AS_ASCII'] = False  # Support for Polish characters
 
 # CORS configuration - allow only localhost and browser extension
 CORS(app, resources={
-    r"/api/*": {
+    r"/*": {
         "origins": [
             "http://localhost:*",
+            "http://127.0.0.1:*",
             "chrome-extension://*",
             "moz-extension://*"
         ]
@@ -92,9 +93,26 @@ def index():
         'endpoints': {
             'health': '/api/health',
             'anonymize': '/api/anonymize',
-            'config': '/api/config'
+            'config': '/api/config',
+            'token': '/api/token',
+            'dashboard': '/dashboard'
         },
         'documentation': '/api/docs'
+    })
+
+# Dashboard endpoint
+@app.route('/dashboard')
+def dashboard():
+    """Serve dashboard HTML"""
+    from flask import send_from_directory
+    return send_from_directory('../web-ui', 'dashboard.html')
+
+# Token endpoint (public - for dashboard)
+@app.route('/api/token', methods=['GET'])
+def get_token():
+    """Get API token (for dashboard use)"""
+    return jsonify({
+        'token': security_manager.get_token()
     })
 
 # Error handlers
