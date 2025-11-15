@@ -14,19 +14,19 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-      background: #f5f7fa;
+      background: #f3f4f6;
       min-height: 100vh;
       display: flex;
     }
 
-    /* Sidebar */
+    /* Sidebar - Dark theme like React version */
     .sidebar {
-      width: 260px;
-      background: white;
-      border-right: 1px solid #e5e7eb;
+      width: 256px;
+      background: #1f2937;
+      color: white;
       display: flex;
       flex-direction: column;
-      padding: 24px 16px;
+      padding: 16px;
       position: fixed;
       height: 100vh;
       left: 0;
@@ -36,212 +36,181 @@
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 8px 12px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
+      padding: 0 8px;
     }
 
-    .logo {
+    .logo-icon {
       width: 40px;
       height: 40px;
+      margin-right: 12px;
     }
 
-    .logo-text {
-      font-size: 18px;
-      font-weight: 600;
-      color: #111827;
+    .logo-text h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+      margin: 0;
     }
 
+    .logo-text p {
+      font-size: 12px;
+      color: #9ca3af;
+      margin: 0;
+    }
+
+    /* Language Switcher */
+    .lang-switcher {
+      display: flex;
+      gap: 16px;
+      padding: 0 8px;
+      margin-bottom: 24px;
+    }
+
+    .lang-flag {
+      width: 32px;
+      height: 20px;
+      border-radius: 2px;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: all 0.2s;
+      transform: scale(1);
+    }
+
+    .lang-flag:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .lang-flag.active {
+      opacity: 1;
+      box-shadow: 0 0 0 2px #60a5fa, 0 0 0 4px #1f2937;
+    }
+
+    /* Navigation */
     .nav-menu {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      flex: 1;
+      gap: 8px;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 12px;
-      color: #6b7280;
+      padding: 12px;
+      border-radius: 8px;
+      color: #d1d5db;
       text-decoration: none;
-      font-size: 15px;
-      font-weight: 500;
       transition: all 0.2s;
       cursor: pointer;
     }
 
     .nav-item:hover {
-      background: #f3f4f6;
-      color: #111827;
-    }
-
-    .nav-item.active {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #374151;
       color: white;
     }
 
-    .nav-icon {
-      font-size: 20px;
-      width: 24px;
-      text-align: center;
+    .nav-item.active {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 16px;
+    }
+
+    /* Sidebar Footer */
     .sidebar-footer {
-      border-top: 1px solid #e5e7eb;
+      margin-top: auto;
       padding-top: 16px;
-      margin-top: 16px;
+      border-top: 1px solid #374151;
+      text-align: center;
       font-size: 12px;
-      color: #9ca3af;
+      color: #6b7280;
+    }
+
+    .sidebar-footer p {
+      margin: 4px 0;
     }
 
     .sidebar-footer a {
-      color: #667eea;
+      color: #60a5fa;
       text-decoration: none;
-      font-weight: 500;
+      transition: color 0.2s;
     }
 
     .sidebar-footer a:hover {
+      color: #93c5fd;
       text-decoration: underline;
     }
 
     /* Main Content */
     .main-content {
-      margin-left: 260px;
+      margin-left: 256px;
       flex: 1;
-      padding: 32px;
+      padding: 24px 32px;
+      overflow-y: auto;
     }
 
     /* Header */
-    .page-header {
-      margin-bottom: 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .page-title h1 {
-      font-size: 28px;
+    .page-header h1 {
+      font-size: 30px;
       font-weight: 700;
       color: #111827;
       margin-bottom: 4px;
     }
 
-    .page-subtitle {
+    .page-header p {
       font-size: 14px;
       color: #6b7280;
-    }
-
-    /* Language Toggle */
-    .lang-toggle {
-      display: flex;
-      gap: 8px;
-      background: white;
-      padding: 4px;
-      border-radius: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .lang-btn {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      color: #6b7280;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .lang-btn.active {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-
-    /* Cards */
-    .card {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-      padding: 24px;
       margin-bottom: 24px;
-      transition: all 0.3s;
-    }
-
-    .card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    }
-
-    .card-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #111827;
-      margin-bottom: 20px;
     }
 
     /* Stats Grid */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
     }
 
     .stat-card {
       background: white;
       padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       display: flex;
       align-items: center;
       gap: 16px;
-      transition: all 0.3s;
+      transition: transform 0.2s;
     }
 
     .stat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+      transform: scale(1.05);
     }
 
     .stat-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #dbeafe;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
       flex-shrink: 0;
     }
 
-    .stat-icon.blue {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+    .stat-icon svg {
+      width: 24px;
+      height: 24px;
+      color: #2563eb;
     }
 
-    .stat-icon.green {
-      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-      color: white;
-    }
-
-    .stat-icon.orange {
-      background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-      color: white;
-    }
-
-    .stat-icon.purple {
-      background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
-      color: white;
-    }
-
-    .stat-content {
-      flex: 1;
-    }
-
-    .stat-label {
-      font-size: 13px;
+    .stat-content h3 {
+      font-size: 12px;
       font-weight: 500;
       color: #6b7280;
       text-transform: uppercase;
@@ -249,238 +218,219 @@
       margin-bottom: 4px;
     }
 
-    .stat-value {
-      font-size: 32px;
+    .stat-content p {
+      font-size: 24px;
       font-weight: 700;
       color: #111827;
     }
 
-    /* Test Section */
-    .test-container {
+    .stat-content p.online {
+      color: #10b981;
+    }
+
+    .stat-content p.offline {
+      color: #ef4444;
+    }
+
+    /* Two Column Layout */
+    .two-column {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 20px;
+      gap: 24px;
+      margin-bottom: 24px;
     }
 
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
-    .input-label {
-      font-size: 14px;
-      font-weight: 500;
-      color: #374151;
+    .card h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 16px;
     }
 
+    /* Test Input */
     textarea {
       width: 100%;
-      min-height: 200px;
-      padding: 14px;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+      height: 160px;
+      padding: 12px;
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Courier New', monospace;
       font-size: 13px;
-      color: #111827;
       resize: vertical;
       transition: all 0.2s;
     }
 
     textarea:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
 
-    .output-box {
-      width: 100%;
-      min-height: 200px;
-      padding: 14px;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
-      font-size: 13px;
-      color: #111827;
-      background: #f9fafb;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      overflow-y: auto;
-    }
-
+    /* Buttons */
     .button-group {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       margin-top: 16px;
     }
 
     .btn {
-      padding: 12px 24px;
+      flex: 1;
+      padding: 10px 16px;
       border: none;
-      border-radius: 10px;
-      font-size: 15px;
+      border-radius: 8px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #2563eb;
       color: white;
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+      background: #1d4ed8;
     }
 
-    .btn-primary:active {
-      transform: translateY(0);
+    .btn-primary:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
     }
 
     .btn-secondary {
-      background: #f3f4f6;
+      background: #e5e7eb;
       color: #374151;
     }
 
     .btn-secondary:hover {
-      background: #e5e7eb;
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    /* Stats Details */
-    .stats-details {
-      margin-top: 16px;
-      padding: 16px;
-      background: #f9fafb;
-      border-radius: 12px;
-      border-left: 4px solid #667eea;
-      display: none;
-    }
-
-    .stats-details.show {
-      display: block;
-    }
-
-    .stats-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .stats-item:last-child {
-      border-bottom: none;
-    }
-
-    .stats-item-label {
-      font-size: 13px;
-      color: #6b7280;
-      font-weight: 500;
-    }
-
-    .stats-item-value {
-      font-size: 13px;
-      color: #111827;
-      font-weight: 600;
-    }
-
-    /* Entity Badges */
-    .entity-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .entity-badge {
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 500;
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-      color: #667eea;
+      background: #d1d5db;
     }
 
     /* Logs */
     .logs-container {
-      background: #1f2937;
-      border-radius: 12px;
+      height: 224px;
+      background: #111827;
+      border-radius: 8px;
       padding: 16px;
-      max-height: 400px;
-      overflow-y: auto;
-      font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+      font-family: 'Monaco', 'Courier New', monospace;
       font-size: 12px;
-      margin-top: 16px;
+      color: white;
+      overflow-y: auto;
     }
 
     .log-entry {
-      padding: 6px 0;
-      color: #d1d5db;
-    }
-
-    .log-entry.info {
-      color: #34d399;
-    }
-
-    .log-entry.warning {
-      color: #fbbf24;
-    }
-
-    .log-entry.error {
-      color: #f87171;
+      display: flex;
+      margin-bottom: 4px;
     }
 
     .log-timestamp {
-      color: #9ca3af;
+      color: #6b7280;
       margin-right: 8px;
     }
 
-    /* Status Indicator */
-    .status-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 13px;
+    .log-type {
+      margin-right: 8px;
       font-weight: 600;
     }
 
-    .status-indicator.online {
-      background: #d1fae5;
-      color: #065f46;
+    .log-type.info {
+      color: #60a5fa;
     }
 
-    .status-indicator.offline {
-      background: #fee2e2;
-      color: #991b1b;
+    .log-type.warning {
+      color: #fbbf24;
     }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
+    .log-type.error {
+      color: #f87171;
+    }
+
+    .log-message {
+      color: #d1d5db;
+      flex: 1;
+    }
+
+    /* Results Card */
+    .results-card {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .results-card.show {
+      display: block;
+    }
+
+    .result-section {
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+      padding: 16px;
+      background: #f9fafb;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .result-section h4 {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #6b7280;
+    }
+
+    .result-section.anonymized h4 {
+      color: #10b981;
+    }
+
+    .result-section.entities h4 {
+      color: #2563eb;
+    }
+
+    .result-section p {
+      white-space: pre-wrap;
+      color: #111827;
+    }
+
+    .result-section ul {
+      list-style: disc;
+      margin-left: 20px;
+      color: #111827;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid white;
+      border-top-color: transparent;
       border-radius: 50%;
-      background: currentColor;
-      animation: pulse 2s infinite;
+      animation: spin 0.6s linear infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     /* Responsive */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+
       .sidebar {
         width: 100%;
         height: auto;
@@ -490,152 +440,187 @@
       .main-content {
         margin-left: 0;
       }
-
-      .test-container {
-        grid-template-columns: 1fr;
-      }
     }
   </style>
 </head>
 <body>
   <!-- Sidebar -->
   <aside class="sidebar">
+    <!-- Logo -->
     <div class="logo-container">
-      <img src="/logo.svg" alt="Presidio Logo" class="logo">
-      <span class="logo-text">Presidio</span>
+      <svg class="logo-icon" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="shieldGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0f172a" />
+            <stop offset="100%" stop-color="#020617" />
+          </linearGradient>
+          <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.6" />
+          </filter>
+        </defs>
+        <path d="M100 10 L170 50 V115 C170 150 140 195 100 220 C60 195 30 150 30 115 V50 Z" fill="url(#shieldGradient)" />
+        <g filter="url(#shadow)">
+          <path d="M50 95 Q70 75 100 80 Q130 75 150 95 Q140 112 150 130 Q125 125 100 128 Q75 125 50 130 Q60 112 50 95Z" fill="#0ea5e9" />
+          <ellipse cx="78" cy="106" rx="14" ry="10" fill="#020617" />
+          <ellipse cx="122" cy="106" rx="14" ry="10" fill="#020617" />
+          <path d="M92 110 Q100 116 108 110" stroke="#020617" stroke-width="3" fill="none" />
+        </g>
+        <path d="M78 155 L94 173 L132 137" fill="none" stroke="#22c55e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <div class="logo-text">
+        <h1>Presidio</h1>
+        <p>Anonymizer</p>
+      </div>
     </div>
 
+    <!-- Language Switcher -->
+    <div class="lang-switcher">
+      <svg class="lang-flag active" data-lang="pl" viewBox="0 0 5 3">
+        <rect width="5" height="3" fill="#fff"/>
+        <rect width="5" height="1.5" y="1.5" fill="#dc143c"/>
+      </svg>
+      <svg class="lang-flag" data-lang="en" viewBox="0 0 60 30">
+        <clipPath id="a"><path d="M0 0v30h60V0z"/></clipPath>
+        <path d="M0 0v30h60V0z" fill="#012169"/>
+        <g clip-path="url(#a)">
+          <path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/>
+          <path d="M0 0l60 30m0-30L0 30" stroke="#c8102e" stroke-width="4"/>
+          <path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/>
+          <path d="M30 0v30M0 15h60" stroke="#c8102e" stroke-width="6"/>
+        </g>
+      </svg>
+      <svg class="lang-flag" data-lang="de" viewBox="0 0 5 3">
+        <rect width="5" height="3" y="0" fill="#000"/>
+        <rect width="5" height="2" y="1" fill="#D00"/>
+        <rect width="5" height="1" y="2" fill="#FFCE00"/>
+      </svg>
+    </div>
+
+    <!-- Navigation -->
     <nav class="nav-menu">
       <a href="/dashboard" class="nav-item active">
-        <span class="nav-icon">📊</span>
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 16v-2m-6-5H4m16 0h-2M7 11l-2 2 2 2m10-4l2 2-2 2m-5-9v2m0 10v2m-2-5h-2m6 0h-2" />
+        </svg>
         <span class="nav-label">Dashboard</span>
       </a>
       <a href="/" class="nav-item">
-        <span class="nav-icon">⚙️</span>
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
         <span class="nav-label">Ustawienia</span>
       </a>
     </nav>
 
+    <!-- Footer -->
     <div class="sidebar-footer">
-      <div style="margin-bottom: 8px;">
-        <strong>Wersja:</strong> 1.0.0
-      </div>
-      <div>
-        Stworzone przez<br>
-        <a href="https://bartoszgaca.pl" target="_blank">bartoszgaca.pl</a> &<br>
-        <a href="https://claude.ai/claude-code" target="_blank">Claude Code</a>
-      </div>
+      <p>Wersja 1.0.1</p>
+      <p>Stworzone przez<br><a href="https://bartoszgaca.pl" target="_blank">bartoszgaca.pl</a></p>
     </div>
   </aside>
 
   <!-- Main Content -->
   <main class="main-content">
     <!-- Header -->
-    <header class="page-header">
-      <div class="page-title">
-        <h1 class="title-text">Dashboard</h1>
-        <p class="page-subtitle subtitle-text">Monitorowanie i testowanie usługi anonimizacji w czasie rzeczywistym.</p>
-      </div>
-      <div class="lang-toggle">
-        <button class="lang-btn active" data-lang="pl">🇵🇱 PL</button>
-        <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
-      </div>
-    </header>
+    <div class="page-header">
+      <h1 id="pageTitle">Dashboard</h1>
+      <p id="pageSubtitle">Monitorowanie i testowanie usługi anonimizacji w czasie rzeczywistym.</p>
+    </div>
 
-    <!-- Status Stats -->
+    <!-- Stats Grid -->
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-icon blue">
-          <span>🟢</span>
+        <div class="stat-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+          </svg>
         </div>
         <div class="stat-content">
-          <div class="stat-label stat-status-label">Status</div>
-          <div class="stat-value" id="statusValue">
-            <span class="status-indicator online" id="statusIndicator">
-              <span class="status-dot"></span>
-              <span class="status-text">Online</span>
-            </span>
+          <h3 id="statStatusLabel">Status Serwisu</h3>
+          <p id="statusValue" class="online">Online</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 10-4.243-4.242 3 3 0 004.243 4.242z" />
+          </svg>
+        </div>
+        <div class="stat-content">
+          <h3 id="statRequestsLabel">Liczba Żądań</h3>
+          <p id="requestCount">0</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <svg class="logo-icon" viewBox="0 0 200 240" style="width:24px;height:24px">
+            <path d="M100 10 L170 50 V115 C170 150 140 195 100 220 C60 195 30 150 30 115 V50 Z" fill="#2563eb" />
+          </svg>
+        </div>
+        <div class="stat-content">
+          <h3 id="statEntitiesLabel">Znalezione Encje</h3>
+          <p id="entitiesFound">0</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="stat-content">
+          <h3 id="statAvgTimeLabel">Śr. Czas Przetwarzania</h3>
+          <p id="avgTime">0ms</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two Column Grid -->
+    <div class="two-column">
+      <!-- Test Card -->
+      <div class="card">
+        <h2 id="testTitle">🧪 Test Anonimizacji</h2>
+        <textarea id="testInput" placeholder="Wpisz tekst z danymi, np: Cześć, jestem Jan Kowalski, mój email to jan.kowalski@example.com a PESEL 92010212345."></textarea>
+        <div class="button-group">
+          <button class="btn btn-primary" id="testButton" onclick="testAnonymize()">
+            <span id="testButtonText">🚀 Testuj Anonimizację</span>
+          </button>
+          <button class="btn btn-secondary" onclick="clearTest()">
+            <svg style="width:20px;height:20px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Logs Card -->
+      <div class="card">
+        <h2 id="logsTitle">📋 Logi Aktywności</h2>
+        <div class="logs-container" id="logsContainer">
+          <div class="log-entry">
+            <span class="log-timestamp">00:00:00</span>
+            <span class="log-type info">[INFO]</span>
+            <span class="log-message">Inicjalizacja dashboardu...</span>
           </div>
         </div>
       </div>
-
-      <div class="stat-card">
-        <div class="stat-icon green">
-          <span>📨</span>
-        </div>
-        <div class="stat-content">
-          <div class="stat-label stat-requests-label">Liczba Żądań</div>
-          <div class="stat-value" id="requestCount">0</div>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon orange">
-          <span>🔍</span>
-        </div>
-        <div class="stat-content">
-          <div class="stat-label stat-entities-label">Znalezione Encje</div>
-          <div class="stat-value" id="entitiesFound">0</div>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon purple">
-          <span>⚡</span>
-        </div>
-        <div class="stat-content">
-          <div class="stat-label stat-avgtime-label">Śr. Czas Przetwarzania</div>
-          <div class="stat-value" id="avgTime">0ms</div>
-        </div>
-      </div>
     </div>
 
-    <!-- Test Anonymization -->
-    <div class="card">
-      <h2 class="card-title test-title">🧪 Test Anonimizacji</h2>
-      <div class="test-container">
-        <div class="input-group">
-          <label class="input-label input-label-text">Tekst wejściowy</label>
-          <textarea id="testInput" class="test-input-placeholder" placeholder="Wpisz tekst z danymi osobowymi, np:&#10;&#10;Cześć, jestem Jan Kowalski&#10;Email: jan.kowalski@example.com&#10;PESEL: 92010212345&#10;Telefon: +48 123 456 789"></textarea>
-        </div>
-        <div class="input-group">
-          <label class="input-label output-label-text">Zanonimizowany tekst</label>
-          <div id="testOutput" class="output-box output-placeholder-text">Wyniki pojawią się tutaj...</div>
-        </div>
+    <!-- Results Card -->
+    <div class="results-card" id="resultsCard">
+      <h2 id="resultsTitle">Wyniki Testu</h2>
+      <div class="result-section">
+        <h4 id="originalTextLabel">Oryginalny tekst:</h4>
+        <p id="originalText"></p>
       </div>
-      <div class="button-group">
-        <button class="btn btn-primary" onclick="testAnonymize()">
-          <span>🚀</span>
-          <span class="btn-test-text">Testuj Anonimizację</span>
-        </button>
-        <button class="btn btn-secondary" onclick="clearTest()">
-          <span>🗑️</span>
-          <span class="btn-clear-text">Wyczyść</span>
-        </button>
+      <div class="result-section anonymized">
+        <h4 id="anonymizedTextLabel">Zanonimizowany tekst:</h4>
+        <p id="anonymizedText"></p>
       </div>
-
-      <!-- Stats Details -->
-      <div id="statsDetails" class="stats-details">
-        <div class="stats-item">
-          <span class="stats-item-label stats-time-label">Czas przetwarzania:</span>
-          <span class="stats-item-value" id="processingTime">-</span>
-        </div>
-        <div class="stats-item">
-          <span class="stats-item-label stats-detected-label">Wykryte dane:</span>
-          <span class="stats-item-value" id="detectedCount">-</span>
-        </div>
-        <div id="entityList"></div>
-      </div>
-    </div>
-
-    <!-- Activity Logs -->
-    <div class="card">
-      <h2 class="card-title logs-title">📋 Logi Aktywności</h2>
-      <div class="logs-container" id="logsContainer">
-        <div class="log-entry info">
-          <span class="log-timestamp">[00:00:00]</span>
-          <span class="log-init-text">[INFO] Dashboard załadowany</span>
-        </div>
+      <div class="result-section entities">
+        <h4 id="entitiesLabel">Wykryte Encje (<span id="entitiesCount">0</span>):</h4>
+        <ul id="entitiesList"></ul>
       </div>
     </div>
   </main>
@@ -644,96 +629,179 @@
     // Translations
     const translations = {
       pl: {
-        dashboard: {
-          title: 'Dashboard',
-          subtitle: 'Monitorowanie i testowanie usługi anonimizacji w czasie rzeczywistym.',
-          statusLabel: 'Status',
-          requestsLabel: 'Liczba Żądań',
-          entitiesLabel: 'Znalezione Encje',
-          avgTimeLabel: 'Śr. Czas Przetwarzania',
-          testTitle: '🧪 Test Anonimizacji',
-          inputLabel: 'Tekst wejściowy',
-          outputLabel: 'Zanonimizowany tekst',
-          btnTest: 'Testuj Anonimizację',
-          btnClear: 'Wyczyść',
-          outputPlaceholder: 'Wyniki pojawią się tutaj...',
-          inputPlaceholder: 'Wpisz tekst z danymi osobowymi, np:\n\nCześć, jestem Jan Kowalski\nEmail: jan.kowalski@example.com\nPESEL: 92010212345\nTelefon: +48 123 456 789',
-          logsTitle: '📋 Logi Aktywności',
-          statsTimeLabel: 'Czas przetwarzania:',
-          statsDetectedLabel: 'Wykryte dane:',
-          logInit: '[INFO] Dashboard załadowany',
-          statusOnline: 'Online',
-          statusOffline: 'Offline',
-          navDashboard: 'Dashboard',
-          navSettings: 'Ustawienia'
-        }
+        pageTitle: 'Dashboard',
+        pageSubtitle: 'Monitorowanie i testowanie usługi anonimizacji w czasie rzeczywistym.',
+        statStatusLabel: 'Status Serwisu',
+        statRequestsLabel: 'Liczba Żądań',
+        statEntitiesLabel: 'Znalezione Encje',
+        statAvgTimeLabel: 'Śr. Czas Przetwarzania',
+        testTitle: '🧪 Test Anonimizacji',
+        testPlaceholder: 'Wpisz tekst z danymi, np: Cześć, jestem Jan Kowalski, mój email to jan.kowalski@example.com a PESEL 92010212345.',
+        testButton: '🚀 Testuj Anonimizację',
+        logsTitle: '📋 Logi Aktywności',
+        resultsTitle: 'Wyniki Testu',
+        originalTextLabel: 'Oryginalny tekst:',
+        anonymizedTextLabel: 'Zanonimizowany tekst:',
+        entitiesLabel: 'Wykryte Encje',
+        navDashboard: 'Dashboard',
+        navSettings: 'Ustawienia',
+        statusOnline: 'Online',
+        statusOffline: 'Offline',
+        logInit: 'Inicjalizacja dashboardu...'
       },
       en: {
-        dashboard: {
-          title: 'Dashboard',
-          subtitle: 'Real-time monitoring and testing of anonymization service.',
-          statusLabel: 'Status',
-          requestsLabel: 'Request Count',
-          entitiesLabel: 'Found Entities',
-          avgTimeLabel: 'Avg. Processing Time',
-          testTitle: '🧪 Test Anonymization',
-          inputLabel: 'Input text',
-          outputLabel: 'Anonymized text',
-          btnTest: 'Test Anonymization',
-          btnClear: 'Clear',
-          outputPlaceholder: 'Results will appear here...',
-          inputPlaceholder: 'Enter text with personal data, e.g.:\n\nHi, I\'m Jan Kowalski\nEmail: jan.kowalski@example.com\nPESEL: 92010212345\nPhone: +48 123 456 789',
-          logsTitle: '📋 Activity Logs',
-          statsTimeLabel: 'Processing time:',
-          statsDetectedLabel: 'Detected data:',
-          logInit: '[INFO] Dashboard loaded',
-          statusOnline: 'Online',
-          statusOffline: 'Offline',
-          navDashboard: 'Dashboard',
-          navSettings: 'Settings'
-        }
+        pageTitle: 'Dashboard',
+        pageSubtitle: 'Real-time monitoring and testing of the anonymization service.',
+        statStatusLabel: 'Service Status',
+        statRequestsLabel: 'Total Requests',
+        statEntitiesLabel: 'Entities Found',
+        statAvgTimeLabel: 'Avg. Processing Time',
+        testTitle: '🧪 Anonymization Test',
+        testPlaceholder: 'Enter text with PII, e.g., Hi, I am John Doe, my email is john.doe@example.com and my ID is 92010212345.',
+        testButton: '🚀 Test Anonymization',
+        logsTitle: '📋 Activity Logs',
+        resultsTitle: 'Test Results',
+        originalTextLabel: 'Original text:',
+        anonymizedTextLabel: 'Anonymized text:',
+        entitiesLabel: 'Detected Entities',
+        navDashboard: 'Dashboard',
+        navSettings: 'Settings',
+        statusOnline: 'Online',
+        statusOffline: 'Offline',
+        logInit: 'Initializing dashboard...'
+      },
+      de: {
+        pageTitle: 'Dashboard',
+        pageSubtitle: 'Echtzeit-Überwachung und Testen des Anonymisierungsdienstes.',
+        statStatusLabel: 'Dienststatus',
+        statRequestsLabel: 'Anfragen gesamt',
+        statEntitiesLabel: 'Entitäten gefunden',
+        statAvgTimeLabel: 'Ø Bearbeitungszeit',
+        testTitle: '🧪 Anonymisierungstest',
+        testPlaceholder: 'Geben Sie Text mit PII ein, z.B.: Hallo, ich bin Max Mustermann, meine E-Mail ist max.mustermann@example.com und meine ID ist 92010212345.',
+        testButton: '🚀 Anonymisierung testen',
+        logsTitle: '📋 Aktivitätsprotokolle',
+        resultsTitle: 'Testergebnisse',
+        originalTextLabel: 'Originaltext:',
+        anonymizedTextLabel: 'Anonymisierter Text:',
+        entitiesLabel: 'Erkannte Entitäten',
+        navDashboard: 'Dashboard',
+        navSettings: 'Einstellungen',
+        statusOnline: 'Online',
+        statusOffline: 'Offline',
+        logInit: 'Initialisiere Dashboard...'
       }
     };
 
     let currentLang = 'pl';
-    let requestCount = 0;
-    let totalEntities = 0;
-    let totalTime = 0;
+    let stats = { requests: 0, entities: 0, totalTime: 0 };
 
-    // Language Toggle
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentLang = btn.dataset.lang;
+    // Language switcher
+    document.querySelectorAll('.lang-flag').forEach(flag => {
+      flag.addEventListener('click', () => {
+        document.querySelectorAll('.lang-flag').forEach(f => f.classList.remove('active'));
+        flag.classList.add('active');
+        currentLang = flag.dataset.lang;
         updateTranslations();
       });
     });
 
     function updateTranslations() {
-      const t = translations[currentLang].dashboard;
-
-      document.querySelector('.title-text').textContent = t.title;
-      document.querySelector('.subtitle-text').textContent = t.subtitle;
-      document.querySelector('.stat-status-label').textContent = t.statusLabel;
-      document.querySelector('.stat-requests-label').textContent = t.requestsLabel;
-      document.querySelector('.stat-entities-label').textContent = t.entitiesLabel;
-      document.querySelector('.stat-avgtime-label').textContent = t.avgTimeLabel;
-      document.querySelector('.test-title').textContent = t.testTitle;
-      document.querySelector('.input-label-text').textContent = t.inputLabel;
-      document.querySelector('.output-label-text').textContent = t.outputLabel;
-      document.querySelector('.btn-test-text').textContent = t.btnTest;
-      document.querySelector('.btn-clear-text').textContent = t.btnClear;
-      document.querySelector('.output-placeholder-text').textContent = t.outputPlaceholder;
-      document.querySelector('.test-input-placeholder').placeholder = t.inputPlaceholder;
-      document.querySelector('.logs-title').textContent = t.logsTitle;
-      document.querySelector('.stats-time-label').textContent = t.statsTimeLabel;
-      document.querySelector('.stats-detected-label').textContent = t.statsDetectedLabel;
-      document.querySelector('.status-text').textContent = t.statusOnline;
-
-      // Update nav labels
+      const t = translations[currentLang];
+      document.getElementById('pageTitle').textContent = t.pageTitle;
+      document.getElementById('pageSubtitle').textContent = t.pageSubtitle;
+      document.getElementById('statStatusLabel').textContent = t.statStatusLabel;
+      document.getElementById('statRequestsLabel').textContent = t.statRequestsLabel;
+      document.getElementById('statEntitiesLabel').textContent = t.statEntitiesLabel;
+      document.getElementById('statAvgTimeLabel').textContent = t.statAvgTimeLabel;
+      document.getElementById('testTitle').textContent = t.testTitle;
+      document.getElementById('testInput').placeholder = t.testPlaceholder;
+      document.getElementById('testButtonText').textContent = t.testButton;
+      document.getElementById('logsTitle').textContent = t.logsTitle;
+      document.getElementById('resultsTitle').textContent = t.resultsTitle;
+      document.getElementById('originalTextLabel').textContent = t.originalTextLabel;
+      document.getElementById('anonymizedTextLabel').textContent = t.anonymizedTextLabel;
+      document.getElementById('entitiesLabel').innerHTML = t.entitiesLabel + ' (<span id="entitiesCount">0</span>):';
       document.querySelectorAll('.nav-label')[0].textContent = t.navDashboard;
       document.querySelectorAll('.nav-label')[1].textContent = t.navSettings;
+    }
+
+    // Add log
+    function addLog(message, type = 'info') {
+      const container = document.getElementById('logsContainer');
+      const timestamp = new Date().toLocaleTimeString();
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = `
+        <span class="log-timestamp">${timestamp}</span>
+        <span class="log-type ${type}">[${type.toUpperCase()}]</span>
+        <span class="log-message">${message}</span>
+      `;
+      container.appendChild(entry);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // Test anonymize
+    async function testAnonymize() {
+      const input = document.getElementById('testInput').value;
+      if (!input.trim()) {
+        alert(currentLang === 'pl' ? 'Wpisz jakiś tekst!' : (currentLang === 'en' ? 'Enter some text!' : 'Geben Sie Text ein!'));
+        return;
+      }
+
+      const button = document.getElementById('testButton');
+      button.disabled = true;
+      button.innerHTML = '<div class="spinner"></div>';
+
+      addLog(currentLang === 'pl' ? 'Rozpoczęto test anonimizacji...' : (currentLang === 'en' ? 'Anonymization test started...' : 'Anonymisierungstest gestartet...'), 'info');
+
+      try {
+        const startTime = Date.now();
+        const response = await fetch('/api/anonymize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: input })
+        });
+
+        const data = await response.json();
+        const duration = Date.now() - startTime;
+
+        if (response.ok) {
+          stats.requests++;
+          stats.entities += data.stats.total_entities;
+          stats.totalTime += duration;
+
+          document.getElementById('requestCount').textContent = stats.requests;
+          document.getElementById('entitiesFound').textContent = stats.entities;
+          document.getElementById('avgTime').textContent = Math.round(stats.totalTime / stats.requests) + 'ms';
+
+          document.getElementById('originalText').textContent = data.original_text;
+          document.getElementById('anonymizedText').textContent = data.anonymized_text;
+          document.getElementById('entitiesCount').textContent = data.stats.total_entities;
+
+          const list = document.getElementById('entitiesList');
+          list.innerHTML = data.entities_found.map(e =>
+            `<li>${e.type}: "${e.text}" (pewność: ${(e.score * 100).toFixed(0)}%)</li>`
+          ).join('');
+
+          document.getElementById('resultsCard').classList.add('show');
+          addLog(currentLang === 'pl' ? `Test zakończony. Znaleziono ${data.stats.total_entities} encji w ${duration}ms.` : (currentLang === 'en' ? `Test finished. Found ${data.stats.total_entities} entities in ${duration}ms.` : `Test abgeschlossen. ${data.stats.total_entities} Entitäten in ${duration}ms gefunden.`), 'info');
+        } else {
+          addLog(currentLang === 'pl' ? 'Test nie powiódł się.' : (currentLang === 'en' ? 'Test failed.' : 'Test fehlgeschlagen.'), 'error');
+        }
+      } catch (error) {
+        addLog(currentLang === 'pl' ? 'Błąd połączenia z API.' : (currentLang === 'en' ? 'API connection error.' : 'API-Verbindungsfehler.'), 'error');
+      } finally {
+        button.disabled = false;
+        button.innerHTML = '<span id="testButtonText">' + translations[currentLang].testButton + '</span>';
+      }
+    }
+
+    // Clear test
+    function clearTest() {
+      document.getElementById('testInput').value = '';
+      document.getElementById('resultsCard').classList.remove('show');
+      addLog(currentLang === 'pl' ? 'Test wyczyszczony.' : (currentLang === 'en' ? 'Test cleared.' : 'Test geleert.'), 'info');
     }
 
     // Check health
@@ -741,120 +809,23 @@
       try {
         const response = await fetch('/api/health');
         const data = await response.json();
-
-        const indicator = document.getElementById('statusIndicator');
-        const statusText = document.querySelector('.status-text');
-        const t = translations[currentLang].dashboard;
-
+        const statusEl = document.getElementById('statusValue');
         if (data.status === 'healthy') {
-          indicator.className = 'status-indicator online';
-          statusText.textContent = t.statusOnline;
+          statusEl.textContent = translations[currentLang].statusOnline;
+          statusEl.className = 'online';
         } else {
-          indicator.className = 'status-indicator offline';
-          statusText.textContent = t.statusOffline;
+          statusEl.textContent = translations[currentLang].statusOffline;
+          statusEl.className = 'offline';
         }
       } catch (error) {
-        const indicator = document.getElementById('statusIndicator');
-        const statusText = document.querySelector('.status-text');
-        const t = translations[currentLang].dashboard;
-
-        indicator.className = 'status-indicator offline';
-        statusText.textContent = t.statusOffline;
+        document.getElementById('statusValue').textContent = translations[currentLang].statusOffline;
+        document.getElementById('statusValue').className = 'offline';
       }
-    }
-
-    // Test anonymize
-    async function testAnonymize() {
-      const input = document.getElementById('testInput').value;
-      const t = translations[currentLang].dashboard;
-
-      if (!input.trim()) {
-        alert(currentLang === 'pl' ? 'Wpisz jakiś tekst do testowania!' : 'Enter some text to test!');
-        return;
-      }
-
-      addLog(currentLang === 'pl' ? 'Wysyłanie żądania anonimizacji...' : 'Sending anonymization request...', 'info');
-
-      try {
-        const startTime = Date.now();
-
-        const response = await fetch('/api/anonymize', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ text: input })
-        });
-
-        const data = await response.json();
-        const endTime = Date.now();
-        const duration = endTime - startTime;
-
-        if (response.ok) {
-          // Update stats
-          requestCount++;
-          totalEntities += data.stats.total_entities;
-          totalTime += duration;
-
-          document.getElementById('requestCount').textContent = requestCount;
-          document.getElementById('entitiesFound').textContent = totalEntities;
-          document.getElementById('avgTime').textContent = Math.round(totalTime / requestCount) + 'ms';
-
-          // Show result
-          const output = document.getElementById('testOutput');
-          output.textContent = data.anonymized_text;
-
-          // Show stats details
-          const statsDetails = document.getElementById('statsDetails');
-          statsDetails.classList.add('show');
-          document.getElementById('processingTime').textContent = duration + 'ms';
-          document.getElementById('detectedCount').textContent = data.stats.total_entities;
-
-          // Show entity badges
-          const entityList = document.getElementById('entityList');
-          if (data.entities_found.length > 0) {
-            const badges = data.entities_found.map(e =>
-              `<span class="entity-badge">${e.type}: "${e.text}" (${(e.score * 100).toFixed(0)}%)</span>`
-            ).join('');
-            entityList.innerHTML = `<div class="entity-badges">${badges}</div>`;
-          } else {
-            entityList.innerHTML = '';
-          }
-
-          addLog(`✅ ${currentLang === 'pl' ? 'Anonimizacja zakończona' : 'Anonymization complete'}: ${data.stats.total_entities} ${currentLang === 'pl' ? 'danych wykrytych w' : 'data detected in'} ${duration}ms`, 'info');
-        } else {
-          addLog(`❌ ${currentLang === 'pl' ? 'Błąd' : 'Error'}: ${data.message || (currentLang === 'pl' ? 'Nieznany błąd' : 'Unknown error')}`, 'error');
-          alert((currentLang === 'pl' ? 'Błąd: ' : 'Error: ') + (data.message || (currentLang === 'pl' ? 'Nieznany błąd' : 'Unknown error')));
-        }
-      } catch (error) {
-        addLog(`❌ ${currentLang === 'pl' ? 'Błąd połączenia' : 'Connection error'}: ${error.message}`, 'error');
-        alert(currentLang === 'pl' ? 'Błąd połączenia z API' : 'API connection error');
-      }
-    }
-
-    // Clear test
-    function clearTest() {
-      const t = translations[currentLang].dashboard;
-      document.getElementById('testInput').value = '';
-      document.getElementById('testOutput').textContent = t.outputPlaceholder;
-      document.getElementById('statsDetails').classList.remove('show');
-      addLog(currentLang === 'pl' ? 'Test wyczyszczony' : 'Test cleared', 'info');
-    }
-
-    // Add log entry
-    function addLog(message, type = 'info') {
-      const logs = document.getElementById('logsContainer');
-      const timestamp = new Date().toLocaleTimeString(currentLang === 'pl' ? 'pl-PL' : 'en-US');
-      const entry = document.createElement('div');
-      entry.className = `log-entry ${type}`;
-      entry.innerHTML = `<span class="log-timestamp">[${timestamp}]</span>${message}`;
-      logs.appendChild(entry);
-      logs.scrollTop = logs.scrollHeight;
     }
 
     // Initialize
     checkHealth();
-    setInterval(checkHealth, 5000); // Check every 5s
+    setInterval(checkHealth, 15000);
   </script>
 </body>
 </html>
