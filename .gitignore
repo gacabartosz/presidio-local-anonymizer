@@ -41,22 +41,8 @@ venv.bak/
 
 # Logs
 *.log
-presidio_anonymizer.log
 
-# Zanonimizowane pliki (wygenerowane)
-*.anon.docx
-*.anon.odt
-*.anon.json
-
-# Raporty
-summary.jsonl
-report.json
-
-# Pliki testowe (jeśli zawierają prawdziwe PII)
-tests/samples/*.docx
-tests/samples/*.odt
-
-# Tymczasowe pliki
+# Temporary files
 *.tmp
 *.bak
 *.backup
