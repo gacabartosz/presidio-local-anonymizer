@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presidio Browser Anonymizer - Settings</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 42px;
+      margin-bottom: 12px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .header .subtitle {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .card h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: #f0f0f0;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .status-indicator.online {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .status-indicator .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ccc;
+    }
+
+    .status-indicator.online .dot {
+      background: #4caf50;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .entity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .entity-item {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .entity-item:hover {
+      border-color: #667eea;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+
+    .entity-item.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: #764ba2;
+    }
+
+    .entity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .entity-name {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .entity-toggle {
+      position: relative;
+      width: 48px;
+      height: 24px;
+      background: #ccc;
+      border-radius: 12px;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .entity-item.active .entity-toggle {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .entity-toggle::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .entity-item.active .entity-toggle::before {
+      transform: translateX(24px);
+    }
+
+    .entity-description {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-bottom: 8px;
+    }
+
+    .entity-example {
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      background: rgba(0,0,0,0.05);
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-top: 8px;
+    }
+
+    .entity-item.active .entity-example {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex: 1;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .quick-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #333;
+      transition: all 0.3s;
+    }
+
+    .quick-link:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .quick-link .icon {
+      font-size: 24px;
+    }
+
+    .footer {
+      text-align: center;
+      color: white;
+      margin-top: 40px;
+      padding: 20px;
+      opacity: 0.9;
+    }
+
+    .footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(255,255,255,0.3);
+      transition: 0.3s;
+    }
+
+    .footer a:hover {
+      border-bottom-color: white;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: none;
+      animation: slideIn 0.3s;
+      z-index: 1000;
+    }
+
+    .notification.show {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔐 Presidio Browser Anonymizer</h1>
+      <p class="subtitle">Real-time PII protection for AI chatbots</p>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span>Service Status</span>
+        <span class="status-indicator" id="statusIndicator">
+          <span class="dot"></span>
+          <span id="statusText">Checking...</span>
+        </span>
+      </h2>
+
+      <div class="quick-links">
+        <a href="/dashboard" class="quick-link">
+          <span class="icon">📊</span>
+          <div>
+            <div style="font-weight: 600;">Dashboard</div>
+            <div style="font-size: 12px; opacity: 0.7;">Monitor & test</div>
+          </div>
+        </a>
+        <a href="https://github.com/gacabartosz/presidio-local-anonymizer" target="_blank" class="quick-link">
+          <span class="icon">📚</span>
+          <div>
+            <div style="font-weight: 600;">Documentation</div>
+            <div style="font-size: 12px; opacity: 0.7;">GitHub repo</div>
+          </div>
+        </a>
+        <a href="https://bartoszgaca.pl" target="_blank" class="quick-link">
+          <span class="icon">👨‍💻</span>
+          <div>
+            <div style="font-weight: 600;">Author</div>
+            <div style="font-size: 12px; opacity: 0.7;">Bartosz Gaca</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ Anonymization Settings</h2>
+      <p style="color: #666; margin-bottom: 20px;">
+        Choose which types of personal data to anonymize. Click on each card to enable/disable.
+      </p>
+
+      <div class="entity-grid" id="entityGrid">
+        <!-- Entities will be loaded here -->
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+        <button class="btn btn-secondary" onclick="resetSettings()">🔄 Reset to Default</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Created by <a href="https://bartoszgaca.pl" target="_blank">bartoszgaca.pl</a> & <a href="https://claude.ai" target="_blank">Claude Code</a>
+  </div>
+
+  <div class="notification" id="notification">
+    <strong>✅ Settings saved!</strong>
+  </div>
+
+  <script>
+    const entities = [
+      {
+        name: 'EMAIL_ADDRESS',
+        displayName: 'Email Address',
+        description: 'Email addresses',
+        example: 'jan@example.com → [EMAIL]',
+        enabled: true
+      },
+      {
+        name: 'PL_PESEL',
+        displayName: 'PESEL',
+        description: 'Polish personal ID number',
+        example: '92010212345 → [PESEL]',
+        enabled: true
+      },
+      {
+        name: 'PL_NIP',
+        displayName: 'NIP',
+        description: 'Polish tax ID',
+        example: '123-456-78-90 → [NIP]',
+        enabled: true
+      },
+      {
+        name: 'PHONE_NUMBER',
+        displayName: 'Phone Number',
+        description: 'Phone numbers',
+        example: '+48 123 456 789 → [TELEFON]',
+        enabled: true
+      },
+      {
+        name: 'URL',
+        displayName: 'URL',
+        description: 'Website addresses',
+        example: 'https://example.com → [URL]',
+        enabled: true
+      },
+      {
+        name: 'IP_ADDRESS',
+        displayName: 'IP Address',
+        description: 'IP addresses',
+        example: '192.168.1.1 → [IP]',
+        enabled: true
+      },
+      {
+        name: 'DATE_TIME',
+        displayName: 'Date & Time',
+        description: 'Dates and timestamps',
+        example: '2024-12-10 → [DATA]',
+        enabled: true
+      },
+      {
+        name: 'LOCATION',
+        displayName: 'Location',
+        description: 'Geographic locations',
+        example: 'Warsaw → [LOKALIZACJA]',
+        enabled: true
+      },
+      {
+        name: 'PERSON',
+        displayName: 'Person Name',
+        description: 'Names of people',
+        example: 'Jan Kowalski → [IMIE]',
+        enabled: false
+      },
+      {
+        name: 'CREDIT_CARD',
+        displayName: 'Credit Card',
+        description: 'Credit card numbers',
+        example: '4111-1111-1111-1111 → [KARTA]',
+        enabled: true
+      }
+    ];
+
+    let currentSettings = [...entities];
+
+    // Load settings from backend
+    async function loadSettings() {
+      try {
+        const response = await fetch('/api/config');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.entities) {
+            // Merge backend settings with defaults
+            currentSettings = entities.map(entity => {
+              const backendEntity = data.entities.find(e => e.name === entity.name);
+              return {
+                ...entity,
+                enabled: backendEntity ? backendEntity.enabled : entity.enabled
+              };
+            });
+          }
+        }
+      } catch (error) {
+        console.warn('Could not load settings from backend, using defaults');
+      }
+      renderEntities();
+    }
+
+    // Render entity cards
+    function renderEntities() {
+      const grid = document.getElementById('entityGrid');
+      grid.innerHTML = currentSettings.map((entity, index) => `
+        <div class="entity-item ${entity.enabled ? 'active' : ''}" onclick="toggleEntity(${index})">
+          <div class="entity-header">
+            <div class="entity-name">${entity.displayName}</div>
+            <div class="entity-toggle"></div>
+          </div>
+          <div class="entity-description">${entity.description}</div>
+          <div class="entity-example">${entity.example}</div>
+        </div>
+      `).join('');
+    }
+
+    // Toggle entity
+    function toggleEntity(index) {
+      currentSettings[index].enabled = !currentSettings[index].enabled;
+      renderEntities();
+    }
+
+    // Save settings
+    async function saveSettings() {
+      try {
+        // Get token first
+        const tokenResponse = await fetch('/api/token');
+        const tokenData = await tokenResponse.json();
+        const token = tokenData.token;
+
+        const response = await fetch('/api/config', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Presidio-Token': token
+          },
+          body: JSON.stringify({
+            entities: currentSettings.map(e => ({
+              name: e.name,
+              enabled: e.enabled
+            }))
+          })
+        });
+
+        if (response.ok) {
+          showNotification('✅ Settings saved successfully!');
+        } else {
+          showNotification('❌ Failed to save settings');
+        }
+      } catch (error) {
+        showNotification('❌ Error: ' + error.message);
+      }
+    }
+
+    // Reset settings
+    function resetSettings() {
+      currentSettings = entities.map(e => ({ ...e, enabled: true }));
+      renderEntities();
+      showNotification('🔄 Settings reset to default');
+    }
+
+    // Show notification
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.innerHTML = message;
+      notification.classList.add('show');
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Check service status
+    async function checkStatus() {
+      try {
+        const response = await fetch('/api/health');
+        const data = await response.json();
+
+        if (data.status === 'healthy') {
+          document.getElementById('statusIndicator').classList.add('online');
+          document.getElementById('statusText').textContent = 'Online';
+        }
+      } catch (error) {
+        document.getElementById('statusText').textContent = 'Offline';
+      }
+    }
+
+    // Initialize
+    loadSettings();
+    checkStatus();
+    setInterval(checkStatus, 5000);
+  </script>
+</body>
+</html>

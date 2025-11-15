@@ -7,18 +7,22 @@ entities:
   PERSON:
     mask: "[OSOBA]"
     description: "Imię i nazwisko osoby"
+    enabled: false
 
   EMAIL_ADDRESS:
     mask: "[EMAIL]"
     description: "Adres email"
+    enabled: true
 
   PHONE_NUMBER:
     mask: "[TELEFON]"
     description: "Numer telefonu"
+    enabled: true
 
   PL_PESEL:
     mask: "[PESEL]"
     description: "Polski numer PESEL"
+    enabled: true
     patterns:
       - name: "PESEL_PATTERN"
         regex: '\b\d{11}\b'
@@ -27,6 +31,7 @@ entities:
   PL_NIP:
     mask: "[NIP]"
     description: "Polski numer identyfikacji podatkowej (NIP)"
+    enabled: true
     patterns:
       - name: "NIP_PATTERN_WITH_DASHES"
         regex: '\b\d{3}-\d{3}-\d{2}-\d{2}\b|\b\d{3}-\d{2}-\d{2}-\d{3}\b'
@@ -38,15 +43,24 @@ entities:
   LOCATION:
     mask: "[LOKALIZACJA]"
     description: "Lokalizacja geograficzna"
+    enabled: true
 
   DATE_TIME:
     mask: "[DATA]"
     description: "Data lub data i czas"
+    enabled: true
 
   URL:
     mask: "[URL]"
     description: "Adres URL"
+    enabled: true
 
   IP_ADDRESS:
     mask: "[IP]"
     description: "Adres IP"
+    enabled: true
+
+  CREDIT_CARD:
+    mask: "[KARTA]"
+    description: "Numer karty kredytowej"
+    enabled: true

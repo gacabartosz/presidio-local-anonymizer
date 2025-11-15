@@ -55,7 +55,12 @@ def verify_token():
     """Verify API token for all requests except public endpoints"""
 
     # Skip token verification for public endpoints
-    public_endpoints = ['/api/health', '/api/token', '/dashboard', '/']
+    public_endpoints = ['/api/health', '/api/token', '/dashboard', '/', '/favicon.ico']
+
+    # Allow GET on /api/config (public), but require token for POST
+    if request.path == '/api/config' and request.method == 'GET':
+        return None
+
     if request.path in public_endpoints or request.path.startswith('/static'):
         return None
 
@@ -83,23 +88,12 @@ app.register_blueprint(health_bp, url_prefix='/api')
 app.register_blueprint(anonymize_bp, url_prefix='/api')
 app.register_blueprint(config_bp, url_prefix='/api')
 
-# Root endpoint
+# Root endpoint - serve index.html
 @app.route('/')
 def index():
-    """Root endpoint - service information"""
-    return jsonify({
-        'service': 'Presidio Browser Anonymizer',
-        'version': '1.0.0',
-        'status': 'running',
-        'endpoints': {
-            'health': '/api/health',
-            'anonymize': '/api/anonymize',
-            'config': '/api/config',
-            'token': '/api/token',
-            'dashboard': '/dashboard'
-        },
-        'documentation': '/api/docs'
-    })
+    """Root endpoint - settings page"""
+    from flask import send_from_directory
+    return send_from_directory('../web-ui', 'index.html')
 
 # Dashboard endpoint
 @app.route('/dashboard')

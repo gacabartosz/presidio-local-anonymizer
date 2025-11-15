@@ -106,12 +106,16 @@ def _add_custom_recognizers(analyzer: AnalyzerEngine, config: Dict[str, Any]) ->
 
 def get_supported_entities(config: Dict[str, Any]) -> list[str]:
     """
-    Zwraca listę nazw obsługiwanych encji z konfiguracji.
+    Zwraca listę nazw włączonych encji z konfiguracji.
 
     Args:
         config: Słownik konfiguracji
 
     Returns:
-        list: Lista nazw encji
+        list: Lista nazw włączonych encji
     """
-    return list(config['entities'].keys())
+    enabled_entities = []
+    for entity_name, entity_config in config['entities'].items():
+        if entity_config.get('enabled', True):
+            enabled_entities.append(entity_name)
+    return enabled_entities

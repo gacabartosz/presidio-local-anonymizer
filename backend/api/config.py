@@ -22,14 +22,28 @@ def get_config():
         {
             "language": "pl",
             "threshold": 0.35,
-            "entities": {...}
+            "entities": [{"name": "EMAIL_ADDRESS", "enabled": true}, ...]
         }
     """
     try:
         with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
 
-        return jsonify(config), 200
+        # Convert entities dict to array format for frontend
+        entities_array = []
+        for name, settings in config.get('entities', {}).items():
+            entities_array.append({
+                'name': name,
+                'enabled': settings.get('enabled', True)
+            })
+
+        response = {
+            'language': config.get('language', 'pl'),
+            'threshold': config.get('threshold', 0.35),
+            'entities': entities_array
+        }
+
+        return jsonify(response), 200
 
     except Exception as e:
         logger.error(f"Error loading config: {e}")
@@ -74,7 +88,15 @@ def update_config():
             current_config['threshold'] = new_config['threshold']
 
         if 'entities' in new_config:
-            current_config['entities'].update(new_config['entities'])
+            # Handle array format from frontend: [{name: "EMAIL", enabled: true}, ...]
+            if isinstance(new_config['entities'], list):
+                for entity_update in new_config['entities']:
+                    entity_name = entity_update.get('name')
+                    if entity_name and entity_name in current_config['entities']:
+                        current_config['entities'][entity_name]['enabled'] = entity_update.get('enabled', True)
+            # Handle dict format: {EMAIL_ADDRESS: {...}, ...}
+            else:
+                current_config['entities'].update(new_config['entities'])
 
         # Save updated config
         with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
