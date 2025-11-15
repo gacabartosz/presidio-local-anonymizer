@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Presidio Anonymizer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 Presidio Anonymizer</h1>
+
+    <div class="status" id="status">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">Checking...</span>
+    </div>
+
+    <div class="section">
+      <label class="toggle">
+        <input type="checkbox" id="enabledToggle" checked>
+        <span class="slider"></span>
+        <span class="label">Auto-anonymize</span>
+      </label>
+    </div>
+
+    <div class="section">
+      <label for="tokenInput">API Token:</label>
+      <input type="password" id="tokenInput" placeholder="Enter token from backend">
+      <button id="saveToken">Save</button>
+    </div>
+
+    <div class="section">
+      <button id="openDashboard">Open Dashboard</button>
+    </div>
+
+    <div class="footer">
+      v1.0.0 | <a href="https://github.com/gacabartosz/presidio-local-anonymizer" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

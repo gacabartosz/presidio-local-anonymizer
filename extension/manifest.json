@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "Presidio Browser Anonymizer",
+  "version": "1.0.0",
+  "description": "Real-time text anonymization for ChatGPT, Claude AI, and Perplexity using Microsoft Presidio",
+  "author": "Bartosz Gaca",
+
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+
+  "host_permissions": [
+    "http://127.0.0.1:4222/*"
+  ],
+
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*",
+        "https://claude.ai/*",
+        "https://www.perplexity.ai/*"
+      ],
+      "js": ["content/content-script.js"],
+      "css": ["content/content-style.css"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": ["content/content-style.css"],
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*",
+        "https://claude.ai/*",
+        "https://www.perplexity.ai/*"
+      ]
+    }
+  ]
+}
