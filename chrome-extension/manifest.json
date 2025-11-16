@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Presidio Browser Anonymizer",
-  "version": "1.3.1",
-  "description": "Auto-anonymize PII when pasting text! Powered by Microsoft Presidio. Detects emails, phones, PESEL, NIP, credit cards, IDs - 28 entity types. Works with ChatGPT, Gmail, and all websites.",
+  "version": "1.3.2",
+  "description": "Auto-anonymize PII when pasting! Detects emails, phones, PESEL, NIP, credit cards, and more. Works with ChatGPT, Claude, Gmail.",
   "author": "Bartosz Gaca",
   "homepage_url": "https://github.com/gacabartosz/presidio-local-anonymizer",
   "permissions": [
