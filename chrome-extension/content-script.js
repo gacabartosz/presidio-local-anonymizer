@@ -136,79 +136,136 @@ document.addEventListener('paste', async (e) => {
   }
 
   console.log('[Presidio] Paste event detected - extension ENABLED');
+  console.log('[Presidio] Active element:', document.activeElement?.tagName, document.activeElement?.className);
 
   // Get pasted text from clipboard
   const pastedText = e.clipboardData.getData('text/plain');
 
   if (!pastedText || pastedText.length === 0) {
+    console.log('[Presidio] No text in clipboard, skipping');
     return;
   }
 
-  // Prevent default paste behavior
+  console.log('[Presidio] Clipboard text length:', pastedText.length);
+
+  // CRITICAL: Prevent default AND stop propagation
   e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
 
   try {
-    console.log('[Presidio] Sending anonymization request for pasted text...');
-    showNotification('Anonimizowanie wklejonego tekstu...', 'info');
+    console.log('[Presidio] Sending anonymization request...');
+    showNotification('Anonimizowanie...', 'info');
 
     const response = await chrome.runtime.sendMessage({
       action: 'anonymize',
       text: pastedText
     });
 
-    console.log('[Presidio] Received response:', response);
+    console.log('[Presidio] Anonymization response:', response.success);
 
     if (response.success) {
-      // Insert anonymized text at cursor position
+      const anonymizedText = response.data.anonymized_text;
       const activeElement = document.activeElement;
 
+      console.log('[Presidio] Inserting anonymized text into:', activeElement?.tagName);
+
+      // METHOD 1: TEXTAREA or INPUT
       if (activeElement && (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'INPUT')) {
-        // For input/textarea elements
-        const start = activeElement.selectionStart;
-        const end = activeElement.selectionEnd;
+        const start = activeElement.selectionStart || 0;
+        const end = activeElement.selectionEnd || 0;
         const before = activeElement.value.substring(0, start);
         const after = activeElement.value.substring(end);
 
-        activeElement.value = before + response.data.anonymized_text + after;
-        activeElement.selectionStart = activeElement.selectionEnd = start + response.data.anonymized_text.length;
+        // Replace content
+        activeElement.value = before + anonymizedText + after;
 
-        // Trigger input event for frameworks like React
+        // Set cursor position
+        const newPos = start + anonymizedText.length;
+        activeElement.selectionStart = activeElement.selectionEnd = newPos;
+
+        // Trigger events for React/Vue
         activeElement.dispatchEvent(new Event('input', { bubbles: true }));
-      } else if (activeElement && activeElement.isContentEditable) {
-        // For contenteditable elements (like ChatGPT)
-        document.execCommand('insertText', false, response.data.anonymized_text);
-      } else {
-        // Fallback: just insert at selection
+        activeElement.dispatchEvent(new Event('change', { bubbles: true }));
+
+        console.log('[Presidio] Text inserted into textarea/input');
+      }
+      // METHOD 2: ContentEditable (ChatGPT, Claude, Gmail)
+      else if (activeElement && (activeElement.isContentEditable || activeElement.contentEditable === 'true')) {
+        // Use execCommand for better compatibility
+        const success = document.execCommand('insertText', false, anonymizedText);
+
+        if (!success) {
+          // Fallback: manual insertion
+          const selection = window.getSelection();
+          if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            range.deleteContents();
+            const textNode = document.createTextNode(anonymizedText);
+            range.insertNode(textNode);
+
+            // Move cursor to end
+            range.setStartAfter(textNode);
+            range.setEndAfter(textNode);
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        }
+
+        // Trigger input event
+        activeElement.dispatchEvent(new InputEvent('input', {
+          bubbles: true,
+          cancelable: true,
+          inputType: 'insertText',
+          data: anonymizedText
+        }));
+
+        console.log('[Presidio] Text inserted into contentEditable');
+      }
+      // METHOD 3: Shadow DOM or other (Perplexity?)
+      else {
+        console.log('[Presidio] Unknown element type, trying selection-based insertion');
+
         const selection = window.getSelection();
-        if (selection.rangeCount > 0) {
+        if (selection && selection.rangeCount > 0) {
           const range = selection.getRangeAt(0);
           range.deleteContents();
-          range.insertNode(document.createTextNode(response.data.anonymized_text));
+          const textNode = document.createTextNode(anonymizedText);
+          range.insertNode(textNode);
+
+          // Move cursor
+          range.setStartAfter(textNode);
+          range.setEndAfter(textNode);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        } else {
+          console.error('[Presidio] No selection range available');
         }
       }
 
-      showNotification('Tekst zanonimizowany przy wklejaniu!', 'success');
+      showNotification('✅ Tekst zanonimizowany!', 'success');
     } else {
       throw new Error(response.error);
     }
   } catch (error) {
-    console.error('Paste anonymization failed:', error);
-    showNotification('Błąd anonimizacji. Wklejam oryginalny tekst.', 'error');
+    console.error('[Presidio] Paste anonymization failed:', error);
+    showNotification('❌ Błąd anonimizacji. Wklejam oryginalny.', 'error');
 
     // Fallback: paste original text
     const activeElement = document.activeElement;
     if (activeElement && (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'INPUT')) {
-      const start = activeElement.selectionStart;
-      const end = activeElement.selectionEnd;
+      const start = activeElement.selectionStart || 0;
+      const end = activeElement.selectionEnd || 0;
       const before = activeElement.value.substring(0, start);
       const after = activeElement.value.substring(end);
       activeElement.value = before + pastedText + after;
       activeElement.selectionStart = activeElement.selectionEnd = start + pastedText.length;
-    } else if (activeElement && activeElement.isContentEditable) {
+      activeElement.dispatchEvent(new Event('input', { bubbles: true }));
+    } else if (activeElement && (activeElement.isContentEditable || activeElement.contentEditable === 'true')) {
       document.execCommand('insertText', false, pastedText);
     }
   }
-});
+}, true);
 
 // =============================================================================
 // AUTO-ANONYMIZE BEFORE SEND (ChatGPT, Gmail, Forms)
