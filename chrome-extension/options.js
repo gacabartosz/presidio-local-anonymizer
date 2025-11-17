@@ -9,11 +9,97 @@ const statusMessage = document.getElementById('status-message');
 // Load saved configuration
 document.addEventListener('DOMContentLoaded', async () => {
   await loadConfig();
+  initializeTabs();
+  initializeOSSelector();
+  initializeInstallTestButtons();
 
   testBtn.addEventListener('click', testConnection);
   saveBtn.addEventListener('click', saveConfig);
   resetBtn.addEventListener('click', resetConfig);
 });
+
+// Initialize tab switching
+function initializeTabs() {
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const targetTab = button.dataset.tab;
+
+      // Remove active class from all tabs
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      tabContents.forEach(content => content.classList.remove('active'));
+
+      // Add active class to clicked tab
+      button.classList.add('active');
+      document.getElementById(`tab-${targetTab}`).classList.add('active');
+    });
+  });
+}
+
+// Initialize OS selector
+function initializeOSSelector() {
+  const osButtons = document.querySelectorAll('.os-btn');
+  const osInstructions = document.querySelectorAll('.os-instructions');
+
+  osButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const selectedOS = button.dataset.os;
+
+      // Remove active class from all OS buttons
+      osButtons.forEach(btn => btn.classList.remove('active'));
+
+      // Hide all instructions
+      osInstructions.forEach(instructions => {
+        instructions.classList.add('hidden');
+      });
+
+      // Show selected OS instructions
+      button.classList.add('active');
+      document.getElementById(`install-${selectedOS}`).classList.remove('hidden');
+    });
+  });
+
+  // Auto-detect OS and select appropriate button
+  detectAndSelectOS(osButtons);
+}
+
+// Detect user's OS and auto-select
+function detectAndSelectOS(osButtons) {
+  const userAgent = navigator.userAgent.toLowerCase();
+  let detectedOS = 'windows'; // default
+
+  if (userAgent.indexOf('mac') !== -1) {
+    detectedOS = 'mac';
+  } else if (userAgent.indexOf('linux') !== -1) {
+    detectedOS = 'linux';
+  } else if (userAgent.indexOf('win') !== -1) {
+    detectedOS = 'windows';
+  }
+
+  // Auto-click the detected OS button
+  osButtons.forEach(button => {
+    if (button.dataset.os === detectedOS) {
+      button.click();
+    }
+  });
+}
+
+// Initialize test connection buttons in installation wizard
+function initializeInstallTestButtons() {
+  const testButtons = [
+    document.getElementById('test-connection-windows'),
+    document.getElementById('test-connection-mac'),
+    document.getElementById('test-connection-linux')
+  ];
+
+  testButtons.forEach(button => {
+    if (button) {
+      button.addEventListener('click', testConnection);
+    }
+  });
+}
 
 // Load config from storage
 async function loadConfig() {
