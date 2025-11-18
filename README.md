@@ -22,11 +22,11 @@
 </p>
 
 <p align="center">
+  <a href="JAK-ZACZĄĆ.md">🇵🇱 Polski przewodnik dla każdego</a> •
   <a href="#-features">Features</a> •
   <a href="#-quick-installation">Installation</a> •
   <a href="#-how-it-works">How It Works</a> •
-  <a href="#-documentation">Documentation</a> •
-  <a href="#-chrome-web-store">Chrome Web Store</a>
+  <a href="#-documentation">Documentation</a>
 </p>
 
 ---
@@ -53,6 +53,8 @@
 
 ## 🚀 Quick Installation
 
+> **🇵🇱 PROSTY PRZEWODNIK PO POLSKU:** [JAK-ZACZĄĆ.md](JAK-ZACZĄĆ.md) - Instrukcja krok po kroku dla każdego!
+>
 > **📖 Full Documentation:** [INSTALLATION.md](INSTALLATION.md) - Complete step-by-step guide with troubleshooting
 
 ### Option 1: Automatic Installation (Recommended)
